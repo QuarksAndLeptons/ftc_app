@@ -12,86 +12,68 @@ code needs to be cleaned
 */
 package org.firstinspires.ftc.teamcode;
 //Import standard FTC libraries
-import android.graphics.Color;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import java.util.concurrent.TimeUnit;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import java.util.Locale;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import java.util.concurrent.TimeUnit;
-
-//Import special FTC-related libraries
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuMarkInstanceId;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackableDefaultListener;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-//Import Gyro 
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.Func;
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
+
+import java.util.Locale;
+
+//Import special FTC-related libraries
+//Import Gyro
 
 
 @Autonomous(name = "Blue_PDauto", group = "Linear Opmode")
 
 public class Blue_PDauto extends LinearOpMode {
-    //Initialize and instantiate vuforia variables
-    OpenGLMatrix lastLocation = null;
-    VuforiaLocalizer vuforia;
 
+    //Direction variables
+    public static int LEFT = 0, RIGHT = 1;
     //Initialize elapsed time object
     private ElapsedTime runtime = new ElapsedTime();
 
-    //Initialize Gryo Vars (I think - PD)
+    //Initialize Gryo Vars
 
     // The IMU sensor object
-    BNO055IMU imu;
+    private BNO055IMU imu;
 
     // State used for updating telemetry
-    Orientation angles;
-    Acceleration gravity;
-
-
-
+    private Orientation angles;
+    private Acceleration gravity;
 
     //ROBOT HARDWARE
     //Instantiate chassis motors
-    DcMotor leftMotor;
-    DcMotor rightMotor;
-    DcMotor leftMotor2;
-    DcMotor rightMotor2;
+    private DcMotor leftMotor;
+    private DcMotor rightMotor;
+    private DcMotor leftMotor2;
+    private DcMotor rightMotor2;
     //Instantiate servos
-    Servo color_servo;
-    Servo glyph_servo;
-    Servo rotation_servo;
+    private Servo color_servo;
+    private Servo rotation_servo;
     //Instantiate sensors
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
+    private ColorSensor sensorColor;
+    private DistanceSensor sensorDistance;
 
     //Run this code when the "init" button is pressed
     @Override
@@ -116,8 +98,8 @@ public class Blue_PDauto extends LinearOpMode {
         parametersV.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
 
 
-        this.vuforia = ClassFactory.createVuforiaLocalizer(parametersV);
-        VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
+        VuforiaLocalizer vuforia = ClassFactory.createVuforiaLocalizer(parametersV);
+        VuforiaTrackables relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
 
@@ -231,19 +213,19 @@ public class Blue_PDauto extends LinearOpMode {
                 case 1://Left
 
                     telemetry.addData("VuMark", "Left Action");
-                    CarSecPow(0.75,.9);
+                    moveForward(0.75,.9);
 
                     break;
                 case 2://Center
 
                     telemetry.addData("VuMark", "Center Action");
-                    CarSecPow(0.5,.9);
+                    moveForward(0.5,.9);
 
                     break;
                 case 3://Right
 
                     telemetry.addData("VuMark", "Right Action");
-                    CarSecPow(0.25,.9);
+                    moveForward(0.25,.9);
 
 
                     break;
@@ -261,9 +243,9 @@ public class Blue_PDauto extends LinearOpMode {
         //     CarTurnDegreeDirection(90,"Right");
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
 
-        CarSecPow(1,1);
+        moveForward(1,1);
         sleep(10000);
-        CarTurnDegreeDirection(90,"Left");
+        turnClockwise(90.);
 
 
         //End of Autonomous
@@ -285,64 +267,31 @@ public class Blue_PDauto extends LinearOpMode {
     // Telemetry Configuration
     //----------------------------------------------------------------------------------------------
 
-    void composeTelemetry() {
-
+    private void composeTelemetry() {
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new Runnable() { @Override public void run()
-        {
-            // Acquiring the angles is relatively expensive; we don't want
-            // to do that in each of the three items that need that info, as that's
-            // three times the necessary expense.
-            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            gravity  = imu.getGravity();
-        }
-        });
+        // Acquiring the angles is relatively expensive; we don't want
+        // to do that in each of the three items that need that info, as that's
+        // three times the necessary expense.
+        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        gravity  = imu.getGravity();
 
         telemetry.addLine()
-                .addData("status", new Func<String>() {
-                    @Override public String value() {
-                        return imu.getSystemStatus().toShortString();
-                    }
-                })
-                .addData("calib", new Func<String>() {
-                    @Override public String value() {
-                        return imu.getCalibrationStatus().toString();
-                    }
-                });
+                .addData("status", (Func) () -> { return imu.getSystemStatus().toShortString();})
+                .addData("calib", (Func) () -> {return imu.getCalibrationStatus().toString();});
 
         telemetry.addLine()
-                .addData("heading", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.firstAngle);
-                    }
-                })
-                .addData("roll", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.secondAngle);
-                    }
-                })
-                .addData("pitch", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.thirdAngle);
-                    }
-                });
+                .addData("heading", (Func) () -> {return formatAngle(angles.angleUnit, angles.firstAngle);})
+                .addData("roll", (Func) () -> {return formatAngle(angles.angleUnit, angles.secondAngle);})
+                .addData("pitch", (Func) () -> {return formatAngle(angles.angleUnit, angles.thirdAngle);});
 
         telemetry.addLine()
-                .addData("grvty", new Func<String>() {
-                    @Override public String value() {
-                        return gravity.toString();
-                    }
-                })
-
-                .addData("mag", new Func<String>() {
-                    @Override public String value() {
-                        return String.format(Locale.getDefault(), "%.3f",
-                                Math.sqrt(gravity.xAccel*gravity.xAccel
-                                        + gravity.yAccel*gravity.yAccel
-                                        + gravity.zAccel*gravity.zAccel));
-                    }
-                });
+                .addData("grvty", (Func) () -> {return gravity.toString();})
+                .addData("mag", (Func) () -> {
+                    return String.format(Locale.getDefault(), "%.3f",
+                            Math.sqrt(gravity.xAccel*gravity.xAccel+
+                                    gravity.yAccel*gravity.yAccel
+                                    + gravity.zAccel*gravity.zAccel));});
     }
     //----------------------------------------------------------------------------------------------
     // Formatting
@@ -357,69 +306,58 @@ public class Blue_PDauto extends LinearOpMode {
     }
     //Gyro End
 
-    // Makes it go for x seconds
 
-    public void CarSecPow(double sec, double pow){
-        double mili = (double) sec * 1000.0; //convert into miliseconds
-        leftMotor.setPower(pow);
-        rightMotor.setPower(pow);
-        leftMotor2.setPower(pow);
-        rightMotor2.setPower(pow);
-        sleep((int) mili);
+    /**
+     * Moves forward for a certain amount of time, then stops all chassis motors
+     * @param time the amount of time to move foward <b>in seconds</b>
+     * @param power the power of each of the motors
+     */
+    private void moveForward(double time, double power){
+        long ms = (long) (time * 1000.0); //convert into miliseconds
+        leftMotor.setPower(power);
+        rightMotor.setPower(power);
+        leftMotor2.setPower(power);
+        rightMotor2.setPower(power);
+        sleep(ms);
         leftMotor.setPower(0);
         rightMotor.setPower(0);
         leftMotor2.setPower(0);
         rightMotor2.setPower(0);
 
     }
-    double Angle = 0;
-    double change = 0;
-    public void CarTurnDegreeDirection(double deg,String dir){
 
-        Angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-        if(dir == "Right") {
-            change = Angle - deg;
+    /**
+     * Turns the robot a certain amount of degrees, based on the built in gyroscope
+     * @param degrees the amount of degrees to turn clockwise.  If the robot must turn
+     *                counterclockwise, use a negative number
+     * @param threshold
+     */
+    public void turnClockwise(double degrees, double threshold){
+        //Initialize angle and change variables
+        double angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle)),newAngle;
+        newAngle = angle + degrees;
 
-        }
-        if(dir == "Left") {
-            change = Angle + deg;
+        while(Math.abs(newAngle-angle)<threshold){
+            if(angle<newAngle){
+                rightMotor.setPower(-.5);
+                rightMotor2.setPower(-.5);
+                leftMotor.setPower(.5);
+                leftMotor2.setPower(.5);
+            }
+            else{
+                rightMotor.setPower(.5);
+                rightMotor2.setPower(.5);
+                leftMotor.setPower(-.5);
+                leftMotor2.setPower(-.5);
+            }
 
-        }
-        if (change < -180){
-            change = change +360;
-        }
-        if (change > 179.9){
-            change = change -360;
-        }
-        Angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-        while (Angle - 1 > change ) {
-            Angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-            rightMotor.setPower(-.5);
-            rightMotor2.setPower(-.5);
-            leftMotor.setPower(.5);
-            leftMotor2.setPower(.5);
-            telemetry.addData("Angle", Angle );
-            telemetry.addData("Deg", deg);
-            telemetry.addData("Change", change);
-            telemetry.addData("Turn Right", "Right");
-            telemetry.update();
-        }
-
-        while (Angle + 1 < change) {
-            Angle = Double.para seDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-            rightMotor.setPower(.5);
-            rightMotor2.setPower(.5);
-            leftMotor.setPower(-.5);
-            leftMotor2.setPower(-.5);
-            telemetry.addData("Angle", Angle );
-            telemetry.addData("Deg", deg);
-            telemetry.addData("Change", change);
-            telemetry.addData("Turn Left", "Left");
-            telemetry.update();
+            //Update angles
+            angle = angles.firstAngle;
         }
     }
-
-
+    public void turnClockwise(double deg){
+        turnClockwise(deg, 1.0);
+    }
 }
 
 
