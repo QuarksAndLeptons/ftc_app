@@ -66,19 +66,19 @@ public class Blue_PDauto extends LinearOpMode {
 
     //Initialize elapsed time object
     private ElapsedTime runtime = new ElapsedTime();
-    
+
     //Initialize Gryo Vars (I think - PD)
-     
-     // The IMU sensor object
+
+    // The IMU sensor object
     BNO055IMU imu;
 
     // State used for updating telemetry
     Orientation angles;
     Acceleration gravity;
-    
-     
-    
-    
+
+
+
+
     //ROBOT HARDWARE
     //Instantiate chassis motors
     DcMotor leftMotor;
@@ -92,7 +92,7 @@ public class Blue_PDauto extends LinearOpMode {
     //Instantiate sensors
     ColorSensor sensorColor;
     DistanceSensor sensorDistance;
-    
+
     //Run this code when the "init" button is pressed
     @Override
     public void runOpMode() {
@@ -109,21 +109,21 @@ public class Blue_PDauto extends LinearOpMode {
         rotation_servo = hardwareMap.get(Servo.class, "jewel_rotation_servo");
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
-        
+
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-                VuforiaLocalizer.Parameters parametersV = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
-         parametersV.vuforiaLicenseKey = "AfRvW7T/////AAAAGSZSz12Y5EPmopiqX9Cc17EX1TB9P/jfFGOFM0F4JDpeOV7v14oYyRCIzW09fiRPCvR2ivZcx3tHGuJTENamTxdwxZYSE72C9xuk7pmCjFeP5wfD3zF7bgYCrcVKk6Piahys8ccRRg93Dw4tC0kqkwrW5iz+u1x6+o6CctbGc8nxY3AzaH3W9HTU+QeGLv1xAx05YFOHwSgzNn9mZJYu2rYu2pBdKmb2Y918AlOwEC8QvbSARqI4aCKQle+Nplm/dBTFWO1p6sBIA8A7HHeb2vKcwHfkD10HEzDsZYuQNVxERAJ+7hfmmRLHLmtQJqXTWsQ6mMlKruGtm+s8m+4LhIEZy3dHnX4131J4bvSz1V6f";
-         parametersV.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
-         
-         
+        VuforiaLocalizer.Parameters parametersV = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
+        parametersV.vuforiaLicenseKey = "AfRvW7T/////AAAAGSZSz12Y5EPmopiqX9Cc17EX1TB9P/jfFGOFM0F4JDpeOV7v14oYyRCIzW09fiRPCvR2ivZcx3tHGuJTENamTxdwxZYSE72C9xuk7pmCjFeP5wfD3zF7bgYCrcVKk6Piahys8ccRRg93Dw4tC0kqkwrW5iz+u1x6+o6CctbGc8nxY3AzaH3W9HTU+QeGLv1xAx05YFOHwSgzNn9mZJYu2rYu2pBdKmb2Y918AlOwEC8QvbSARqI4aCKQle+Nplm/dBTFWO1p6sBIA8A7HHeb2vKcwHfkD10HEzDsZYuQNVxERAJ+7hfmmRLHLmtQJqXTWsQ6mMlKruGtm+s8m+4LhIEZy3dHnX4131J4bvSz1V6f";
+        parametersV.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT;
+
+
         this.vuforia = ClassFactory.createVuforiaLocalizer(parametersV);
         VuforiaTrackables relicTrackables = this.vuforia.loadTrackablesFromAsset("RelicVuMark");
         VuforiaTrackable relicTemplate = relicTrackables.get(0);
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
-        
-        //Initilize Gryo 
-        
-       // Set up the parameters with which we will use our IMU. Note that integration
+
+        //Initilize Gryo
+
+        // Set up the parameters with which we will use our IMU. Note that integration
         // algorithm here just reports accelerations to the logcat log; it doesn't actually
         // provide positional information.
         BNO055IMU.Parameters parametersG = new BNO055IMU.Parameters();
@@ -138,7 +138,7 @@ public class Blue_PDauto extends LinearOpMode {
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-       imu.initialize(parametersG);
+        imu.initialize(parametersG);
 
         // Set up our telemetry dashboard
         composeTelemetry();
@@ -153,10 +153,10 @@ public class Blue_PDauto extends LinearOpMode {
        /* while (opModeIsActive()) {
             telemetry.update();
         }*/
-        
+
         telemetry.addData(">", "Press Play to start");
         telemetry.update();
-       
+
 
         relicTrackables.activate();
         // eg: Set the drive motor directions:
@@ -165,123 +165,121 @@ public class Blue_PDauto extends LinearOpMode {
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         rightMotor2.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         // Wait for the game to start (driver presses PLAY)
-        
+
         waitForStart();
         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000); // For Gyro Reset
-        
+
         // Start the logging of measured acceleration -- Gyro
-        
-        
+
+
         telemetry.addData("Status", "Waiting for play button");
         telemetry.update();
         runtime.reset();
-        
-        
+
+
         telemetry.addData("Red  ", sensorColor.red());
         telemetry.addData("Green", sensorColor.green());
         telemetry.addData("Blue ", sensorColor.blue());
         telemetry.update();
-        
-        
-            
+
+
+
         color_servo.setPosition(1);
         rotation_servo.setPosition(.45);
         sleep(2000);
-          
-         
+
+
         telemetry.addData("Red  ", sensorColor.red());
         telemetry.addData("Green", sensorColor.green());
         telemetry.addData("Blue ", sensorColor.blue());
         telemetry.update();
         telemetry.addData("Status", "Knocking Ball");
-        telemetry.update();   
+        telemetry.update();
         if (sensorColor.red() < sensorColor.blue() ) {  // is red // go froward knock red
-                    rotation_servo.setPosition(.2);
-                
-        } 
+            rotation_servo.setPosition(.2);
+
+        }
         if (sensorColor.red() > sensorColor.blue() ) { // is blue // go back knock red
-                    rotation_servo.setPosition(.8);         
-                    
-                    } 
-                    
-                    telemetry.addData("Red  ", sensorColor.red());
+            rotation_servo.setPosition(.8);
+
+        }
+
+        telemetry.addData("Red  ", sensorColor.red());
         telemetry.addData("Green", sensorColor.green());
         telemetry.addData("Blue ", sensorColor.blue());
-        
+
         telemetry.update();
-            
-        sleep(2000);        
+
+        sleep(2000);
         color_servo.setPosition(.3);
-        rotation_servo.setPosition(.45); 
-       
+        rotation_servo.setPosition(.45);
+
         telemetry.addData("Status", "VuMarking");
-        telemetry.update();   
+        telemetry.update();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
-           
+
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "not visible");
-            
+
         }
         else{
             telemetry.addData("VuMark", "%s visible", vuMark);
-            
-           
-            
+
+
+
             switch(vuMark.ordinal()){
                 case 1://Left
-            
+
                     telemetry.addData("VuMark", "Left Action");
-                    CarSecPow(0.75,.9);  
-                    
+                    CarSecPow(0.75,.9);
+
                     break;
                 case 2://Center
-                    
+
                     telemetry.addData("VuMark", "Center Action");
-                    CarSecPow(0.5,.9);  
-                    
+                    CarSecPow(0.5,.9);
+
                     break;
                 case 3://Right
-            
+
                     telemetry.addData("VuMark", "Right Action");
-                    CarSecPow(0.25,.9); 
-           
-            
+                    CarSecPow(0.25,.9);
+
+
                     break;
                 default://Not visible
-                  
+
             }
-            
+
 
         }
-    
+
         telemetry.addData("Status", "Drove Forward now Turning");
-        telemetry.update();   
-       
-        
-   //     CarTurnDegreeDirection(90,"Right");
-   imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-         CarTurnDegreeDirection(90,"Right");
-         
-        sleep(1000);
-        telemetry.addData("Status", "Done Turning");
-        telemetry.update();  
-        
-        CarTurnDegreeDirection(180,"Left");
-        CarTurnDegreeDirection(145,"Left");
-        
+        telemetry.update();
+
+
+        //     CarTurnDegreeDirection(90,"Right");
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+
+        CarSecPow(1,1);
+        sleep(10000);
+        CarTurnDegreeDirection(90,"Left");
+
+
+        //End of Autonomous
     }
 
-        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
+    // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
      /*  leftMotor.setPower(.5);
         rightMotor.setPower(.5);
         leftMotor2.setPower(.5);
         rightMotor2.setPower(.5);
         runtime.reset(); */
-        
+
     String format(OpenGLMatrix transformationMatrix) {
-            return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
     }
-    
+
     // Gyro
     //----------------------------------------------------------------------------------------------
     // Telemetry Configuration
@@ -292,57 +290,57 @@ public class Blue_PDauto extends LinearOpMode {
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
         telemetry.addAction(new Runnable() { @Override public void run()
-                {
-                // Acquiring the angles is relatively expensive; we don't want
-                // to do that in each of the three items that need that info, as that's
-                // three times the necessary expense.
-                angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-                gravity  = imu.getGravity();
-                }
-            });
+        {
+            // Acquiring the angles is relatively expensive; we don't want
+            // to do that in each of the three items that need that info, as that's
+            // three times the necessary expense.
+            angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+            gravity  = imu.getGravity();
+        }
+        });
 
         telemetry.addLine()
-            .addData("status", new Func<String>() {
-                @Override public String value() {
-                    return imu.getSystemStatus().toShortString();
+                .addData("status", new Func<String>() {
+                    @Override public String value() {
+                        return imu.getSystemStatus().toShortString();
                     }
                 })
-            .addData("calib", new Func<String>() {
-                @Override public String value() {
-                    return imu.getCalibrationStatus().toString();
+                .addData("calib", new Func<String>() {
+                    @Override public String value() {
+                        return imu.getCalibrationStatus().toString();
                     }
                 });
 
         telemetry.addLine()
-            .addData("heading", new Func<String>() {
-                @Override public String value() {
-                    return formatAngle(angles.angleUnit, angles.firstAngle);
+                .addData("heading", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.firstAngle);
                     }
                 })
-            .addData("roll", new Func<String>() {
-                @Override public String value() {
-                    return formatAngle(angles.angleUnit, angles.secondAngle);
+                .addData("roll", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.secondAngle);
                     }
                 })
-            .addData("pitch", new Func<String>() {
-                @Override public String value() {
-                    return formatAngle(angles.angleUnit, angles.thirdAngle);
+                .addData("pitch", new Func<String>() {
+                    @Override public String value() {
+                        return formatAngle(angles.angleUnit, angles.thirdAngle);
                     }
                 });
 
         telemetry.addLine()
-            .addData("grvty", new Func<String>() {
-                @Override public String value() {
-                    return gravity.toString();
+                .addData("grvty", new Func<String>() {
+                    @Override public String value() {
+                        return gravity.toString();
                     }
                 })
-                
-            .addData("mag", new Func<String>() {
-                @Override public String value() {
-                    return String.format(Locale.getDefault(), "%.3f",
-                            Math.sqrt(gravity.xAccel*gravity.xAccel
-                                    + gravity.yAccel*gravity.yAccel
-                                    + gravity.zAccel*gravity.zAccel));
+
+                .addData("mag", new Func<String>() {
+                    @Override public String value() {
+                        return String.format(Locale.getDefault(), "%.3f",
+                                Math.sqrt(gravity.xAccel*gravity.xAccel
+                                        + gravity.yAccel*gravity.yAccel
+                                        + gravity.zAccel*gravity.zAccel));
                     }
                 });
     }
@@ -358,129 +356,70 @@ public class Blue_PDauto extends LinearOpMode {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
     //Gyro End
-    
+
     // Makes it go for x seconds
-   
+
     public void CarSecPow(double sec, double pow){
-            double mili = (double) sec * 1000.0; //convert into miliseconds
-            leftMotor.setPower(pow);
-            rightMotor.setPower(pow);
-            leftMotor2.setPower(pow);
-            rightMotor2.setPower(pow);
-            sleep((int) mili);
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
-            leftMotor2.setPower(0);
-            rightMotor2.setPower(0);
-        
-    } 
-     double Angle = 0;
-     double change = 0;
+        double mili = (double) sec * 1000.0; //convert into miliseconds
+        leftMotor.setPower(pow);
+        rightMotor.setPower(pow);
+        leftMotor2.setPower(pow);
+        rightMotor2.setPower(pow);
+        sleep((int) mili);
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+        leftMotor2.setPower(0);
+        rightMotor2.setPower(0);
+
+    }
+    double Angle = 0;
+    double change = 0;
     public void CarTurnDegreeDirection(double deg,String dir){
-        
+
         Angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
         if(dir == "Right") {
-             change = Angle - deg;
-            
+            change = Angle - deg;
+
         }
         if(dir == "Left") {
-             change = Angle + deg;
-            
+            change = Angle + deg;
+
         }
         if (change < -180){
             change = change +360;
         }
         if (change > 179.9){
-              change = change -360;  
+            change = change -360;
         }
         Angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
         while (Angle - 1 > change ) {
-        Angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));    
-        rightMotor.setPower(-.5);
-        rightMotor2.setPower(-.5);
-        leftMotor.setPower(.5);
-        leftMotor2.setPower(.5);    
-        telemetry.addData("Angle", Angle );
-        telemetry.addData("Deg", deg);
-        telemetry.addData("Change", change);
-        telemetry.addData("Turn Right", "Right");
-        telemetry.update();
+            Angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
+            rightMotor.setPower(-.5);
+            rightMotor2.setPower(-.5);
+            leftMotor.setPower(.5);
+            leftMotor2.setPower(.5);
+            telemetry.addData("Angle", Angle );
+            telemetry.addData("Deg", deg);
+            telemetry.addData("Change", change);
+            telemetry.addData("Turn Right", "Right");
+            telemetry.update();
         }
-        
+
         while (Angle + 1 < change) {
-        Angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));    
-        rightMotor.setPower(.5);
-        rightMotor2.setPower(.5);
-        leftMotor.setPower(-.5);
-        leftMotor2.setPower(-.5);    
-        telemetry.addData("Angle", Angle );
-        telemetry.addData("Deg", deg);
-        telemetry.addData("Change", change);
-        telemetry.addData("Turn Left", "Left");
-        telemetry.update();
-        }
-    }
-        
-        
-        
-        
-       /*  imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-        if (dir == "Right") {
-         Angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-        telemetry.addData("Angle",Angle);
-        telemetry.update();
-        }
-        if (dir == "Left") {
-         Angle = -Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-        telemetry.addData("Angle",Angle);
-        telemetry.update();
-        }
-         imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-         
-        while (Angle <  deg){
-             imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-            if (dir == "Right" && Angle != 0.0) {
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-        leftMotor.setPower(.5);
-        leftMotor2.setPower(.5); 
-        rightMotor.setPower(-.5);
-        rightMotor2.setPower(-.5);
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-        Angle = -Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-        telemetry.addData("Turn", "Turning Right");
-        telemetry.addData("Angle", Angle);
-        telemetry.addData("Deg", deg);
-        telemetry.update();
- 
-            }
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-        if (dir == "Left" && Angle != 0.0) {
+            Angle = Double.para seDouble(formatAngle(angles.angleUnit, angles.firstAngle));
             rightMotor.setPower(.5);
             rightMotor2.setPower(.5);
             leftMotor.setPower(-.5);
             leftMotor2.setPower(-.5);
-            imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-            Angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-            telemetry.addData("Turn", "Turning Left");
-            telemetry.addData("Angle", Angle);
+            telemetry.addData("Angle", Angle );
             telemetry.addData("Deg", deg);
-            telemetry.update();    
+            telemetry.addData("Change", change);
+            telemetry.addData("Turn Left", "Left");
+            telemetry.update();
         }
-            if(opModeIsActive() && (double) Angle > (double) deg) {
-            leftMotor.setPower(0);
-            rightMotor.setPower(0);
-            leftMotor2.setPower(0);
-            rightMotor2.setPower(0);
-              imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
-              Angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-        telemetry.addData("Turn", "Done");
-        telemetry.addData("Angle", Angle);
-        telemetry.update(); 
-        
-        }
-       
-        }
-    }*/
+    }
+
+
 }
 
 
