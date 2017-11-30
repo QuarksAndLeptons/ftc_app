@@ -293,21 +293,21 @@ public class Blue_Autonomous extends LinearOpMode {
      * Turn the robot clockwise
      * @param degrees the number of degrees to turn <b>clockwise</b>
      */
-    private void turnClockwise(double degrees){
+    private void turnClockwise(double degrees, double power){
         double angle = angles.firstAngle, newAngle = angle + degrees;
         while (opModeIsActive() && Math.abs(angle - newAngle) > 0.5){
             angle = angles.firstAngle;
             if (angle > newAngle) {
-                rightMotor.setPower(-.1);
-                rightMotor2.setPower(-.1);
-                leftMotor.setPower(.1);
-                leftMotor2.setPower(.1);
-            }
-            else if (angle < newAngle) {
                 rightMotor.setPower(.1);
                 rightMotor2.setPower(.1);
                 leftMotor.setPower(-.1);
                 leftMotor2.setPower(-.1);
+            }
+            else{
+                rightMotor.setPower(-.1);
+                rightMotor2.setPower(-.1);
+                leftMotor.setPower(.1);
+                leftMotor2.setPower(.1);
             }
             //Update telemetry
             telemetry.addData("angle", angle);
@@ -323,6 +323,10 @@ public class Blue_Autonomous extends LinearOpMode {
         leftMotor2.setPower(0);
         telemetry.addData("Status","Done turning");
         telemetry.update();
+    }
+
+    private void turnClockwise(double degrees){
+        turnClockwise(degrees, 0.2);
     }
 
     private void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
