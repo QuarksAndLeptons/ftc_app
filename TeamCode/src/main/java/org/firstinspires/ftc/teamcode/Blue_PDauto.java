@@ -1,27 +1,17 @@
-
-/*
-
-Working:
-Color Sensor (Some measuments need to be updated)
-VuMark (distance traveled needs to be updated)
-Gyro (needs to be tested)
-
-Not working:
-every thing in () up there
-code needs to be cleaned
-*/
 package org.firstinspires.ftc.teamcode;
 //Import standard FTC libraries
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import java.util.Locale;
-
+//Import hardware libraries
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+//Import Gyro
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 
 //Import special FTC-related libraries
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -31,11 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
-//Import Gyro 
-
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-
-import org.firstinspires.ftc.robotcore.external.Func;
+//Import navigation libraries
 import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -58,34 +44,32 @@ public class Blue_PDauto extends LinearOpMode {
     //Initialize Gryo Vars (I think - PD)
 
     // The IMU sensor object
-    BNO055IMU imu;
+    private BNO055IMU imu;
 
     // Orientation and acceleration variables from the built in 9-axis accelerometer
-    Orientation angles;
-    Acceleration gravity;
+    private Orientation angles;
+    private Acceleration gravity;
 
     //ROBOT HARDWARE
     //Instantiate chassis motors
-    DcMotor leftMotor;
-    DcMotor rightMotor;
-    DcMotor leftMotor2;
-    DcMotor rightMotor2;
-    DcMotor dropMotor;
+    private DcMotor leftMotor;
+    private DcMotor rightMotor;
+    private DcMotor leftMotor2;
+    private DcMotor rightMotor2;
+    private DcMotor dropMotor;
     //Instantiate servos
-    Servo color_servo;
-    Servo glyph_servo;
-    Servo rotation_servo;
+    private Servo color_servo;
+    private Servo glyph_servo;
+    private Servo rotation_servo;
     //Instantiate sensors
-    ColorSensor sensorColor;
-    DistanceSensor sensorDistance;
+    private ColorSensor sensorColor;
+    private DistanceSensor sensorDistance;
 
     //Initlize encoder variables
-    double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
-    double     DRIVE_GEAR_REDUCTION    = 1;     // This is < 1.0 if geared UP
-    double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-    double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION ) / (WHEEL_DIAMETER_INCHES * 3.1415);
-    double     DRIVE_SPEED             = 0.6;
-    double     TURN_SPEED              = 0.5;
+    private double COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
+    private double DRIVE_GEAR_REDUCTION    = 1;     // This is < 1.0 if geared UP
+    private double WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
+    private double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION ) / (WHEEL_DIAMETER_INCHES * 3.1415);
 
 
     //Run this code when the "init" button is pressed
@@ -253,60 +237,29 @@ public class Blue_PDauto extends LinearOpMode {
     // Telemetry Configuration
     //----------------------------------------------------------------------------------------------
     void composeTelemetry() {
-
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
-        telemetry.addAction(new Runnable() { @Override public void run()
-        {
+        telemetry.addAction(() -> {
             // Acquiring the angles is relatively expensive; we don't want
             // to do that in each of the three items that need that info, as that's
             // three times the necessary expense.
             angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             gravity  = imu.getGravity();
-        }
         });
         telemetry.addLine()
-                .addData("status", new Func<String>() {
-                    @Override public String value() {
-                        return imu.getSystemStatus().toShortString();
-                    }
-                })
-                .addData("calib", new Func<String>() {
-                    @Override public String value() {
-                        return imu.getCalibrationStatus().toString();
-                    }
-                });
+                .addData("status", () -> imu.getSystemStatus().toShortString())
+                .addData("calib", () -> imu.getCalibrationStatus().toString());
         telemetry.addLine()
-                .addData("heading", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.firstAngle);
-                    }
-                })
-                .addData("roll", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.secondAngle);
-                    }
-                })
-                .addData("pitch", new Func<String>() {
-                    @Override public String value() {
-                        return formatAngle(angles.angleUnit, angles.thirdAngle);
-                    }
-                });
+                .addData("heading", () -> formatAngle(angles.angleUnit, angles.firstAngle))
+                .addData("roll", () -> formatAngle(angles.angleUnit, angles.secondAngle))
+                .addData("pitch", () -> formatAngle(angles.angleUnit, angles.thirdAngle));
         telemetry.addLine()
-                .addData("grvty", new Func<String>() {
-                    @Override public String value() {
-                        return gravity.toString();
-                    }
-                })
+                .addData("grvty", () -> gravity.toString())
 
-                .addData("mag", new Func<String>() {
-                    @Override public String value() {
-                        return String.format(Locale.getDefault(), "%.3f",
-                                Math.sqrt(gravity.xAccel*gravity.xAccel
-                                        + gravity.yAccel*gravity.yAccel
-                                        + gravity.zAccel*gravity.zAccel));
-                    }
-                });
+                .addData("mag", () -> String.format(Locale.getDefault(), "%.3f",
+                        Math.sqrt(gravity.xAccel*gravity.xAccel
+                                + gravity.yAccel*gravity.yAccel
+                                + gravity.zAccel*gravity.zAccel)));
     }
 
 
@@ -314,45 +267,48 @@ public class Blue_PDauto extends LinearOpMode {
     //----------------------------------------------------------------------------------------------
     // Formatting
     //----------------------------------------------------------------------------------------------
-    String formatAngle(AngleUnit angleUnit, double angle) {
+    private String formatAngle(AngleUnit angleUnit, double angle) {
         return formatDegrees(AngleUnit.DEGREES.fromUnit(angleUnit, angle));
 
     }
 
-    String formatDegrees(double degrees){
+    private String formatDegrees(double degrees){
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
 
-
-    // Makes it go for x seconds
-    public void CarSecPow(double sec, double pow){
-        double mili = (double) sec * 1000.0; //convert into miliseconds
-        leftMotor.setPower(pow);
-        rightMotor.setPower(pow);
-        leftMotor2.setPower(pow);
-        rightMotor2.setPower(pow);
-        sleep((int) mili);
+    /**
+     * Move the forward for a certain amount of time
+     * @param time the amount of time to move forward in <b>seconds</b>
+     * @param power the power of each of the motors
+     */
+    private void moveForward(double time, double power){
+        leftMotor.setPower(power);
+        rightMotor.setPower(power);
+        leftMotor2.setPower(power);
+        rightMotor2.setPower(power);
+        sleep((int)(time * 1000.0));
         leftMotor.setPower(0);
         rightMotor.setPower(0);
         leftMotor2.setPower(0);
         rightMotor2.setPower(0);
-
     }
 
-    public void turnClockwise(double deg){
-        double angle = angles.firstAngle, newAngle = angle + deg;
+    /**
+     * Turn the robot clockwise
+     * @param degrees the number of degrees to turn <b>clockwise</b>
+     */
+    private void turnClockwise(double degrees){
+        double angle = angles.firstAngle, newAngle = angle + degrees;
         while (opModeIsActive() && Math.abs(angle - newAngle) > 0.5){
             angle = angles.firstAngle;
             if (angle > newAngle) {
-                angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
                 rightMotor.setPower(-.1);
                 rightMotor2.setPower(-.1);
                 leftMotor.setPower(.1);
                 leftMotor2.setPower(.1);
             }
             else if (angle < newAngle) {
-                angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
                 rightMotor.setPower(.1);
                 rightMotor2.setPower(.1);
                 leftMotor.setPower(-.1);
@@ -360,7 +316,7 @@ public class Blue_PDauto extends LinearOpMode {
             }
             //Update telemetry
             telemetry.addData("angle", angle);
-            telemetry.addData("Deg", deg);
+            telemetry.addData("Degrees", degrees);
             telemetry.addData("Change", newAngle);
             telemetry.update();
         }
@@ -374,68 +330,58 @@ public class Blue_PDauto extends LinearOpMode {
         telemetry.update();
     }
 
-    public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
+    private void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
         int newLeftTarget;
         int newRightTarget;
 
-        // Ensure that the opmode is still active leftMotor
-        if (opModeIsActive()) {
+        // Determine new target position, and pass to motor controller
+        newLeftTarget = leftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
+        newRightTarget = rightMotor2.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
+        leftMotor.setTargetPosition(newLeftTarget);
+        leftMotor2.setTargetPosition(newLeftTarget);
+        rightMotor.setTargetPosition(newRightTarget);
+        rightMotor2.setTargetPosition(newRightTarget);
 
-            // Determine new target position, and pass to motor controller
-            newLeftTarget = leftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            newRightTarget = rightMotor2.getCurrentPosition() + (int)(rightInches * COUNTS_PER_INCH);
-            leftMotor.setTargetPosition(newLeftTarget);
-            leftMotor2.setTargetPosition(newLeftTarget);
-            rightMotor.setTargetPosition(newRightTarget);
-            rightMotor2.setTargetPosition(newRightTarget);
+        // Turn On RUN_TO_POSITION
+        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-            // Turn On RUN_TO_POSITION
-            leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // reset the timeout time and start motion.
+        runtime.reset();
+        leftMotor.setPower(Math.abs(speed));
+        leftMotor2.setPower(Math.abs(speed));
+        rightMotor.setPower(Math.abs(speed));
+        rightMotor2.setPower(Math.abs(speed));
 
-            // reset the timeout time and start motion.
-            runtime.reset();
-            leftMotor.setPower(Math.abs(speed));
-            leftMotor2.setPower(Math.abs(speed));
-            rightMotor.setPower(Math.abs(speed));
-            rightMotor2.setPower(Math.abs(speed));
-
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() &&
-                    runtime.seconds() < timeoutS &&
-                    leftMotor.isBusy() && rightMotor2.isBusy()) {
-                // Display it for the driver.
-                telemetry.addData("Left Target",  "Running to", newLeftTarget);
-                telemetry.addData("Right Target",  "Running to", newRightTarget);
-                telemetry.addData("leftMotor",  "Running at", leftMotor.getCurrentPosition());
-                telemetry.addData("rightMotor2",  "Running at", rightMotor2.getCurrentPosition());
-                telemetry.update();
-            }
-
-            // Stop all motion;
-            leftMotor.setPower(0);
-            leftMotor2.setPower(0);
-            rightMotor.setPower(0);
-            rightMotor2.setPower(0);
-
-            // Turn off RUN_TO_POSITION
-            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            sleep(1000);   // optional pause after each move
-
-            telemetry.addData("Status", "Done moving forward");
+        // keep looping while we are still active, and there is time left, AND at least one motor is running.
+        while (opModeIsActive() &&
+                runtime.seconds() < timeoutS &&
+                leftMotor.isBusy() || rightMotor2.isBusy()) {
+            // Display it for the driver.
+            telemetry.addData("Left Target",  "Running to", newLeftTarget);
+            telemetry.addData("Right Target",  "Running to", newRightTarget);
+            telemetry.addData("leftMotor",  "Running at", leftMotor.getCurrentPosition());
+            telemetry.addData("rightMotor2",  "Running at", rightMotor2.getCurrentPosition());
             telemetry.update();
-
         }
+
+        // Stop all motion;
+        leftMotor.setPower(0);
+        leftMotor2.setPower(0);
+        rightMotor.setPower(0);
+        rightMotor2.setPower(0);
+
+        // Turn off RUN_TO_POSITION
+        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        sleep(1000);   // optional pause after each move
+
+        telemetry.addData("Status", "Done moving forward");
+        telemetry.update();
     }
 }
 
