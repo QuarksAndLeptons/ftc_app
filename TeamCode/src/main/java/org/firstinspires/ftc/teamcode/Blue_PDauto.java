@@ -95,8 +95,8 @@ public class Blue_PDauto extends LinearOpMode {
     DistanceSensor sensorDistance;
     
     //Inilize Encoder
-            double     COUNTS_PER_MOTOR_REV    = 1440 ;    // eg: TETRIX Motor Encoder
-            double     DRIVE_GEAR_REDUCTION    = .9 ;     // This is < 1.0 if geared UP
+            double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
+            double     DRIVE_GEAR_REDUCTION    = 1;     // This is < 1.0 if geared UP
             double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
             double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION ) / (WHEEL_DIAMETER_INCHES * 3.1415);
             double     DRIVE_SPEED             = 0.6;
@@ -135,8 +135,8 @@ public class Blue_PDauto extends LinearOpMode {
         relicTemplate.setName("relicVuMarkTemplate"); // can help in debugging; otherwise not necessary
         
         
-        leftMotor.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        rightMotor2.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //Initilize Gryo 
         
        // Set up the parameters with which we will use our IMU. Note that integration
@@ -237,9 +237,11 @@ public class Blue_PDauto extends LinearOpMode {
                 case 1://Left
             
                 telemetry.addData("VuMark", "Left Action");
-                encoderDrive(-1,-21,-21,10);
-                CarTurnDegreeDirection(30,"Right");
-                sleep(20000);
+                encoderDrive(-1,-25,-25,10);
+                CarTurnDegreeDirection(45,"Right");
+                telemetry.addData("iakjfla", "IT works");
+                telemetry.update();
+                encoderDrive(-1,-10,-10,10);  //(power,left inches, right inches, timeout)
                 dropMotor.setTargetPosition(400);
                 dropMotor.setPower(-0.25);
                     
@@ -247,7 +249,7 @@ public class Blue_PDauto extends LinearOpMode {
                 case 2://Center
                     
                     telemetry.addData("VuMark", "Center Action");
-                   encoderDrive(1,21,21,10);
+                   encoderDrive(.25,23,23,10);
                 CarTurnDegreeDirection(30,"Right");
                 
                 dropMotor.setTargetPosition(400);
@@ -280,7 +282,7 @@ public class Blue_PDauto extends LinearOpMode {
         
         
         
-                        CarTurnDegreeDirection(30,"Right");
+                      
         
         
 
@@ -409,7 +411,7 @@ public class Blue_PDauto extends LinearOpMode {
         if (change > 179.9){
               change = change -360;  
         }
-        
+        int cad = 0; // made just to fix it running froever problem
         while (!(change - 2 < Angle && Angle < change + 2)){
         telemetry.addData("Angle", Angle );
         telemetry.addData("Deg", deg);
@@ -432,11 +434,23 @@ public class Blue_PDauto extends LinearOpMode {
         leftMotor.setPower(-.1);
         leftMotor2.setPower(-.1);    
         }
-        }
+         
+        if (change - 2 < Angle && Angle < change + 2){
         rightMotor.setPower(0);
         rightMotor2.setPower(0);
         leftMotor.setPower(0);
         leftMotor2.setPower(0); 
+        telemetry.addData("A","Return" );
+        telemetry.update();
+        
+        
+            
+        
+        
+        return;
+        }
+        }
+     
     }
     
      public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) { 
