@@ -341,41 +341,37 @@ public class Blue_PDauto extends LinearOpMode {
     }
 
     public void turnClockwise(double deg){
-        double angle = angles.firstAngle, change = angle + deg;
-
-
-        while (!(change - 2 < angle && angle < change + 2)){
-            telemetry.addData("angle", angle);
-            telemetry.addData("Deg", deg);
-            telemetry.addData("Change", change);
-            //Update telemetry
-            angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-            if (angle > change ) {
+        double angle = angles.firstAngle, newAngle = angle + deg;
+        while (opModeIsActive() && Math.abs(angle - newAngle) > 0.5){
+            angle = angles.firstAngle;
+            if (angle > newAngle) {
                 angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
                 rightMotor.setPower(-.1);
                 rightMotor2.setPower(-.1);
                 leftMotor.setPower(.1);
                 leftMotor2.setPower(.1);
             }
-
-            if (angle < change) {
+            else if (angle < newAngle) {
                 angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
                 rightMotor.setPower(.1);
                 rightMotor2.setPower(.1);
                 leftMotor.setPower(-.1);
                 leftMotor2.setPower(-.1);
             }
-
-            if (change - 2 < angle && angle < change + 2){
-                rightMotor.setPower(0);
-                rightMotor2.setPower(0);
-                leftMotor.setPower(0);
-                leftMotor2.setPower(0);
-                telemetry.addData("A","Return" );
-                telemetry.update();
-                return;
-            }
+            //Update telemetry
+            telemetry.addData("angle", angle);
+            telemetry.addData("Deg", deg);
+            telemetry.addData("Change", newAngle);
+            telemetry.update();
         }
+
+        //Stop motors
+        rightMotor.setPower(0);
+        rightMotor2.setPower(0);
+        leftMotor.setPower(0);
+        leftMotor2.setPower(0);
+        telemetry.addData("Status","Done turning");
+        telemetry.update();
     }
 
     public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
@@ -399,7 +395,6 @@ public class Blue_PDauto extends LinearOpMode {
             rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-//left -34223 right2 -7116 ----- -31576 -4745 = 2647 2371
             // reset the timeout time and start motion.
             runtime.reset();
             leftMotor.setPower(Math.abs(speed));
@@ -413,13 +408,13 @@ public class Blue_PDauto extends LinearOpMode {
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() && (runtime.seconds() < timeoutS) && (leftMotor.isBusy())) {
+            while (opModeIsActive() &&
+                    runtime.seconds() < timeoutS &&
+                    leftMotor.isBusy() && rightMotor2.isBusy()) {
                 // Display it for the driver.
                 telemetry.addData("Left Target",  "Running to", newLeftTarget);
                 telemetry.addData("Right Target",  "Running to", newRightTarget);
                 telemetry.addData("leftMotor",  "Running at", leftMotor.getCurrentPosition());
-                telemetry.addData("leftMotor2",  "Running at", leftMotor2.getCurrentPosition());
-                telemetry.addData("rightMotor",  "Running at", rightMotor.getCurrentPosition());
                 telemetry.addData("rightMotor2",  "Running at", rightMotor2.getCurrentPosition());
                 telemetry.update();
             }
@@ -437,12 +432,11 @@ public class Blue_PDauto extends LinearOpMode {
             rightMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             sleep(1000);   // optional pause after each move
 
-            telemetry.addData("Done?", "Done" );
+            telemetry.addData("Status", "Done moving forward");
             telemetry.update();
 
         }
     }
-
 }
 
 
