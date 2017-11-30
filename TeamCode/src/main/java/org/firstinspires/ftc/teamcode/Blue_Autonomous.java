@@ -294,20 +294,20 @@ public class Blue_Autonomous extends LinearOpMode {
      * @param degrees the number of degrees to turn <b>clockwise</b>
      */
     private void turnClockwise(double degrees, double power){
-        double angle = angles.firstAngle, newAngle = angle + degrees;
+        double angle = angles.firstAngle, newAngle = (angle + degrees)%360;
         while (opModeIsActive() && Math.abs(angle - newAngle) > 0.5){
             angle = angles.firstAngle;
             if (angle > newAngle) {
-                rightMotor.setPower(.1);
-                rightMotor2.setPower(.1);
-                leftMotor.setPower(-.1);
-                leftMotor2.setPower(-.1);
+                rightMotor.setPower(power);
+                rightMotor2.setPower(power);
+                leftMotor.setPower(-power);
+                leftMotor2.setPower(-power);
             }
             else{
-                rightMotor.setPower(-.1);
-                rightMotor2.setPower(-.1);
-                leftMotor.setPower(.1);
-                leftMotor2.setPower(.1);
+                rightMotor.setPower(-power);
+                rightMotor2.setPower(-power);
+                leftMotor.setPower(power);
+                leftMotor2.setPower(power);
             }
             //Update telemetry
             telemetry.addData("angle", angle);
