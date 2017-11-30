@@ -136,7 +136,7 @@ telemetry.addData("Left Trigger", gamepad2.left_trigger );
             angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             double angle;
             angle = AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
-            telemetry.addData("Angle", angle);
+            telemetry.addData("angle", angle);
             telemetry.update();
             
             if (gamepad1.left_trigger < .5 && gamepad1.right_trigger < .5) {
