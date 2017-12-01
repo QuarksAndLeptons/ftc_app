@@ -56,14 +56,15 @@ public class Blue_Autonomous extends LinearOpMode {
     private DcMotor dropMotor;
     //Instantiate servos
     private Servo color_servo;
-    private Servo glyph_servo;
     private Servo rotation_servo;
+    private Servo color_servo2;
+    private Servo rotation_servo2;
     //Instantiate sensors
     private ColorSensor sensorColor;
     private DistanceSensor sensorDistance;
 
     //Initlize encoder variables
-    private double COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
+    private double COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: Andymark Encoder
     private double DRIVE_GEAR_REDUCTION    = 1;     // This is < 1.0 if geared UP
     private double WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
     private double COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION ) / (WHEEL_DIAMETER_INCHES * 3.1415);
@@ -94,6 +95,9 @@ public class Blue_Autonomous extends LinearOpMode {
         //Initialize the servos
         color_servo = hardwareMap.get(Servo.class, "jewel_servo");
         rotation_servo = hardwareMap.get(Servo.class, "jewel_rotation_servo");
+        //Left Side
+        color_servo2 = hardwareMap.get(Servo.class, "jewel_servo2");
+        rotation_servo2 = hardwareMap.get(Servo.class, "jewel_rotation_servo2");
         //Finally initialize the sensors
         sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
         sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
@@ -173,9 +177,19 @@ public class Blue_Autonomous extends LinearOpMode {
         telemetry.addData("Status", "VuMarking");
         telemetry.update();
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+        sleep(2000);
+        //If Vumark not visible
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "not visible");
             telemetry.update();
+            color_servo2.setPosition(.3);
+            encoderDrive(-.3,-21,-21,10);
+            turnClockwise(45);
+            telemetry.addData("Status", "Successful");
+            telemetry.update();
+            encoderDrive(-.3,-10,-10,10);  //(power,left inches, right inches, timeout)
+            dropMotor.setTargetPosition(400);
+            dropMotor.setPower(-0.25);
         }
         else{
             telemetry.addData("VuMark", "%s visible", vuMark);
@@ -184,30 +198,29 @@ public class Blue_Autonomous extends LinearOpMode {
             switch(vuMark.ordinal()){
                 case 1://Left
                     telemetry.addData("VuMark", "Left Action");
-                    encoderDrive(-1,-25,-25,10);
+                    encoderDrive(-.3,-21,-21,10);
                     turnClockwise(45);
                     telemetry.addData("Status", "Successful");
                     telemetry.update();
-                    encoderDrive(-1,-10,-10,10);  //(power,left inches, right inches, timeout)
+                    encoderDrive(-.3,-10,-10,10);  //(power,left inches, right inches, timeout)
                     dropMotor.setTargetPosition(400);
                     dropMotor.setPower(-0.25);
                     break;
 
                 case 2://Center
                     telemetry.addData("VuMark", "Center Action");
-                    encoderDrive(.25,23,23,10);
+                    encoderDrive(.3,23,23,10);
                     turnClockwise(30);
                     dropMotor.setTargetPosition(400);
                     dropMotor.setPower(-0.25);
-                    encoderDrive(1,2,2,10);
+                    encoderDrive(.2,2,2,10);
                     break;
 
                 case 3://Right
                     telemetry.addData("VuMark", "Right Action");
-                    //encoderDrive(-1,-24,-24,10);
+                    //encoderDrive(-.3,-24,-24,10);
                     //FIXME
                     break;
-                default://Not visible
             }
         }
 
@@ -231,7 +244,7 @@ public class Blue_Autonomous extends LinearOpMode {
     //----------------------------------------------------------------------------------------------
     // Telemetry Configuration
     //----------------------------------------------------------------------------------------------
-    void composeTelemetry() {
+    private void composeTelemetry() {
         // At the beginning of each telemetry update, grab a bunch of data
         // from the IMU that we will then display in separate lines.
         telemetry.addAction(() -> {
@@ -294,7 +307,9 @@ public class Blue_Autonomous extends LinearOpMode {
      * @param degrees the number of degrees to turn <b>clockwise</b>
      */
     private void turnClockwise(double degrees, double power){
-        double angle = angles.firstAngle, newAngle = (angle + degrees)%360;
+        //FIXME get this loop to refresh more frequently
+        angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double angle = angles.firstAngle, newAngle = angle + degrees;
         while (opModeIsActive() && Math.abs(angle - newAngle) > 0.5){
             angle = angles.firstAngle;
             if (angle > newAngle) {
@@ -310,6 +325,7 @@ public class Blue_Autonomous extends LinearOpMode {
                 leftMotor2.setPower(power);
             }
             //Update telemetry
+            composeTelemetry();
             telemetry.addData("angle", angle);
             telemetry.addData("Degrees", degrees);
             telemetry.addData("Change", newAngle);
