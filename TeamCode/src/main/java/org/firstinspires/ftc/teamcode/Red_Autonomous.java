@@ -33,13 +33,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 
-@Autonomous(name = "Blue_Autonomous", group = "Linear Opmode")
-public class Blue_Autonomous extends LinearOpMode {
+@Autonomous(name = "Red_Autonomous", group = "Linear Opmode")
+public class Red_Autonomous extends LinearOpMode {
     //Initialize and instantiate vuforia variables
     OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia;
 
-    //Initialize elapsed time object 
+    //Initialize elapsed time object
     private ElapsedTime runtime = new ElapsedTime();
 
     // The IMU sensor object
@@ -180,7 +180,7 @@ public class Blue_Autonomous extends LinearOpMode {
         rotation_servo.setPosition(.45);
 
         //For now we are only driving forward
-        driveForward(30);
+        driveForward(22);
         telemetry.addData("Status", "Done");
         /*
         //Detect the Vumark

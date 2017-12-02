@@ -52,6 +52,10 @@ public class Two_PDteleop extends LinearOpMode {
     DcMotor dropMotor;
     Servo color_servo;
     Servo jewel_rotation_servo;
+    Servo color_servo2;
+    Servo jewel_rotation_servo2;
+    Servo left_intake;
+    Servo right_intake;
     Orientation angles;
     
     BNO055IMU imu;
@@ -97,6 +101,10 @@ public class Two_PDteleop extends LinearOpMode {
         //Initialize servos
         color_servo = hardwareMap.get(Servo.class, "jewel_servo");
         jewel_rotation_servo = hardwareMap.get(Servo.class, "jewel_rotation_servo");
+        color_servo2 = hardwareMap.get(Servo.class, "jewel_servo2");
+        jewel_rotation_servo2 = hardwareMap.get(Servo.class, "jewel_rotation_servo2");
+        //left_intake = hardwareMap.get(Servo.class, "left_intake");
+        //right_intake = hardwareMap.get(Servo.class, "right_intake");
         telemetry.addData("Status", "Initializing motors");
         
         //Gyro 
@@ -206,6 +214,12 @@ telemetry.addData("Left Trigger", gamepad2.left_trigger );
             if (gamepad1.a) {
                 jewel_rotation_servo.setPosition(.45);
             }
+             if (gamepad2.x) {
+                jewel_rotation_servo.setPosition(.45);
+             }
+            if (gamepad1.a) {
+               // left_intake.setPosition(.45);
+            }
             
             //Lifting mechanism
             //Stop the lifting motor if it isn't busy
@@ -247,6 +261,7 @@ telemetry.addData("Left Trigger", gamepad2.left_trigger );
                 dropMotor.setTargetPosition(dropPos - 50);
                  dropMotor.setPower(-0.25);
             }
+            //Drop motor
             if(gamepad2.y){
                 dropMotor.setTargetPosition(400);
                 if(dropMotor.isBusy()) dropMotor.setPower(0.1);
