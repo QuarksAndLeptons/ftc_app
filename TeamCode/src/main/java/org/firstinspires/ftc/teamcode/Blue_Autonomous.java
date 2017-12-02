@@ -180,8 +180,11 @@ public class Blue_Autonomous extends LinearOpMode {
         rotation_servo.setPosition(.45);
 
         //For now we are only driving forward
-        driveForward(30);
+        telemetry.addData("Status", "Moving forward");
+        telemetry.update();
+        moveForward(1.2,-1.0);
         telemetry.addData("Status", "Done");
+        telemetry.update();
         /*
         //Detect the Vumark
         telemetry.addData("Status", "VuMarking");
@@ -436,7 +439,7 @@ public class Blue_Autonomous extends LinearOpMode {
                     leftIsMoving = false;
                 }
                 //If the motors aren't done moving, keep moving them
-                else if (rightMotor.getCurrentPosition() > newRightTarget) {
+                else if (rightMotor.getCurrentPosition() < newRightTarget) {
                     rightMotor.setPower(-.5);
                     rightMotor2.setPower(-.5);
                 }

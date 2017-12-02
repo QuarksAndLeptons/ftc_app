@@ -180,8 +180,11 @@ public class Red_Autonomous extends LinearOpMode {
         rotation_servo.setPosition(.45);
 
         //For now we are only driving forward
-        driveForward(22);
+        telemetry.addData("Status", "Moving forward");
+        telemetry.update();
+        moveForward(1.2,1.0);
         telemetry.addData("Status", "Done");
+        telemetry.update();
         /*
         //Detect the Vumark
         telemetry.addData("Status", "VuMarking");
@@ -407,7 +410,7 @@ public class Red_Autonomous extends LinearOpMode {
      */
     public void driveForward(double distance) {
         long newLeftTarget = leftMotor.getCurrentPosition() + (long) (distance * COUNTS_PER_INCH);
-        long newRightTarget = rightMotor2.getCurrentPosition() + (long) (distance * COUNTS_PER_INCH);
+        long newRightTarget = rightMotor2.getCurrentPosition() - (long) (distance * COUNTS_PER_INCH);
         boolean leftIsMoving = true, rightIsMoving = true;
 
         while ((leftIsMoving||rightIsMoving) && opModeIsActive()){
