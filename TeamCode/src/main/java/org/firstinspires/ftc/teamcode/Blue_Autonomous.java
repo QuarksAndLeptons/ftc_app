@@ -1,3 +1,10 @@
+/*
+TODO Connect to the phone wirelessly
+TODO Use Autonomous_Conept to fix driveForward()
+TODO Use Autonomous_Conept to fix turnClockwise()
+TODO Write code for all of the glyph patterns
+TODO Fine-tune the program to work flawlessly
+ */
 package org.firstinspires.ftc.teamcode;
 //Import standard FTC libraries
 
