@@ -59,10 +59,10 @@ import java.util.concurrent.TimeUnit;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@Autonomous(name = "Blue_PDauto", group = "Linear Opmode")
+@Autonomous(name = "Blue Jewell Auto", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
 
-public class Blue_PDauto extends LinearOpMode {
+public class SimpleBlueAuto extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
