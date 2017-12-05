@@ -28,8 +28,8 @@ public class PDChangePIDController extends LinearOpMode {
 
 
     public static final double NEW_P = 2.5;
-    public static final double NEW_I = 0.1;
-    public static final double NEW_D = 0.2;
+    public static final double NEW_I = 0.25;
+    public static final double NEW_D = 0.1;
 
     public void runOpMode() {
         // get reference to DC motor.
