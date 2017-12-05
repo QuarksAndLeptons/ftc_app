@@ -140,11 +140,11 @@ public class SimpleBlueAuto extends LinearOpMode {
             telemetry.addData("Blue ", sensorColor.blue());
             telemetry.update();
 
-            if (sensorColor.red() > sensorColor.blue() && done == 0) {  // is red // go froward knock red
+            if (sensorColor.red() < sensorColor.blue() && done == 0) {  // is red // go froward knock red
                 rotation_servo.setPosition(.2);
                 done = 1;
             }
-            if (sensorColor.red() < sensorColor.blue() && done == 0) { // not red // go back knock red
+            if (sensorColor.red() > sensorColor.blue() && done == 0) { // not red // go back knock red
                 rotation_servo.setPosition(.8);
                 done = 1;
             }
