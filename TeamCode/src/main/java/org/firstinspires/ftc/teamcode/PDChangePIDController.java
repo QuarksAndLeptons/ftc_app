@@ -21,10 +21,10 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
 public class PDChangePIDController extends LinearOpMode {
 
     // our DC motor.
-    DcMotor leftMotor;
-    DcMotor rightMotor;
-    DcMotor leftMotor2;
-    DcMotor rightMotor2;
+    DcMotorEx leftMotor;
+    DcMotorEx rightMotor;
+    DcMotorEx leftMotor2;
+    DcMotorEx rightMotor2;
 
 
     public static final double NEW_P = 2.5;
@@ -33,10 +33,10 @@ public class PDChangePIDController extends LinearOpMode {
 
     public void runOpMode() {
         // get reference to DC motor.
-        leftMotor = hardwareMap.dcMotor.get("leftFront");
-        rightMotor = hardwareMap.dcMotor.get("rightFront");
-        leftMotor2 = hardwareMap.dcMotor.get("leftRear");
-        rightMotor2 = hardwareMap.dcMotor.get("rightRear");
+        leftMotor = (DcMotorEx)hardwareMap.dcMotor.get("leftFront");
+        rightMotor = (DcMotorEx)hardwareMap.dcMotor.get("rightFront");
+        leftMotor2 = (DcMotorEx)hardwareMap.dcMotor.get("leftRear");
+        rightMotor2 = (DcMotorEx)hardwareMap.dcMotor.get("rightRear");
 
         // wait for start command.
         waitForStart();
@@ -46,10 +46,10 @@ public class PDChangePIDController extends LinearOpMode {
         DcMotorControllerEx motorControllerEx = (DcMotorControllerEx)leftMotor.getController();
 
         // get the port number of our configured motor.
-        int motorIndexLeft = ((DcMotorEx)leftMotor).getPortNumber();
-        int motorIndexRight = ((DcMotorEx)rightMotor).getPortNumber();
-        int motorIndexLeft2 = ((DcMotorEx)leftMotor2).getPortNumber();
-        int motorIndexRight2 = ((DcMotorEx)rightMotor2).getPortNumber();
+        int motorIndexLeft = leftMotor.getPortNumber();
+        int motorIndexRight = rightMotor.getPortNumber();
+        int motorIndexLeft2 = leftMotor2.getPortNumber();
+        int motorIndexRight2 = rightMotor2.getPortNumber();
         // get the PID coefficients for the RUN_USING_ENCODER  modes.
         PIDCoefficients pidOrigLeft = motorControllerEx.getPIDCoefficients(motorIndexLeft, DcMotor.RunMode.RUN_USING_ENCODER);
         PIDCoefficients pidOrigRight = motorControllerEx.getPIDCoefficients(motorIndexRight, DcMotor.RunMode.RUN_USING_ENCODER);
@@ -72,7 +72,7 @@ public class PDChangePIDController extends LinearOpMode {
             telemetry.addData("P,I,D (pidOrigLeft2)", "%.04f, %.04f, %.0f",
                     pidOrigLeft.p, pidOrigLeft2.i, pidOrigLeft2.d);
             telemetry.addData("P,I,D (pidOrigRight2)", "%.04f, %.04f, %.0f",
-                    pidOrigLeft.p, pidOrigLeft.i, pidOrigLeft.d);
+                    pidOrigLeft.p, pidOrigRight2.i, pidOrigRight2.d);
             telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
                     pidModified.p, pidModified.i, pidModified.d);
             telemetry.update();
