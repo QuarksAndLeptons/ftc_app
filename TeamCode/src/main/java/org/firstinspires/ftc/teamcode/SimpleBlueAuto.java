@@ -34,6 +34,8 @@ package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
 import java.util.concurrent.TimeUnit;
+
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import java.util.Locale;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
@@ -92,7 +94,8 @@ public class SimpleBlueAuto extends LinearOpMode {
         color_servo = hardwareMap.get(Servo.class, "jewelServo");
         rotation_servo = hardwareMap.get(Servo.class, "jewelRotationServo");
         blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
-        //sensorDistance = hardwareMap.get(DistanceSensor.class, "BlueColorDistance");
+        redSensorColor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "RedColorSensor");
+
         float hsvValues[] = {0F, 0F, 0F};
         // values is a reference to the hsvValues array.
         final float values[] = hsvValues;
