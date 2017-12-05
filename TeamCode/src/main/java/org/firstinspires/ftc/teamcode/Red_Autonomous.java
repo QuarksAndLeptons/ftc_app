@@ -42,11 +42,11 @@ public class Red_Autonomous extends org.firstinspires.ftc.teamcode.Autonomous
         sleep(2000);
 /*
         //Knock over the blue ball
-        if (sensorColor.red() < sensorColor.blue()) {  // is red // go froward knock red
+        if (redSensorColor.red() < redSensorColor.blue()) {  // is red // go froward knock red
             rotation_servo.setPosition(.2);
             telemetry.addData("Status", "detected BLUE (moving servo FORWARD)");
             telemetry.update();
-        } else if (sensorColor.red() > sensorColor.blue()) { // is blue // go back knock red
+        } else if (redSensorColor.red() > redSensorColor.blue()) { // is blue // go back knock red
             rotation_servo.setPosition(.8);
             telemetry.addData("Status", "detected RED (moving servo FORWARD)");
             telemetry.update();
