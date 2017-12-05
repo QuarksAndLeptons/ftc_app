@@ -108,8 +108,8 @@ public class Red_PDauto extends LinearOpMode {
         rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         rightMotor2.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
         // Wait for the game to start (driver presses PLAY)
-        color_servo.setPosition(.3);
-        rotation_servo.setPosition(.5);
+        color_servo.setPosition(.1);
+        rotation_servo.setPosition(.47);
 
         waitForStart();
         telemetry.addData("Status", "Waiting for play button");
