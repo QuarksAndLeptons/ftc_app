@@ -6,7 +6,6 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -58,9 +57,6 @@ public abstract class Autonomous extends LinearOpMode {
     ColorSensor blueSensorColor;
     ColorSensor redSensorColor;
 
-
-
-
     //Initlize encoder variables
     protected double COUNTS_PER_MOTOR_REV = 1120;    // eg: Andymark Encoder
     protected double DRIVE_GEAR_REDUCTION = 1;     // This is < 1.0 if geared UP
@@ -82,10 +78,10 @@ public abstract class Autonomous extends LinearOpMode {
 
         //Initialize robot hardware
         //Begin with the chassis
-        leftMotor = hardwareMap.dcMotor.get("left_drive");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
-        leftMotor2 = hardwareMap.dcMotor.get("left_drive2");
-        rightMotor2 = hardwareMap.dcMotor.get("right_drive2");
+        leftMotor = hardwareMap.dcMotor.get("leftFront");
+        rightMotor = hardwareMap.dcMotor.get("rightFront");
+        leftMotor2 = hardwareMap.dcMotor.get("leftBack");
+        rightMotor2 = hardwareMap.dcMotor.get("rightBack");
         //Reset the encoders on the chassis to 0
         //NOTE: Do not add leftMotor and rightMotor2 because there aren't any encoders on 'em
         leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
