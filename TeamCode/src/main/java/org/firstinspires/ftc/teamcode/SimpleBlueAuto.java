@@ -49,137 +49,65 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import java.util.concurrent.TimeUnit;
 
 
-/**
- * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
- * the autonomous or the teleop period of an FTC match. The names of OpModes appear on the menu
- * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
- * class is instantiated on the Robot Controller and executed.
- * <p>
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
- * It includes all the skeletal structure that all linear OpModes contain.
- * <p>
- * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
- * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
- */
 @Autonomous(name = "Blue Jewell Auto", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
 
-public class SimpleBlueAuto extends LinearOpMode {
+public class SimpleBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
-    /* Declare OpMode members. */
-    private ElapsedTime runtime = new ElapsedTime();
-    DcMotor leftMotor; // = null;
-    DcMotor rightMotor; //= null;
-    DcMotor leftMotor2; //= null;
-    DcMotor rightMotor2; // = null;
-    Servo color_servo;
-    Servo glyph_servo;
-    Servo rotation_servo;
-    ColorSensor blueSensorColor;
-    ColorSensor redSensorColor;
 
     @Override
     public void runOpMode() {
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
 
-        /* eg: Initialize the hardware variables. Note that the strings used here as parameters
-         * to 'get' must correspond to the names assigned during the robot configuration
-         * step (using the FTC Robot Controller app on the phone).
-         */
-        leftMotor = hardwareMap.dcMotor.get("leftFront");
-        rightMotor = hardwareMap.dcMotor.get("rightFront");
-        leftMotor2 = hardwareMap.dcMotor.get("leftRear");
-        rightMotor2 = hardwareMap.dcMotor.get("rightRear");
-        color_servo = hardwareMap.get(Servo.class, "jewelServo");
-        rotation_servo = hardwareMap.get(Servo.class, "jewelRotationServo");
-        blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
-        redSensorColor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "RedColorSensor");
+        //Initalize the hardware
+        initializeHardware();
 
-        float hsvValues[] = {0F, 0F, 0F};
-        // values is a reference to the hsvValues array.
-        final float values[] = hsvValues;
-        final double SCALE_FACTOR = 255;
-        double done = 0;
-        // get a reference to the RelativeLayout so we can change the background
-        // color of the Robot Controller app to match the hue detected by the RGB sensor.
-        telemetry.addData("Status", "Initializing motors");
 
-        // eg: Set the drive motor directions:
-        // "Reverse" the motor that runs backwards when connected directly to the battery
-        // leftMotor.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        rightMotor2.setDirection(DcMotor.Direction.REVERSE);// Set to FORWARD if using AndyMark motors
-        // Wait for the game to start (driver presses PLAY)
+        //Set the initial servo positions
         color_servo.setPosition(.1);
         rotation_servo.setPosition(.47);
 
-        waitForStart();
+        //Wait for start
         telemetry.addData("Status", "Waiting for play button");
         runtime.reset();
+        waitForStart();
 
-        while (opModeIsActive()) {
-            Color.RGBToHSV((int) (blueSensorColor.red() * SCALE_FACTOR),
-                    (int) (blueSensorColor.green() * SCALE_FACTOR),
-                    (int) (blueSensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
-            telemetry.addData("Red  ", blueSensorColor.red());
-            telemetry.addData("Green", blueSensorColor.green());
-            telemetry.addData("Blue ", blueSensorColor.blue());
+
+        boolean done = false;
+        //The start button has been pressed.
+        while (opModeIsActive() && !done) {
+
+            debugColorSensor(blueSensorColor);
             telemetry.update();
-
-
 
             color_servo.setPosition(1);
             rotation_servo.setPosition(.5);
             sleep(2000);
 
-            Color.RGBToHSV((int) (blueSensorColor.red() * SCALE_FACTOR),
-                    (int) (blueSensorColor.green() * SCALE_FACTOR),
-                    (int) (blueSensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
-            telemetry.addData("Red  ", blueSensorColor.red());
-            telemetry.addData("Green", blueSensorColor.green());
-            telemetry.addData("Blue ", blueSensorColor.blue());
+
+            debugColorSensor(blueSensorColor);
             telemetry.update();
 
-            if (blueSensorColor.red() < blueSensorColor.blue() && done == 0) {  // is red // go froward knock red
+            if (blueSensorColor.red() < blueSensorColor.blue()) {  // is red // go froward knock red
                 rotation_servo.setPosition(.2);
-                done = 1;
+                done = true;
             }
-            if (blueSensorColor.red() > blueSensorColor.blue() && done == 0) { // not red // go back knock red
+            if (blueSensorColor.red() > blueSensorColor.blue()) { // not red // go back knock red
                 rotation_servo.setPosition(.8);
-                done = 1;
+                done = true;
             }
 
-            Color.RGBToHSV((int) (blueSensorColor.red() * SCALE_FACTOR),
-                    (int) (blueSensorColor.green() * SCALE_FACTOR),
-                    (int) (blueSensorColor.blue() * SCALE_FACTOR),
-                    hsvValues);
-            telemetry.addData("Red  ", blueSensorColor.red());
-            telemetry.addData("Green", blueSensorColor.green());
-            telemetry.addData("Blue ", blueSensorColor.blue());
-            telemetry.addData("Done ", done);
+
             telemetry.update();
 
             sleep(2000);
             color_servo.setPosition(.35);
             rotation_servo.setPosition(.47);
-            sleep(20000000);
-
         }
-
-        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-     /*  leftMotor.setPower(.5);
-        rightMotor.setPower(.5);
-        leftMotor2.setPower(.5);
-        rightMotor2.setPower(.5);
-        runtime.reset(); */
-
-
-
-
+        debugColorSensor(blueSensorColor);
+        telemetry.addData("Status", "Done");
+        telemetry.update();
     }
+
 }
 
 

@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -53,11 +54,12 @@ public abstract class Autonomous extends LinearOpMode {
     //Instantiate servos
     protected Servo color_servo;
     protected Servo rotation_servo;
-    protected Servo color_servo2;
-    protected Servo rotation_servo2;
     //Instantiate sensors
-    protected ColorSensor sensorColor;
-    protected DistanceSensor sensorDistance;
+    ColorSensor blueSensorColor;
+    ColorSensor redSensorColor;
+
+
+
 
     //Initlize encoder variables
     protected double COUNTS_PER_MOTOR_REV = 1120;    // eg: Andymark Encoder
@@ -102,12 +104,10 @@ public abstract class Autonomous extends LinearOpMode {
         //Initialize the servos
         color_servo = hardwareMap.get(Servo.class, "jewel_servo");
         rotation_servo = hardwareMap.get(Servo.class, "jewel_rotation_servo");
-        //Left Side
-        color_servo2 = hardwareMap.get(Servo.class, "jewel_servo2");
-        rotation_servo2 = hardwareMap.get(Servo.class, "jewel_rotation_servo2");
-        //Finally initialize the sensors
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+        //Initialize sensors
+        blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
+        redSensorColor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "RedColorSensor");
+
 
         //Initialize Vuforia extension
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -425,5 +425,16 @@ public abstract class Autonomous extends LinearOpMode {
                 }
             }
         }
+    }
+
+    /**
+     * Displays the red, green, and blue values on telemetry.
+     * <b>Note: </b> this method does not call telemetry.update()
+     *
+     */
+    protected void debugColorSensor(ColorSensor sensor){
+        telemetry.addData("Red  ", blueSensorColor.red());
+        telemetry.addData("Green", blueSensorColor.green());
+        telemetry.addData("Blue ", blueSensorColor.blue());
     }
 }
