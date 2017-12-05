@@ -33,18 +33,14 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import android.graphics.Color;
-import java.util.concurrent.TimeUnit;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import java.util.Locale;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-import java.util.concurrent.TimeUnit;
+import com.qualcomm.robotcore.util.ElapsedTime;
+
 
 
 /**
@@ -59,10 +55,10 @@ import java.util.concurrent.TimeUnit;
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
-@Autonomous(name = "Blue Jewell Auto", group = "Linear Opmode")
+@Autonomous(name = "Red Jewell Auto", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
 
-public class SimpleBlueAuto extends LinearOpMode {
+public class SimpleRedAuto extends LinearOpMode {
 
     /* Declare OpMode members. */
     private ElapsedTime runtime = new ElapsedTime();
@@ -75,6 +71,7 @@ public class SimpleBlueAuto extends LinearOpMode {
     Servo rotation_servo;
     ColorSensor blueSensorColor;
     ColorSensor redSensorColor;
+
 
     @Override
     public void runOpMode() {
@@ -92,7 +89,7 @@ public class SimpleBlueAuto extends LinearOpMode {
         color_servo = hardwareMap.get(Servo.class, "jewelServo");
         rotation_servo = hardwareMap.get(Servo.class, "jewelRotationServo");
         blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
-        //sensorDistance = hardwareMap.get(DistanceSensor.class, "BlueColorDistance");
+        redSensorColor = hardwareMap.get(ColorSensor.class, "RedColorSensor");
         float hsvValues[] = {0F, 0F, 0F};
         // values is a reference to the hsvValues array.
         final float values[] = hsvValues;
@@ -116,13 +113,13 @@ public class SimpleBlueAuto extends LinearOpMode {
         runtime.reset();
 
         while (opModeIsActive()) {
-            Color.RGBToHSV((int) (blueSensorColor.red() * SCALE_FACTOR),
-                    (int) (blueSensorColor.green() * SCALE_FACTOR),
-                    (int) (blueSensorColor.blue() * SCALE_FACTOR),
+            Color.RGBToHSV((int) (redSensorColor.red() * SCALE_FACTOR),
+                    (int) (redSensorColor.green() * SCALE_FACTOR),
+                    (int) (redSensorColor.blue() * SCALE_FACTOR),
                     hsvValues);
-            telemetry.addData("Red  ", blueSensorColor.red());
-            telemetry.addData("Green", blueSensorColor.green());
-            telemetry.addData("Blue ", blueSensorColor.blue());
+            telemetry.addData("Red  ", redSensorColor.red());
+            telemetry.addData("Green", redSensorColor.green());
+            telemetry.addData("Blue ", redSensorColor.blue());
             telemetry.update();
 
 
@@ -131,31 +128,31 @@ public class SimpleBlueAuto extends LinearOpMode {
             rotation_servo.setPosition(.5);
             sleep(2000);
 
-            Color.RGBToHSV((int) (blueSensorColor.red() * SCALE_FACTOR),
-                    (int) (blueSensorColor.green() * SCALE_FACTOR),
-                    (int) (blueSensorColor.blue() * SCALE_FACTOR),
+            Color.RGBToHSV((int) (redSensorColor.red() * SCALE_FACTOR),
+                    (int) (redSensorColor.green() * SCALE_FACTOR),
+                    (int) (redSensorColor.blue() * SCALE_FACTOR),
                     hsvValues);
-            telemetry.addData("Red  ", blueSensorColor.red());
-            telemetry.addData("Green", blueSensorColor.green());
-            telemetry.addData("Blue ", blueSensorColor.blue());
+            telemetry.addData("Red  ", redSensorColor.red());
+            telemetry.addData("Green", redSensorColor.green());
+            telemetry.addData("Blue ", redSensorColor.blue());
             telemetry.update();
 
-            if (blueSensorColor.red() < blueSensorColor.blue() && done == 0) {  // is red // go froward knock red
+            if (redSensorColor.red() > redSensorColor.blue() && done == 0) {  // is red // go froward knock red
                 rotation_servo.setPosition(.2);
                 done = 1;
             }
-            if (blueSensorColor.red() > blueSensorColor.blue() && done == 0) { // not red // go back knock red
+            if (redSensorColor.red() < redSensorColor.blue() && done == 0) { // not red // go back knock red
                 rotation_servo.setPosition(.8);
                 done = 1;
             }
 
-            Color.RGBToHSV((int) (blueSensorColor.red() * SCALE_FACTOR),
-                    (int) (blueSensorColor.green() * SCALE_FACTOR),
-                    (int) (blueSensorColor.blue() * SCALE_FACTOR),
+            Color.RGBToHSV((int) (redSensorColor.red() * SCALE_FACTOR),
+                    (int) (redSensorColor.green() * SCALE_FACTOR),
+                    (int) (redSensorColor.blue() * SCALE_FACTOR),
                     hsvValues);
-            telemetry.addData("Red  ", blueSensorColor.red());
-            telemetry.addData("Green", blueSensorColor.green());
-            telemetry.addData("Blue ", blueSensorColor.blue());
+            telemetry.addData("Red  ", redSensorColor.red());
+            telemetry.addData("Green", redSensorColor.green());
+            telemetry.addData("Blue ", redSensorColor.blue());
             telemetry.addData("Done ", done);
             telemetry.update();
 
