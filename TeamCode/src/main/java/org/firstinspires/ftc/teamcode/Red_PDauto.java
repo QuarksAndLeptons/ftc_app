@@ -85,14 +85,14 @@ public class Red_PDauto extends LinearOpMode {
          * to 'get' must correspond to the names assigned during the robot configuration
          * step (using the FTC Robot Controller app on the phone).
          */
-        leftMotor = hardwareMap.dcMotor.get("left_drive");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
-        leftMotor2 = hardwareMap.dcMotor.get("left_drive2");
-        rightMotor2 = hardwareMap.dcMotor.get("right_drive2");
-        color_servo = hardwareMap.get(Servo.class, "jewel_servo");
-        rotation_servo = hardwareMap.get(Servo.class, "jewel_rotation_servo");
-        sensorColor = hardwareMap.get(ColorSensor.class, "sensor_color_distance");
-        sensorDistance = hardwareMap.get(DistanceSensor.class, "sensor_color_distance");
+        leftMotor = hardwareMap.dcMotor.get("leftFront");
+        rightMotor = hardwareMap.dcMotor.get("rightFront");
+        leftMotor2 = hardwareMap.dcMotor.get("leftRear");
+        rightMotor2 = hardwareMap.dcMotor.get("rightRear");
+        color_servo = hardwareMap.get(Servo.class, "jewelServo");
+        rotation_servo = hardwareMap.get(Servo.class, "jewelRotationServo");
+        sensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
+        //sensorDistance = hardwareMap.get(DistanceSensor.class, "BlueColorDistance");
         float hsvValues[] = {0F, 0F, 0F};
         // values is a reference to the hsvValues array.
         final float values[] = hsvValues;
