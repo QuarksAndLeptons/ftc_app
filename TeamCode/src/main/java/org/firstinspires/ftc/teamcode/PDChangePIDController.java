@@ -7,6 +7,8 @@ import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDCoefficients;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 /**
  * Created by tom on 9/26/17.
  * This assumes that you are using a REV Robotics Expansion Hub
@@ -64,6 +66,12 @@ public class PDChangePIDController extends LinearOpMode {
 
         // display info to user.
         while(opModeIsActive()) {
+            leftMotor.setVelocity(180, AngleUnit.DEGREES);
+            leftMotor2.setVelocity(180, AngleUnit.DEGREES);
+            rightMotor.setVelocity(180, AngleUnit.DEGREES);
+            rightMotor2.setVelocity(180, AngleUnit.DEGREES);
+
+            //Update telemetry for debugging purposes
             telemetry.addData("Runtime", "%.03f", getRuntime());
             telemetry.addData("P,I,D (pidOrigLeft)", "%.04f, %.04f, %.0f",
                     pidOrigLeft.p, pidOrigLeft.i, pidOrigLeft.d);
@@ -78,4 +86,7 @@ public class PDChangePIDController extends LinearOpMode {
             telemetry.update();
         }
     }
+
+
+
 }
