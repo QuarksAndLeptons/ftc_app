@@ -95,7 +95,6 @@ public abstract class Autonomous extends LinearOpMode {
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //Reverse the right motors so all motors move forward when set to a positive speed.
-        //GANG MOTORS NEED REVERSED
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor2.setDirection(DcMotor.Direction.REVERSE);
         //Now initialize the drop motor

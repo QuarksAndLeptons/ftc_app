@@ -41,7 +41,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class SimpleBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
 
-    @Override
+    //@Override
     public void drivetrain() {
 
 

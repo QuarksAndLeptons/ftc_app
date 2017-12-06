@@ -1,36 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 //Import standard FTC libraries
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import java.util.Locale;
-//Import hardware libraries
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
-//Import Gyro
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-
-//Import special FTC-related libraries
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
-
-//Import navigation libraries
-import org.firstinspires.ftc.robotcore.external.navigation.Acceleration;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+
+//Import hardware libraries
+//Import Gyro
+//Import special FTC-related libraries
+//Import navigation libraries
 
 
 @Autonomous(name = "Red_Autonomous", group = "Linear Opmode")
@@ -61,7 +40,7 @@ public class Red_Autonomous extends org.firstinspires.ftc.teamcode.Autonomous
         color_servo.setPosition(.9);
         rotation_servo.setPosition(.45);
         sleep(2000);
-
+/*
         //Knock over the blue ball
         if (sensorColor.red() < sensorColor.blue()) {  // is red // go froward knock red
             rotation_servo.setPosition(.2);

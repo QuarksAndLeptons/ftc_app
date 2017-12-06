@@ -9,7 +9,6 @@ package org.firstinspires.ftc.teamcode;
 //Import standard FTC libraries
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 //Import hardware libraries
 //Import Gyro
@@ -23,47 +22,8 @@ public class Blue_Autonomous extends org.firstinspires.ftc.teamcode.Autonomous {
     //Run this code when the "init" button is pressed
     @Override
     public void runOpMode() {
+//Insert Simple Blue Auto
 
-        //Initializing hardware (inherited from Autonomous)
-        initializeHardware();
-
-        // Wait for the game to start (driver presses PLAY)
-        waitForStart();
-
-        //Reset the runtime.
-        runtime.reset();
-
-        // Move the color sensor to the jewels
-        telemetry.addData("Status", "Reading color of jewel");
-        telemetry.update();
-        color_servo.setPosition(.9);
-        rotation_servo.setPosition(.45);
-        sleep(2000);
-
-        //Knock over the blue ball
-        if (sensorColor.red() < sensorColor.blue()) {  // is red // go froward knock red
-            rotation_servo.setPosition(.2);
-            telemetry.addData("Status", "detected BLUE (moving servo FORWARD)");
-            telemetry.update();
-        } else if (sensorColor.red() > sensorColor.blue()) { // is blue // go back knock red
-            rotation_servo.setPosition(.8);
-            telemetry.addData("Status", "detected RED (moving servo FORWARD)");
-            telemetry.update();
-        }
-        telemetry.update();
-
-        //Wait for the servo to finish its movement
-        sleep(2000);
-        //Reset the servos to retract the sensor
-        color_servo.setPosition(.3);
-        rotation_servo.setPosition(.45);
-
-        //For now we are only driving forward
-        telemetry.addData("Status", "Moving forward");
-        telemetry.update();
-        driveForwardTime(1.2,-1.0) ;
-        telemetry.addData("Status", "Done");
-        telemetry.update();
 
         /*
         //Detect the Vumark

@@ -29,7 +29,7 @@ public class PDChangePIDController extends LinearOpMode {
     DcMotorEx rightMotor2;
 
 
-    public static final double NEW_P = 2.5;
+    public static final double NEW_P = 3.5;
     public static final double NEW_I = 0.0;
     public static final double NEW_D = 0.0;
 
@@ -40,6 +40,9 @@ public class PDChangePIDController extends LinearOpMode {
         rightMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"rightFront");
         leftMotor2 = (DcMotorEx)hardwareMap.get(DcMotor.class,"leftRear");
         rightMotor2 = (DcMotorEx)hardwareMap.get(DcMotor.class,"rightRear");
+
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor2.setDirection(DcMotor.Direction.REVERSE);
 
         // wait for start command.
         waitForStart();
