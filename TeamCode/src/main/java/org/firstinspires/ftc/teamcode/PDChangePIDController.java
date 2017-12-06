@@ -35,10 +35,11 @@ public class PDChangePIDController extends LinearOpMode {
 
     public void runOpMode() {
         // get reference to DC motor.
-        leftMotor = (DcMotorEx)hardwareMap.dcMotor.get("leftFront");
-        rightMotor = (DcMotorEx)hardwareMap.dcMotor.get("rightFront");
-        leftMotor2 = (DcMotorEx)hardwareMap.dcMotor.get("leftRear");
-        rightMotor2 = (DcMotorEx)hardwareMap.dcMotor.get("rightRear");
+
+        leftMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"leftFront");
+        rightMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"rightFront");
+        leftMotor2 = (DcMotorEx)hardwareMap.get(DcMotor.class,"leftRear");
+        rightMotor2 = (DcMotorEx)hardwareMap.get(DcMotor.class,"rightRear");
 
         // wait for start command.
         waitForStart();

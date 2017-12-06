@@ -6,6 +6,9 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -45,11 +48,12 @@ public abstract class Autonomous extends LinearOpMode {
 
     //ROBOT HARDWARE
     //Instantiate chassis motors
-    protected DcMotor leftMotor;
-    protected DcMotor rightMotor;
-    protected DcMotor leftMotor2;
-    protected DcMotor rightMotor2;
-    protected DcMotor dropMotor;
+
+    protected DcMotorEx leftMotor;
+    protected DcMotorEx rightMotor;
+    protected DcMotorEx leftMotor2;
+    protected DcMotorEx rightMotor2;
+    protected DcMotorEx dropMotor;
     //Instantiate servos
     protected Servo color_servo;
     protected Servo rotation_servo;
@@ -78,13 +82,14 @@ public abstract class Autonomous extends LinearOpMode {
 
         //Initialize robot hardware
         //Begin with the chassis
-        leftMotor = hardwareMap.dcMotor.get("leftFront");
-        rightMotor = hardwareMap.dcMotor.get("rightFront");
-        leftMotor2 = hardwareMap.dcMotor.get("leftBack");
-        rightMotor2 = hardwareMap.dcMotor.get("rightBack");
+        leftMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"leftFront");
+        rightMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"rightFront");
+        leftMotor2 = (DcMotorEx)hardwareMap.get(DcMotor.class,"leftRear");
+        rightMotor2 = (DcMotorEx)hardwareMap.get(DcMotor.class,"rightRear");
         //Reset the encoders on the chassis to 0
-        //NOTE: Do not add leftMotor and rightMotor2 because there aren't any encoders on 'em
         leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //Set the motor modes to normal
         leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -92,10 +97,11 @@ public abstract class Autonomous extends LinearOpMode {
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //Reverse the right motors so all motors move forward when set to a positive speed.
+        //GANG MOTORS NEED REVERSED
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor2.setDirection(DcMotor.Direction.REVERSE);
         //Now initialize the drop motor
-        dropMotor = hardwareMap.dcMotor.get("glyphdrop_motor");
+        dropMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"glyphdrop_motor");
         dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //Initialize the servos
         color_servo = hardwareMap.get(Servo.class, "jewel_servo");
@@ -187,6 +193,19 @@ public abstract class Autonomous extends LinearOpMode {
         return String.format(Locale.getDefault(), "%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 
+    /**
+     * Basic Drivetrain FIX ME
+     *
+     * @param time  the amount of time to move forward in <b>seconds</b>
+     * @param power the power of each of the motors
+     */
+    protected void drivetrain (double time, double power) {
+        leftMotor.setVelocity(power);
+        rightMotor.setVelocity(power);
+        leftMotor2.setVelocity(power);
+        rightMotor2.setVelocity(power);
+
+    }
 
     /**
      * Move the forward for a certain amount of time

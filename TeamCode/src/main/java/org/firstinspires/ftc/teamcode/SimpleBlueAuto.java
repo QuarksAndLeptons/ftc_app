@@ -42,6 +42,10 @@ public class SimpleBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
 
     @Override
+    public void drivetrain() {
+
+
+    }
     public void runOpMode() {
 
         //Initalize the hardware

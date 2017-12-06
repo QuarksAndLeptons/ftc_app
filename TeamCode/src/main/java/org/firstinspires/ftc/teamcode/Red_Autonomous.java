@@ -86,7 +86,7 @@ public class Red_Autonomous extends org.firstinspires.ftc.teamcode.Autonomous
         driveForwardTime(1.2,1.0);
         telemetry.addData("Status", "Done");
         telemetry.update();
-        /*
+
         //Detect the Vumark
         telemetry.addData("Status", "VuMarking");
         telemetry.update();
