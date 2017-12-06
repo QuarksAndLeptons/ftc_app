@@ -6,9 +6,7 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -200,10 +198,10 @@ public abstract class Autonomous extends LinearOpMode {
      * @param power the power of each of the motors
      */
     protected void drivetrain (double time, double power) {
-        leftMotor.setVelocity(power);
-        rightMotor.setVelocity(power);
-        leftMotor2.setVelocity(power);
-        rightMotor2.setVelocity(power);
+        leftMotor.setVelocity(180, AngleUnit.DEGREES);
+        leftMotor2.setVelocity(180, AngleUnit.DEGREES);
+        rightMotor.setVelocity(180, AngleUnit.DEGREES);
+        rightMotor2.setVelocity(180, AngleUnit.DEGREES);
 
     }
 
