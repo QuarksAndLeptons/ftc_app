@@ -533,8 +533,8 @@ public abstract class Autonomous extends LinearOpMode {
                     rightSpeed /= max;
                 }
 
-                leftDrive(leftSpeed));
-                rightDrive(rightSpeed));
+                leftDrive(leftSpeed);
+                rightDrive(rightSpeed);
 
                 // Display drive status for the driver.
                 telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
