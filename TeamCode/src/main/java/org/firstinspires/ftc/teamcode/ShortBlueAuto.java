@@ -35,10 +35,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 
-@Autonomous(name = "Long Blue Auto", group = "Linear Opmode")
+@Autonomous(name = "Short Blue Auto", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
 
-public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
+public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
 
     @Override
@@ -90,7 +90,7 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             rotation_servo.setPosition(.47);
 
             driveForwardDistance(32);                               //drive forward
-            CarTurnDegreeDirection(30, "Right");   //turn right
+            CarTurnDegreeDirection(90, "Left");   //turn right
             dropMotor.setTargetPosition(400);                       //lift ramp to drop glyph
             if(dropMotor.isBusy()) dropMotor.setPower(0.1);
             driveForwardTime(.5,-.5);                              //backup
