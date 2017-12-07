@@ -98,8 +98,8 @@ public abstract class Autonomous extends LinearOpMode {
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor2.setDirection(DcMotor.Direction.REVERSE);
         //Now initialize the drop motor
-        //dropMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"glyphdrop_motor");
-        //dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        dropMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"glyphDropMotor");
+        dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //Initialize the servos
         color_servo = hardwareMap.get(Servo.class, "jewelServo");
         rotation_servo = hardwareMap.get(Servo.class, "jewelRotationServo");
