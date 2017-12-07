@@ -24,44 +24,27 @@ import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 
 
-public class Two_PDteleop extends LinearOpMode {
+public class Two_PDteleop extends Autonomous {
 
     //Declare runtime variable
     private ElapsedTime runtime = new ElapsedTime();
 
     //Instantiate hardware links
-    DcMotor leftMotor;
-    DcMotor rightMotor;
-    DcMotor leftMotor2;
-    DcMotor rightMotor2;
-    DcMotor liftMotor;
-    DcMotor dropMotor;
-    Servo color_servo;
-    Servo jewel_rotation_servo;
-    Servo color_servo2;
-    Servo jewel_rotation_servo2;
-    Servo left_intake;
-    Servo right_intake;
-    Orientation angles;
+
     
-    BNO055IMU imu;
+
     public static final double JEWEL_ROTATION_AMOUNT = 0.005;
     
     //Inilize Encoder
 
-            double     COUNTS_PER_MOTOR_REV    = 1120 ;    // eg: TETRIX Motor Encoder
-            double     DRIVE_GEAR_REDUCTION    = 1.0 ;     // This is < 1.0 if geared UP
-            double     WHEEL_DIAMETER_INCHES   = 4.0 ;     // For figuring circumference
-            double     COUNTS_PER_INCH         = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION ) / (WHEEL_DIAMETER_INCHES * 3.1415);
-            double     DRIVE_SPEED             = 0.6;
-            double     TURN_SPEED              = 0.5;
-            
+
     // Gyro
-    
+    private DcMotor liftMotor;
 
 
     //Define opmode
     @Override public void runOpMode() {
+
         //This code runs immediately after the "init" button is pressed.
         //Inform the user that the opmode has been initialized.
         telemetry.addData("Status", "Initialized");
@@ -70,25 +53,18 @@ public class Two_PDteleop extends LinearOpMode {
         //Initialize hardware variables by paring them to motors in
         //"hardwareMap"
         //Begin with the chassis
-        
-        leftMotor = hardwareMap.dcMotor.get("left_drive");
-        leftMotor2 = hardwareMap.dcMotor.get("left_drive2");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
-        rightMotor2 = hardwareMap.dcMotor.get("right_drive2");
-        //Initialize the lifting motors
-        liftMotor = hardwareMap.dcMotor.get("lift_motor");
-        liftMotor.getCurrentPosition();
-        liftMotor.setMode(DcMotor.RunMode.RESET_ENCODERS);
-        
+
+
+
+        liftMotor = hardwareMap.get(DcMotor.class, "liftMotor");
+
+
+        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        dropMotor = hardwareMap.dcMotor.get("glyphdrop_motor");
-        dropMotor.setMode(DcMotor.RunMode.RESET_ENCODERS);
+        dropMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //Initialize servos
-        color_servo = hardwareMap.get(Servo.class, "jewel_servo");
-        jewel_rotation_servo = hardwareMap.get(Servo.class, "jewel_rotation_servo");
-        color_servo2 = hardwareMap.get(Servo.class, "jewel_servo2");
-        jewel_rotation_servo2 = hardwareMap.get(Servo.class, "jewel_rotation_servo2");
+
         //left_intake = hardwareMap.get(Servo.class, "left_intake");
         //right_intake = hardwareMap.get(Servo.class, "right_intake");
         telemetry.addData("Status", "Initializing motors");
@@ -198,14 +174,12 @@ telemetry.addData("Left Trigger", gamepad2.left_trigger );
                 color_servo.setPosition(.3);
             }
             if (gamepad1.a) {
-                jewel_rotation_servo.setPosition(.45);
+                rotation_servo.setPosition(.45);
             }
              if (gamepad2.x) {
-                jewel_rotation_servo.setPosition(.45);
+                 rotation_servo.setPosition(.45);
              }
-            if (gamepad1.a) {
-               // left_intake.setPosition(.45);
-            }
+
             
             //Lifting mechanism
             //Stop the lifting motor if it isn't busy
@@ -263,7 +237,7 @@ telemetry.addData("Left Trigger", gamepad2.left_trigger );
             //add some debug data
             telemetry.addData("Buttons",(gamepad1.a?"A":"-")+(gamepad1.b?"B":"-")+(gamepad1.x?"X":"-")+(gamepad1.y?"Y":"-"));
             telemetry.addData("Dpad",(gamepad1.dpad_left?"L":"-")+(gamepad1.dpad_right?"R":"-")+(gamepad1.dpad_down?"D":"-")+(gamepad1.dpad_up?"U":"-"));
-            telemetry.addData("Servo Position",jewel_rotation_servo.getPosition());
+            telemetry.addData("Servo Position",rotation_servo.getPosition());
             telemetry.addData("Lift Position", liftMotor.getCurrentPosition());
             telemetry.addData("Lift Target", liftMotor.getTargetPosition());
             telemetry.addData("Lift status", liftMotor.isBusy()?"I'm busy":"I got free time.");
