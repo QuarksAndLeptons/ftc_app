@@ -92,7 +92,7 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             gyroDrive(.3,22,360);                               //drive forward
             gyroTurn(.3,30);   //turn right
             dropMotor.setTargetPosition(400);                       //lift ramp to drop glyph
-            if(dropMotor.isBusy()) dropMotor.setPower(0.1);
+            if(dropMotor.isBusy())  dropMotor.setPower(0.1);
             gyroDrive(.3,-5,30);
 
             //Finish code
