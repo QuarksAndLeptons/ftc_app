@@ -89,11 +89,11 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             color_servo.setPosition(.35);
             rotation_servo.setPosition(.47);
 
-            driveForwardDistance(22);                               //drive forward
-            CarTurnDegreeDirection(30, "Right");   //turn right
+            gyroDrive(.3,22,360);                               //drive forward
+            gyroTurn(.3,30);   //turn right
             dropMotor.setTargetPosition(400);                       //lift ramp to drop glyph
             if(dropMotor.isBusy()) dropMotor.setPower(0.1);
-            driveForwardTime(.5,-.5);                   //backup
+            gyroDrive(.3,-5,30);
 
             //Finish code
             sleep(10000);
