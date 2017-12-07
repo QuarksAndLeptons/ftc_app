@@ -90,7 +90,8 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             rotation_servo.setPosition(.47);
 
             driveForwardDistance(32);                               //drive forward
-            CarTurnDegreeDirection(90, "Left");   //turn right
+            //TODO Depreciated method: convert to gyro methods
+            //CarTurnDegreeDirection(90, "Left");   //turn right
             dropMotor.setTargetPosition(400);                       //lift ramp to drop glyph
             if(dropMotor.isBusy()) dropMotor.setPower(0.1);
             driveForwardTime(.5,-.5);                              //backup

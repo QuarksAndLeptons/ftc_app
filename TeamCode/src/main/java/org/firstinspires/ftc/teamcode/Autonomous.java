@@ -71,9 +71,9 @@ public abstract class Autonomous extends LinearOpMode {
     static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
     static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
 
-    static final double     HEADING_THRESHOLD       = 1 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = 0.1;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_COEFF           = 0.15;     // Larger is more responsive, but also less stable
+    static final double     HEADING_THRESHOLD       = 5 ;      // As tight as we can make it with an integer gyro
+    static final double     P_TURN_COEFF            = 2.5;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = 2.5;     // Larger is more responsive, but also less stable
 
     //Initialize Vuforia variables
     VuforiaTrackables relicTrackables;
@@ -158,9 +158,9 @@ public abstract class Autonomous extends LinearOpMode {
     protected void startAdvancedSensing(){
         //Do some calibration and activation
         // Calibrate Gyro
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 40);
         // Start the logging of measured acceleration
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 1000);
+        imu.startAccelerationIntegration(new Position(), new Velocity(), 40);
         //Activate Vuforia
         relicTrackables.activate();
     }
@@ -201,16 +201,18 @@ public abstract class Autonomous extends LinearOpMode {
     }
 
     /**
-     * Basic Drivetrain
-     *
+     * Sets the power of both right motors
      * @param power the power of each of the motors
      */
-
     protected void rightDrive(double power) {
-            rightMotor.setPower(power);
-            rightMotor2.setPower(power);
-        }
+        rightMotor.setPower(power);
+        rightMotor2.setPower(power);
+    }
 
+    /**
+     * Sets the power of both left motors
+     * @param power the power of each of the motors
+     */
     protected void leftDrive(double power) {
         leftMotor.setPower(power);
         leftMotor2.setPower(power);
@@ -233,110 +235,10 @@ public abstract class Autonomous extends LinearOpMode {
         rightMotor2.setPower(0);
     }
 
-    /**
-     * Turn the robot clockwise
-     * @deprecated This code doesn't work yet.  Edit it in the Autonomous class
-     * @param degrees the number of degrees to turn <b>clockwise</b>
-     */
-    protected void turnClockwise(double degrees, double power) {
-        //FIXME get this loop to refresh more frequently
-        angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double angle = angles.firstAngle, newAngle = angle + degrees;
-        while (opModeIsActive() && Math.abs(angle - newAngle) > 0.5) {
-            angle = angles.firstAngle;
-            if (angle > newAngle) {
-                rightMotor.setPower(power);
-                rightMotor2.setPower(power);
-                leftMotor.setPower(-power);
-                leftMotor2.setPower(-power);
-            } else {
-                rightMotor.setPower(-power);
-                rightMotor2.setPower(-power);
-                leftMotor.setPower(power);
-                leftMotor2.setPower(power);
-            }
-            //Update telemetry
-            composeTelemetry();
-            telemetry.addData("angle", angle);
-            telemetry.addData("Degrees", degrees);
-            telemetry.addData("Change", newAngle);
-            telemetry.update();
-        }
-        //Stop motors
-        rightMotor.setPower(0);
-        rightMotor2.setPower(0);
-        leftMotor.setPower(0);
-        leftMotor2.setPower(0);
-        telemetry.addData("Status", "Done turning");
-        telemetry.update();
-    }
-
-    /**
-     * Turn the robot clockwise
-     * @deprecated This code doesn't work yet.  Edit it in the Autonomous class
-     * @param degrees the number of degrees to turn <b>clockwise</b>
-     */
-    private void turnClockwise(double degrees) {
-        turnClockwise(degrees, 0.2);
-    }
-
-
-    /**
-     * Turn the robot a certain number of degrees in a certain direction
-     * @param degrees
-     * @param direction a string, either "Left" or "Right")
-     */
-    public void CarTurnDegreeDirection(double degrees, String direction) {
-
-        double angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle)), change = 0;
-
-        if (direction.equals("Right")){
-            change = angle - degrees;
-        }
-        if (direction.equals("Left")){
-            change = angle + degrees;
-        }
-        if (change < -180) {
-            change = change + 360;
-        }
-        if (change > 179.9) {
-            change = change - 360;
-        }
-        while (Math.abs(change-angle)>2 && opModeIsActive()) {
-            telemetry.addData("Angle", angle);
-            telemetry.addData("Deg", degrees);
-
-            telemetry.update();
-            telemetry.addData("Change", change);
-            angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-            if (angle > change) {
-                angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-                rightMotor.setPower(-.1);
-                rightMotor2.setPower(-.1);
-                leftMotor.setPower(.1);
-                leftMotor2.setPower(.1);
-            }
-            else {
-                angle = Double.parseDouble(formatAngle(angles.angleUnit, angles.firstAngle));
-                rightMotor.setPower(.1);
-                rightMotor2.setPower(.1);
-                leftMotor.setPower(-.1);
-                leftMotor2.setPower(-.1);
-            }
-        }
-
-        rightMotor.setPower(0);
-        rightMotor2.setPower(0);
-        leftMotor.setPower(0);
-        leftMotor2.setPower(0);
-        telemetry.addData("A", "Return");
-        telemetry.update();
-    }
-
 
     /**
      * Runs the chassis motors at a given power for a certain number of inches
-     * @Depreciated Use moveForwardInches()
+     * @Depreciated Use driveForwardInches()
      * @param speed the motor power
      * @param leftInches number of inches for the left motor to turn
      * @param rightInches number of inches for the right motor to turn
@@ -473,8 +375,8 @@ public abstract class Autonomous extends LinearOpMode {
      *                   If a relative angle is required, add/subtract from current heading.
      */
     protected void gyroDrive ( double speed,
-                            double distance,
-                            double angle) {
+                               double distance,
+                               double angle) {
 
         int     newLeftTarget;
         int     newRightTarget;
@@ -614,7 +516,7 @@ public abstract class Autonomous extends LinearOpMode {
      * @param PCoeff    Proportional Gain coefficient
      * @return
      */
-    boolean onHeading(double speed, double angle, double PCoeff) {
+    private boolean onHeading(double speed, double angle, double PCoeff) {
         double   error ;
         double   steer ;
         boolean  onTarget = false ;
@@ -632,8 +534,8 @@ public abstract class Autonomous extends LinearOpMode {
         }
         else {
             steer = getSteer(error, PCoeff);
-            rightSpeed  = speed * steer;
-            leftSpeed   = -rightSpeed;
+            leftSpeed  = speed * steer;
+            rightSpeed   = -leftSpeed;
         }
 
         // Send desired speeds to motors.
@@ -654,7 +556,7 @@ public abstract class Autonomous extends LinearOpMode {
      * @return  error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
      *          +ve error means the robot should turn LEFT (CCW) to reduce error.
      */
-    public double getError(double targetAngle) {
+    private double getError(double targetAngle) {
 
         double robotError;
 
@@ -671,9 +573,8 @@ public abstract class Autonomous extends LinearOpMode {
      * @param PCoeff  Proportional Gain Coefficient
      * @return
      */
-    public double getSteer(double error, double PCoeff) {
+    private double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
     }
-
-    }
+}
 
