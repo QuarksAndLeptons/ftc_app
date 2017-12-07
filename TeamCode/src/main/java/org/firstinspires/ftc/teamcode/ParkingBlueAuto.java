@@ -35,10 +35,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 
-@Autonomous(name = "Blue Jewell Auto", group = "Linear Opmode")
+@Autonomous(name = "Blue Parking Auto", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
 
-public class SimpleBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
+public class ParkingBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
 
     @Override
@@ -88,6 +88,8 @@ public class SimpleBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             sleep(2000);
             color_servo.setPosition(.35);
             rotation_servo.setPosition(.47);
+
+            driveForwardDistance(32);
 
 
             //Finish code

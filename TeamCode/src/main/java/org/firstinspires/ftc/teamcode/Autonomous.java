@@ -98,11 +98,11 @@ public abstract class Autonomous extends LinearOpMode {
         rightMotor.setDirection(DcMotor.Direction.REVERSE);
         rightMotor2.setDirection(DcMotor.Direction.REVERSE);
         //Now initialize the drop motor
-        dropMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"glyphdrop_motor");
-        dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //dropMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"glyphdrop_motor");
+        //dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //Initialize the servos
-        color_servo = hardwareMap.get(Servo.class, "jewel_servo");
-        rotation_servo = hardwareMap.get(Servo.class, "jewel_rotation_servo");
+        color_servo = hardwareMap.get(Servo.class, "jewelServo");
+        rotation_servo = hardwareMap.get(Servo.class, "jewelRotationServo");
         //Initialize sensors
         blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
         redSensorColor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "RedColorSensor");
@@ -196,11 +196,15 @@ public abstract class Autonomous extends LinearOpMode {
      * @param time  the amount of time to move forward in <b>seconds</b>
      * @param power the power of each of the motors
      */
-    protected void drivetrain (double time, double power) {
+
+    protected void rightDrive() {
+            rightMotor.setVelocity(180, AngleUnit.DEGREES);
+            rightMotor2.setVelocity(180, AngleUnit.DEGREES);
+        }
+
+    protected void leftDrive() {
         leftMotor.setVelocity(180, AngleUnit.DEGREES);
         leftMotor2.setVelocity(180, AngleUnit.DEGREES);
-        rightMotor.setVelocity(180, AngleUnit.DEGREES);
-        rightMotor2.setVelocity(180, AngleUnit.DEGREES);
 
     }
 
@@ -391,16 +395,16 @@ public abstract class Autonomous extends LinearOpMode {
      */
     public void driveForwardDistance(double distance) {
         int iterations = 0;
-        long newLeftTarget = leftMotor.getCurrentPosition() + (long) (distance * COUNTS_PER_INCH);
-        long newRightTarget = rightMotor2.getCurrentPosition() + (long) (distance * COUNTS_PER_INCH);
+        long newLeftTarget = leftMotor2.getCurrentPosition() + (long) (distance * COUNTS_PER_INCH);
+        long newRightTarget = rightMotor.getCurrentPosition() + (long) (distance * COUNTS_PER_INCH);
         boolean leftIsMoving = true, rightIsMoving = true;
 
         while ((leftIsMoving||rightIsMoving) && opModeIsActive()){
             telemetry.addData("Status", "Driving forward " + distance + " inches");
-            telemetry.addData("Left Motor Position", leftMotor.getCurrentPosition());
+            telemetry.addData("Left Motor Position", leftMotor2.getCurrentPosition());
             telemetry.addData("Left Motor Speed", leftMotor.getPowerFloat());
-            telemetry.addData("Right Motor Position", rightMotor2.getCurrentPosition());
-            telemetry.addData("Right Motor Speed", rightMotor2.getPowerFloat());
+            telemetry.addData("Right Motor Position", rightMotor.getCurrentPosition());
+            telemetry.addData("Right Motor Speed", rightMotor.getPowerFloat());
             telemetry.addData("Iterations", ++iterations);
             if(leftIsMoving){ //Are the left motors moving
                 //Check if the left motors are done moving

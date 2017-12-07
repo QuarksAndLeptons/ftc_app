@@ -35,10 +35,10 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 
-@Autonomous(name = "Blue Jewell Auto", group = "Linear Opmode")
+@Autonomous(name = "Red Parking Auto", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
 
-public class SimpleBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
+public class ParkingRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
 
     @Override
@@ -64,7 +64,7 @@ public class SimpleBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         //The start button has been pressed.
         while (opModeIsActive() && done == false) {
 
-            debugColorSensor(blueSensorColor);
+            debugColorSensor(redSensorColor);
             telemetry.update();
 
             color_servo.setPosition(1);
@@ -72,13 +72,13 @@ public class SimpleBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             sleep(2000);
 
 
-            debugColorSensor(blueSensorColor);
+            debugColorSensor(redSensorColor);
             telemetry.update();
 
-            if (blueSensorColor.red() < blueSensorColor.blue()) {  // is red // go froward knock red
+            if (redSensorColor.red() > redSensorColor.blue()) {  // is blue // go forward knock blue
                 rotation_servo.setPosition(.2);
             }
-            if (blueSensorColor.red() > blueSensorColor.blue()) { // not red // go back knock red
+            if (redSensorColor.red() < redSensorColor.blue()) { // not blue // go back knock blue
                 rotation_servo.setPosition(.8);
             }
 
@@ -89,12 +89,14 @@ public class SimpleBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             color_servo.setPosition(.35);
             rotation_servo.setPosition(.47);
 
+            driveForwardDistance(32);
+
 
             //Finish code
             sleep(10000);
             done = true;
         }
-        debugColorSensor(blueSensorColor);
+        debugColorSensor(redSensorColor);
         telemetry.addData("Status", "Done");
         telemetry.update();
     }

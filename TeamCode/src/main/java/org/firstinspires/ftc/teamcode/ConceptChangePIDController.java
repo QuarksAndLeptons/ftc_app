@@ -31,14 +31,8 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
  * supports the extended motor functions, but other controllers (such as the
  * Modern Robotics and Hitechnic DC Motor Controllers) do not.
  */
-public void rightDrive
 
-        rightMotor.setVelocity(180, AngleUnit.DEGREES);
-        rightMotor2.setVelocity(180, AngleUnit.DEGREES);
 
-public void leftDrive
-        leftMotor.setVelocity(180, AngleUnit.DEGREES);
-        leftMotor2.setVelocity(180, AngleUnit.DEGREES);
 
 
 @Autonomous(name="Concept: Change PID Controller Lange", group = "Examples")
@@ -68,12 +62,12 @@ public class ConceptChangePIDController extends LinearOpMode {
         // get a reference to the motor controller and cast it as an extended functionality controller.
         // we assume it's a REV Robotics Expansion Hub (which supports the extended controller functions).
         DcMotorControllerEx motorControllerExL = (DcMotorControllerEx) leftMotor.getController();
-        DcMotorControllerEx  motorControllerExR= (DcMotorControllerEx) rightMotor.getController();
+        DcMotorControllerEx motorControllerExR = (DcMotorControllerEx) rightMotor.getController();
 
 
         // get the port number of our configured motor.
         int motorIndexL = ((DcMotorEx) leftMotor).getPortNumber();
-        int motorIndexR= ((DcMotorEx) rightMotor).getPortNumber();
+        int motorIndexR = ((DcMotorEx) rightMotor).getPortNumber();
 
         // get the PID coefficients for the RUN_USING_ENCODER  modes.
         PIDCoefficients pidOrigL = motorControllerExL.getPIDCoefficients(motorIndexL, DcMotor.RunMode.RUN_USING_ENCODER);
@@ -92,17 +86,24 @@ public class ConceptChangePIDController extends LinearOpMode {
 
 
         // display info to user.
-        while(opModeIsActive()) {
+        while (opModeIsActive()) {
             telemetry.addData("Runtime", "%.03f", getRuntime());
-            telemetry.addData("P,I,D (origL)", "%.04f, %.04f, %.0f",
-                    pidOrigL.p, pidOrigL.i, pidOrigL.d);
-            telemetry.addData("P,I,D (origR)", "%.04f, %.04f, %.0f",
-                    pidOrigR.p, pidOrigR.i, pidOrigR.d);
-            telemetry.addData("P,I,D (modifiedL)", "%.04f, %.04f, %.04f",
-                    pidModifiedL.p, pidModifiedL.i, pidModifiedL.d);
-            telemetry.addData("P,I,D (modifiedR)", "%.04f, %.04f, %.04f",
-                    pidModifiedR.p, pidModifiedR.i, pidModifiedR.d);
+            telemetry.addData("P,I,D (origL)", "%.04f, %.04f, %.0f", pidOrigL.p, pidOrigL.i, pidOrigL.d);
+            telemetry.addData("P,I,D (origR)", "%.04f, %.04f, %.0f", pidOrigR.p, pidOrigR.i, pidOrigR.d);
+            telemetry.addData("P,I,D (modifiedL)", "%.04f, %.04f, %.04f", pidModifiedL.p, pidModifiedL.i, pidModifiedL.d);
+            telemetry.addData("P,I,D (modifiedR)", "%.04f, %.04f, %.04f", pidModifiedR.p, pidModifiedR.i, pidModifiedR.d);
             telemetry.update();
         }
     }
+
+   /* public void rightDrive() {
+        rightMotor.setVelocity(180, AngleUnit.DEGREES);
+        rightMotor2.setVelocity(180, AngleUnit.DEGREES);
+    }
+
+    public void leftDrive() {
+        leftMotor.setVelocity(180, AngleUnit.DEGREES);
+        leftMotor2.setVelocity(180, AngleUnit.DEGREES);
+    }
+    */
 }
