@@ -68,12 +68,12 @@ public abstract class Autonomous extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.5;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.3;     // Nominal half speed for better accuracy.
 
-    static final double     HEADING_THRESHOLD       = 5 ;      // As tight as we can make it with an integer gyro
+    static final double     HEADING_THRESHOLD       = 2 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = .1;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_COEFF           = .15;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = .1;     // Larger is more responsive, but also less stable
 
     //Initialize Vuforia variables
     VuforiaTrackables relicTrackables;
@@ -95,17 +95,18 @@ public abstract class Autonomous extends LinearOpMode {
         leftMotor2 = (DcMotorEx)hardwareMap.get(DcMotor.class,"leftRear");
         rightMotor2 = (DcMotorEx)hardwareMap.get(DcMotor.class,"rightRear");
         //Reset the encoders on the chassis to 0
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         leftMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         rightMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         //Set the motor modes to normal
         leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //Reverse the right motors so all motors move forward when set to a positive speed.
-        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotorEx.Direction.REVERSE);
         rightMotor2.setDirection(DcMotor.Direction.REVERSE);
         //Now initialize the drop motor
         dropMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"glyphDropMotor");
@@ -229,10 +230,8 @@ public abstract class Autonomous extends LinearOpMode {
         leftDrive(power);
         rightDrive(power);
         sleep((int) (time * 1000.0));
-        leftMotor.setPower(0);
-        rightMotor.setPower(0);
-        leftMotor2.setPower(0);
-        rightMotor2.setPower(0);
+        leftDrive(0);
+        rightDrive(0);
     }
 
 
@@ -403,10 +402,7 @@ public abstract class Autonomous extends LinearOpMode {
 
             // Turn On RUN_TO_POSITION
             leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            leftMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             leftMotor.setPower(speed);
@@ -452,12 +448,6 @@ public abstract class Autonomous extends LinearOpMode {
             // Stop all motion;
             leftDrive(0);
             rightDrive(0);
-
-            // Turn off RUN_TO_POSITION
-            leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            leftMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            rightMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
     }
 

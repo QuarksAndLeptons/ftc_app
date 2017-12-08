@@ -34,6 +34,10 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
+import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
+
 
 @Autonomous(name = "Long Blue Auto", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
@@ -48,7 +52,7 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
         //Initalize the hardware
         initializeHardware();
-/*
+
 
         //Set the initial servo positions
         color_servo.setPosition(.1);
@@ -57,66 +61,111 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         //Wait for start
         telemetry.addData("Status", "Waiting for play button");
         telemetry.update();
-        runtime.reset();
         waitForStart();
 
+        runtime.reset();
 
-        boolean done = false;
-        //The start button has been pressed.
-        while (opModeIsActive() && done == false) {
+        debugColorSensor(blueSensorColor);
+        telemetry.update();
 
-            debugColorSensor(blueSensorColor);
-            telemetry.update();
-
-            color_servo.setPosition(1);
-            rotation_servo.setPosition(.5);
-            sleep(2000);
+        color_servo.setPosition(1);
+        rotation_servo.setPosition(.5);
+        sleep(2000);
 
 
-            debugColorSensor(blueSensorColor);
-            telemetry.update();
+        debugColorSensor(blueSensorColor);
+        telemetry.update();
 
-            if (blueSensorColor.red() < blueSensorColor.blue()) {  // is red // go froward knock red
-                rotation_servo.setPosition(.2);
-            }
-            if (blueSensorColor.red() > blueSensorColor.blue()) { // not red // go back knock red
-                rotation_servo.setPosition(.8);
-            }
+        if (blueSensorColor.red() < blueSensorColor.blue()) {  // is red // go froward knock red
+            rotation_servo.setPosition(.2);
+        }
+        if (blueSensorColor.red() > blueSensorColor.blue()) { // not red // go back knock red
+            rotation_servo.setPosition(.8);
+        }
 
 
-            telemetry.update();
+        telemetry.update();
 
-            sleep(2000);
-            color_servo.setPosition(.35);
-            rotation_servo.setPosition(.47);
-            sleep(2000);
+        sleep(2000);
+        color_servo.setPosition(.35);
+        rotation_servo.setPosition(.47);
+        sleep(2000);
+/*
+
+        RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
+
+        if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
+            telemetry.addData("VuMark", "not visible");
+
+        }
+        else{
+            telemetry.addData("VuMark", "%s visible", vuMark);
+
+
+
+            switch(vuMark.ordinal()){
+                case 1://Left
+
+
+        gyroTurn(TURN_SPEED, -5.0);                // Turn  CCW to -5 Degrees
+        gyroHold(TURN_SPEED, -5.0, 0.5); // Hold -5 Deg heading for a 1/2 second
+        gyroDrive(DRIVE_SPEED, 28,-5);    // Drive FWD 30 inches
+        //gyroHold(TURN_SPEED, -5.0, 0.5); // Hold -5 Deg heading for a 1/2 second
+       dropMotor.setTargetPosition(100);                      //lift ramp to drop glyph
+        if(dropMotor.isBusy()) dropMotor.setPower(.3);
+        sleep(2000);
+        gyroDrive(DRIVE_SPEED, -6,0);
+
+                 //   break;
+                //case 2://Center
+
+        //Center
+        gyroTurn(TURN_SPEED, -15.0);                // Turn  CCW to -15 Degrees
+        gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
+        gyroDrive(DRIVE_SPEED, 29,-15);    // Drive FWD 29 inches
+        gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
+       dropMotor.setTargetPosition(100);                      //lift ramp to drop glyph
+        if(dropMotor.isBusy()) dropMotor.setPower(.3);
+        sleep(2000);
+        gyroDrive(DRIVE_SPEED, -6, -15);
+
 
 */
-            gyroDrive(DRIVE_SPEED, 48.0, 0.0);    // Drive FWD 48 inches
-            gyroTurn( TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
-            gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-            gyroDrive(DRIVE_SPEED, 12.0, -45.0);  // Drive FWD 12 inches at 45 degrees
-            gyroTurn( TURN_SPEED,  45.0);         // Turn  CW  to  45 Degrees
-            gyroHold( TURN_SPEED,  45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
-            gyroTurn( TURN_SPEED,   0.0);         // Turn  CW  to   0 Degrees
-            gyroHold( TURN_SPEED,   0.0, 1.0);    // Hold  0 Deg heading for a 1 second
-            gyroDrive(DRIVE_SPEED,-48.0, 0.0);    // Drive REV 48 inches
-            //gyroDrive(1,48,0);                               //drive forward
-            //gyroTurn(1,-45);   //turn right cw is neg
-            //sleep(2000);
-            //dropMotor.setTargetPosition(400);                       //lift ramp to drop glyph
-            //if(dropMotor.isBusy()) dropMotor.setPower(0.1);
-            //sleep(2000);
-            //gyroDrive(.3,-5,-45);
 
-            //Finish code
-            //sleep(10000);
-            //done = true;
-        }
-       // debugColorSensor(blueSensorColor);
-        //telemetry.addData("Status", "Done");
-        //telemetry.update();
+
+/*
+                    break;
+                case 3://Right
+*/
+        gyroTurn(TURN_SPEED, -30.0);                // Turn  CCW to -25 Degrees
+        gyroHold(TURN_SPEED, -30.0, 0.5); // Hold -25 Deg heading for a 1/2 second
+        gyroDrive(DRIVE_SPEED, 31,-30);    // Drive FWD 29 inches
+        gyroHold(TURN_SPEED, -30.0, 0.5); // Hold -25 Deg heading for a 1/2 second
+       dropMotor.setTargetPosition(100);                      //lift ramp to drop glyph
+        if(dropMotor.isBusy()) dropMotor.setPower(.3);
+        sleep(2000);
+        gyroDrive(DRIVE_SPEED, -6, -30);
+
+/*
+
+                    break;
+                default://Not visible
+                */
+        debugColorSensor(blueSensorColor);
+        telemetry.addData("Status", "Done");
+        telemetry.update();
+
+        //done = true;
     }
+    // debugColorSensor(blueSensorColor);
+    //telemetry.addData("Status", "Done");
+    //telemetry.update();
+
+    String format(OpenGLMatrix transformationMatrix) {
+        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
+}
+    }
+//}
 
 
 

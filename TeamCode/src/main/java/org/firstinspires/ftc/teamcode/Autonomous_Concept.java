@@ -47,8 +47,8 @@ public class Autonomous_Concept extends org.firstinspires.ftc.teamcode.Autonomou
         waitForStart();
 
         runtime.reset();
-
-        driveForwardDistance(15);
+        dropMotor.setTargetPosition(400);                      //lift ramp to drop glyph
+        if(dropMotor.isBusy()) dropMotor.setPower(.3);
     }
 }
 
