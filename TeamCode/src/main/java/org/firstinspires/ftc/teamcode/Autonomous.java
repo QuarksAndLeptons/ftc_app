@@ -72,8 +72,8 @@ public abstract class Autonomous extends LinearOpMode {
     static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 5 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = 2.5;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_COEFF           = 2.5;     // Larger is more responsive, but also less stable
+    static final double     P_TURN_COEFF            = .1;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = .15;     // Larger is more responsive, but also less stable
 
     //Initialize Vuforia variables
     VuforiaTrackables relicTrackables;
@@ -105,8 +105,8 @@ public abstract class Autonomous extends LinearOpMode {
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         //Reverse the right motors so all motors move forward when set to a positive speed.
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        leftMotor2.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor2.setDirection(DcMotor.Direction.REVERSE);
         //Now initialize the drop motor
         dropMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"glyphDropMotor");
         dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -409,8 +409,8 @@ public abstract class Autonomous extends LinearOpMode {
 
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            leftDrive(speed);
-            rightDrive(speed);
+            leftMotor.setPower(speed);
+            rightMotor.setPower(speed);
 
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
@@ -426,7 +426,9 @@ public abstract class Autonomous extends LinearOpMode {
 
                 leftSpeed = speed - steer;
                 rightSpeed = speed + steer;
-
+                telemetry.addData("left: ", leftSpeed );
+                telemetry.addData("right", rightSpeed);
+                telemetry.update();
                 // Normalize speeds if either one exceeds +/- 1.0;
                 max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
                 if (max > 1.0)
@@ -534,8 +536,8 @@ public abstract class Autonomous extends LinearOpMode {
         }
         else {
             steer = getSteer(error, PCoeff);
-            leftSpeed  = speed * steer;
-            rightSpeed   = -leftSpeed;
+            rightSpeed  = speed * steer;
+            leftSpeed   = -rightSpeed;
         }
 
         // Send desired speeds to motors.

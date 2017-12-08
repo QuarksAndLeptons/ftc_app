@@ -48,7 +48,7 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
         //Initalize the hardware
         initializeHardware();
-
+/*
 
         //Set the initial servo positions
         color_servo.setPosition(.1);
@@ -56,6 +56,7 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
         //Wait for start
         telemetry.addData("Status", "Waiting for play button");
+        telemetry.update();
         runtime.reset();
         waitForStart();
 
@@ -88,22 +89,35 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             sleep(2000);
             color_servo.setPosition(.35);
             rotation_servo.setPosition(.47);
+            sleep(2000);
 
-            gyroDrive(.3,22,360);                               //drive forward
-            gyroTurn(.3,30);   //turn right
-            dropMotor.setTargetPosition(400);                       //lift ramp to drop glyph
-            if(dropMotor.isBusy()) dropMotor.setPower(0.1);
-            gyroDrive(.3,-5,30);
+*/
+            gyroDrive(DRIVE_SPEED, 48.0, 0.0);    // Drive FWD 48 inches
+            gyroTurn( TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
+            gyroHold( TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
+            gyroDrive(DRIVE_SPEED, 12.0, -45.0);  // Drive FWD 12 inches at 45 degrees
+            gyroTurn( TURN_SPEED,  45.0);         // Turn  CW  to  45 Degrees
+            gyroHold( TURN_SPEED,  45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
+            gyroTurn( TURN_SPEED,   0.0);         // Turn  CW  to   0 Degrees
+            gyroHold( TURN_SPEED,   0.0, 1.0);    // Hold  0 Deg heading for a 1 second
+            gyroDrive(DRIVE_SPEED,-48.0, 0.0);    // Drive REV 48 inches
+            //gyroDrive(1,48,0);                               //drive forward
+            //gyroTurn(1,-45);   //turn right cw is neg
+            //sleep(2000);
+            //dropMotor.setTargetPosition(400);                       //lift ramp to drop glyph
+            //if(dropMotor.isBusy()) dropMotor.setPower(0.1);
+            //sleep(2000);
+            //gyroDrive(.3,-5,-45);
 
             //Finish code
-            sleep(10000);
-            done = true;
+            //sleep(10000);
+            //done = true;
         }
-        debugColorSensor(blueSensorColor);
-        telemetry.addData("Status", "Done");
-        telemetry.update();
+       // debugColorSensor(blueSensorColor);
+        //telemetry.addData("Status", "Done");
+        //telemetry.update();
     }
 
-}
+
 
 
