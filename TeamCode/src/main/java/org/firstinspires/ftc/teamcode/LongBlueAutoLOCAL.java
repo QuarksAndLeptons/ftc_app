@@ -60,7 +60,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import java.util.Locale;
 
 
-@Autonomous(name = "Long Blue Auto", group = "Linear Opmode")
+@Autonomous(name = "Long Blue Auto Local", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
 
 public class LongBlueAutoLOCAL extends LinearOpMode {
@@ -117,35 +117,23 @@ public class LongBlueAutoLOCAL extends LinearOpMode {
             sleep(2000);
 
 
-            gyroDrive(DRIVE_SPEED, 48.0, 0.0);    // Drive FWD 48 inches
-            gyroTurn(TURN_SPEED, -45.0);         // Turn  CCW to -45 Degrees
+            gyroDrive(DRIVE_SPEED,48,0.0);    // Drive FWD 48 inches
+            gyroTurn(TURN_SPEED, -45.0);                // Turn  CCW to -45 Degrees
             gyroHold(TURN_SPEED, -45.0, 0.5);    // Hold -45 Deg heading for a 1/2 second
-            gyroDrive(DRIVE_SPEED, 12.0, -45.0);  // Drive FWD 12 inches at 45 degrees
-            gyroTurn(TURN_SPEED, 45.0);         // Turn  CW  to  45 Degrees
-            gyroHold(TURN_SPEED, 45.0, 0.5);    // Hold  45 Deg heading for a 1/2 second
-            gyroTurn(TURN_SPEED, 0.0);         // Turn  CW  to   0 Degrees
-            gyroHold(TURN_SPEED, 0.0, 1.0);    // Hold  0 Deg heading for a 1 second
-            gyroDrive(DRIVE_SPEED, -48.0, 0.0);    // Drive REV 48 inches
-            /*
-            gyroDrive(1,48,0);                               //drive forward
+            //dropMotor.setTargetPosition(400);                       //lift ramp to drop glyph
+            //if(dropMotor.isBusy()) dropMotor.setPower(0.1);
+            //sleep(2000);
+            //gyroDrive(.3,-5,-45);
 
-            gyroTurn(1,-45);   //turn right cw is neg
-            sleep(2000);
-            dropMotor.setTargetPosition(400);                       //lift ramp to drop glyph
-            if(dropMotor.isBusy()) dropMotor.setPower(0.1);
-            sleep(2000);
-            gyroDrive(.3,-5,-45);
 
-            Finish code
-            sleep(10000);
             done = true;
         }
         debugColorSensor(blueSensorColor);
         telemetry.addData("Status", "Done");
         telemetry.update();
-        */
+
     }
-}
+
     //Initialize and instantiate vuforia variables
     OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia;
@@ -183,12 +171,12 @@ public class LongBlueAutoLOCAL extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.7;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.2;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.1;     // Nominal half speed for better accuracy.
 
-    static final double     HEADING_THRESHOLD       = 5 ;      // As tight as we can make it with an integer gyro
+    static final double     HEADING_THRESHOLD       = 2 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = .1;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_COEFF           = .15;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = .1;     // Larger is more responsive, but also less stable
 
     //Initialize Vuforia variables
     VuforiaTrackables relicTrackables;
