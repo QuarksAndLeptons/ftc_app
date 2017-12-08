@@ -1,7 +1,8 @@
 package org.firstinspires.ftc.teamcode;
 
 //Import FTC modules
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -10,16 +11,12 @@ import com.qualcomm.robotcore.hardware.Servo;
 //Define as teleop
 @TeleOp(name = "Current Teleoperation", group = "Linear Opmode")
 
-public class Teleop extends LinearOpMode {
+public class Teleop extends org.firstinspires.ftc.teamcode.Autonomous {
 
     //Declare runtime variable
     private ElapsedTime runtime = new ElapsedTime();
 
     //Instantiate hardware links
-    DcMotor leftMotor;
-    DcMotor rightMotor;
-    DcMotor leftMotor2;
-    DcMotor rightMotor2;
     Servo color_servo;
     Servo jewel_rotation_servo;
     public static final double JEWEL_ROTATION_AMOUNT = 0.005;
@@ -33,11 +30,6 @@ public class Teleop extends LinearOpMode {
 
         //Initialize hardware variables by paring them to motors in
         //"hardwareMap"
-        //Begin with the chassis
-        leftMotor = hardwareMap.dcMotor.get("left_drive");
-        leftMotor2 = hardwareMap.dcMotor.get("left_drive2");
-        rightMotor = hardwareMap.dcMotor.get("right_drive");
-        rightMotor2 = hardwareMap.dcMotor.get("right_drive2");
         //Initialize servos
         color_servo = hardwareMap.get(Servo.class, "jewel_servo");
         jewel_rotation_servo = hardwareMap.get(Servo.class, "jewel_rotation_servo");
@@ -59,12 +51,14 @@ public class Teleop extends LinearOpMode {
         while (opModeIsActive()) {
             //Inform the user of the current time
             telemetry.addData("Status", "Run Time: " + runtime.toString());
-
+            // Set Motors to 0
+            leftDrive(0);
+            rightDrive(0);
             //Control the chassis
-            leftMotor.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-            leftMotor2.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-            rightMotor2.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-            rightMotor.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
+            leftDrive((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
+            leftDrive((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
+            rightDrive((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
+            rightDrive((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
             telemetry.addData("Left motor power", leftMotor.getPower());
             telemetry.addData("Right motor power", leftMotor.getPower());
 
@@ -77,7 +71,7 @@ public class Teleop extends LinearOpMode {
                 color_servo.setPosition(0.0);
             }
 
-            if (gamepad1.x&&jewel_rotation_servo.getPosition()>jewel_rotation_servo.MIN_POSITION+JEWEL_ROTATION_AMOUNT) {
+            if (gamepad1.x && jewel_rotation_servo.getPosition() > jewel_rotation_servo.MIN_POSITION+JEWEL_ROTATION_AMOUNT) {
                 jewel_rotation_servo.setPosition(jewel_rotation_servo.getPosition()-JEWEL_ROTATION_AMOUNT);
             }
 
