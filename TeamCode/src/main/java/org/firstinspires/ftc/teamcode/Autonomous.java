@@ -73,7 +73,14 @@ public abstract class Autonomous extends LinearOpMode {
 
     static final double     HEADING_THRESHOLD       = 2 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = .1;     // Larger is more responsive, but also less stable
+    static final double     I_TURN_COEFF            = .1;
+    static final double     D_TURN_COEFF            = .1;
+
     static final double     P_DRIVE_COEFF           = .1;     // Larger is more responsive, but also less stable
+    static final double     I_DRIVE_COEFF           = .1;
+    static final double     D_DRIVE_COEFF           = .1;
+
+
 
     //Initialize Vuforia variables
     VuforiaTrackables relicTrackables;
@@ -567,6 +574,21 @@ public abstract class Autonomous extends LinearOpMode {
      */
     private double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
+
+
+        /* From PID wiki
+        previous_error = 0
+        integral = 0
+    loop:
+      error = setpoint - measured_value
+      integral = integral + error*dt
+      derivative = (error - previous_error)/dt
+      output = Kp*error + Ki*integral + Kd*derivative
+      previous_error = error
+      wait(dt)
+      goto loop
+
+         */
     }
 }
 

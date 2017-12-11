@@ -358,6 +358,19 @@ public class PushbotAutoDriveByGyro_Linear extends LinearOpMode {
      */
     public double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
+
+        /* From PID wiki
+        previous_error = 0
+        integral = 0
+    loop:
+      error = setpoint - measured_value
+      integral = integral + error*dt
+      derivative = (error - previous_error)/dt
+      output = Kp*error + Ki*integral + Kd*derivative
+      previous_error = error
+      wait(dt)
+      goto loop
+         */
     }
 
 }
