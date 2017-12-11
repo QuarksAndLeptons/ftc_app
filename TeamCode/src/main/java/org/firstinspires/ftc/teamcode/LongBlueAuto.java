@@ -1,3 +1,5 @@
+//Add a  timer that says at 25 seconds drop block and back up
+
 /*
 Copyright (c) 2016 Robert Atkinson
 
