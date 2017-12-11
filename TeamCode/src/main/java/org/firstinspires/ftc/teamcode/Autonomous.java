@@ -165,8 +165,6 @@ public abstract class Autonomous extends LinearOpMode {
      */
     protected void startAdvancedSensing(){
         //Do some calibration and activation
-        // Calibrate Gyro
-        imu.startAccelerationIntegration(new Position(), new Velocity(), 40);
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 40);
         //Activate Vuforia
@@ -244,7 +242,7 @@ public abstract class Autonomous extends LinearOpMode {
 
     /**
      * Runs the chassis motors at a given power for a certain number of inches
-     * @Depreciated Use driveForwardInches()
+     * @Depreciated Use driveForwardDistance()
      * @param speed the motor power
      * @param leftInches number of inches for the left motor to turn
      * @param rightInches number of inches for the right motor to turn

@@ -63,6 +63,9 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         telemetry.update();
         waitForStart();
 
+        //Start measuring gyro acceleration and activate Vuforia
+        startAdvancedSensing();
+
         runtime.reset();
 
         debugColorSensor(blueSensorColor);
@@ -90,82 +93,65 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         color_servo.setPosition(.35);
         rotation_servo.setPosition(.47);
         sleep(2000);
-/*
+
 
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
+        telemetry.addData("Identified Vumark", vuMark.name());
+
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "not visible");
+            gyroTurn(TURN_SPEED, -5.0);                // Turn  CCW to -5 Degrees
+            gyroHold(TURN_SPEED, -5.0, 0.5); // Hold -5 Deg heading for a 1/2 second
+            gyroDrive(DRIVE_SPEED, 28, -5);    // Drive FWD 30 inches
+            //gyroHold(TURN_SPEED, -5.0, 0.5); // Hold -5 Deg heading for a 1/2 second
+            dropMotor.setTargetPosition(100);                      //lift ramp to drop glyph
+            if (dropMotor.isBusy()) dropMotor.setPower(.3);
+            sleep(2000);
+            gyroDrive(DRIVE_SPEED, -6, 0);
 
-        }
-        else{
+        } else {
             telemetry.addData("VuMark", "%s visible", vuMark);
-
-
-
-            switch(vuMark.ordinal()){
-                case 1://Left
-
-
-        gyroTurn(TURN_SPEED, -5.0);                // Turn  CCW to -5 Degrees
-        gyroHold(TURN_SPEED, -5.0, 0.5); // Hold -5 Deg heading for a 1/2 second
-        gyroDrive(DRIVE_SPEED, 28,-5);    // Drive FWD 30 inches
-        //gyroHold(TURN_SPEED, -5.0, 0.5); // Hold -5 Deg heading for a 1/2 second
-       dropMotor.setTargetPosition(100);                      //lift ramp to drop glyph
-        if(dropMotor.isBusy()) dropMotor.setPower(.3);
-        sleep(2000);
-        gyroDrive(DRIVE_SPEED, -6,0);
-
-                 //   break;
-                //case 2://Center
-
-        //Center
-        gyroTurn(TURN_SPEED, -15.0);                // Turn  CCW to -15 Degrees
-        gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-        gyroDrive(DRIVE_SPEED, 29,-15);    // Drive FWD 29 inches
-        gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-       dropMotor.setTargetPosition(100);                      //lift ramp to drop glyph
-        if(dropMotor.isBusy()) dropMotor.setPower(.3);
-        sleep(2000);
-        gyroDrive(DRIVE_SPEED, -6, -15);
-
-
-*/
-
-
-/*
+            switch (vuMark.ordinal()) {
+                case 1:
+                    gyroTurn(TURN_SPEED, -5.0);                // Turn  CCW to -5 Degrees
+                    gyroHold(TURN_SPEED, -5.0, 0.5); // Hold -5 Deg heading for a 1/2 second
+                    gyroDrive(DRIVE_SPEED, 28, -5);    // Drive FWD 30 inches
+                    //gyroHold(TURN_SPEED, -5.0, 0.5); // Hold -5 Deg heading for a 1/2 second
+                    dropMotor.setTargetPosition(100);                      //lift ramp to drop glyph
+                    if (dropMotor.isBusy()) dropMotor.setPower(.3);
+                    sleep(2000);
+                    gyroDrive(DRIVE_SPEED, -6, 0);
                     break;
+
+                case 2://Center
+                    gyroTurn(TURN_SPEED, -15.0);                // Turn  CCW to -15 Degrees
+                    gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
+                    gyroDrive(DRIVE_SPEED, 29, -15);    // Drive FWD 29 inches
+                    gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
+                    dropMotor.setTargetPosition(100);                      //lift ramp to drop glyph
+                    while (dropMotor.isBusy()) dropMotor.setPower(0.6);
+                    sleep(2000);
+                    gyroDrive(DRIVE_SPEED, -6, -15);
+                    break;
+
                 case 3://Right
-*/
-        gyroTurn(TURN_SPEED, -30.0);                // Turn  CCW to -25 Degrees
-        gyroHold(TURN_SPEED, -30.0, 0.5); // Hold -25 Deg heading for a 1/2 second
-        gyroDrive(DRIVE_SPEED, 31,-30);    // Drive FWD 29 inches
-        gyroHold(TURN_SPEED, -30.0, 0.5); // Hold -25 Deg heading for a 1/2 second
-       dropMotor.setTargetPosition(100);                      //lift ramp to drop glyph
-        if(dropMotor.isBusy()) dropMotor.setPower(.3);
-        sleep(2000);
-        gyroDrive(DRIVE_SPEED, -6, -30);
+                    gyroTurn(TURN_SPEED, -30.0);                // Turn  CCW to -25 Degrees
+                    gyroHold(TURN_SPEED, -30.0, 0.5); // Hold -25 Deg heading for a 1/2 second
+                    gyroDrive(DRIVE_SPEED, 31, -30);    // Drive FWD 29 inches
+                    gyroHold(TURN_SPEED, -30.0, 0.5); // Hold -25 Deg heading for a 1/2 second
+                    dropMotor.setTargetPosition(100);               //lift ramp to drop glyph
+                    while (dropMotor.isBusy()) dropMotor.setPower(.5);
+                    sleep(2000);
+                    gyroDrive(DRIVE_SPEED, -6, -30);
+            }
 
-/*
-
-                    break;
-                default://Not visible
-                */
-        debugColorSensor(blueSensorColor);
-        telemetry.addData("Status", "Done");
-        telemetry.update();
-
-        //done = true;
+            debugColorSensor(blueSensorColor);
+            telemetry.addData("Status", "Done");
+            telemetry.update();
+        }
     }
-    // debugColorSensor(blueSensorColor);
-    //telemetry.addData("Status", "Done");
-    //telemetry.update();
-
-    String format(OpenGLMatrix transformationMatrix) {
-        return (transformationMatrix != null) ? transformationMatrix.formatAsTransform() : "null";
 }
-    }
-//}
 
 
 
