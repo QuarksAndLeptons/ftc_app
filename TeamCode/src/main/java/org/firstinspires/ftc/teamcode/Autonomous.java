@@ -68,10 +68,10 @@ public abstract class Autonomous extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.5;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.3;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.4;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.4;     // Nominal half speed for better accuracy.
 
-    static final double     HEADING_THRESHOLD       = 2 ;      // As tight as we can make it with an integer gyro
+    static final double     HEADING_THRESHOLD       = 2.5 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = .1;     // Larger is more responsive, but also less stable
     static final double     I_TURN_COEFF            = .1;
     static final double     D_TURN_COEFF            = .1;
@@ -130,7 +130,7 @@ public abstract class Autonomous extends LinearOpMode {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         VuforiaLocalizer.Parameters parametersV = new VuforiaLocalizer.Parameters(cameraMonitorViewId);
         parametersV.vuforiaLicenseKey = "AfRvW7T/////AAAAGSZSz12Y5EPmopiqX9Cc17EX1TB9P/jfFGOFM0F4JDpeOV7v14oYyRCIzW09fiRPCvR2ivZcx3tHGuJTENamTxdwxZYSE72C9xuk7pmCjFeP5wfD3zF7bgYCrcVKk6Piahys8ccRRg93Dw4tC0kqkwrW5iz+u1x6+o6CctbGc8nxY3AzaH3W9HTU+QeGLv1xAx05YFOHwSgzNn9mZJYu2rYu2pBdKmb2Y918AlOwEC8QvbSARqI4aCKQle+Nplm/dBTFWO1p6sBIA8A7HHeb2vKcwHfkD10HEzDsZYuQNVxERAJ+7hfmmRLHLmtQJqXTWsQ6mMlKruGtm+s8m+4LhIEZy3dHnX4131J4bvSz1V6f";
-        parametersV.cameraDirection = VuforiaLocalizer.CameraDirection.FRONT; //Set camera
+        parametersV.cameraDirection = VuforiaLocalizer.CameraDirection.BACK; //Set camera
         vuforia = ClassFactory.createVuforiaLocalizer(parametersV);
         //Get the assets for Vuforia
         relicTrackables = vuforia.loadTrackablesFromAsset("RelicVuMark");
@@ -231,7 +231,7 @@ public abstract class Autonomous extends LinearOpMode {
      * @param time  the amount of time to move forward in <b>seconds</b>
      * @param power the power of each of the motors
      */
-    protected void driveForwardTime(double time, double power) {
+    protected void driveTime(double time, double power) {
         leftDrive(power);
         rightDrive(power);
         sleep((int) (time * 1000.0));

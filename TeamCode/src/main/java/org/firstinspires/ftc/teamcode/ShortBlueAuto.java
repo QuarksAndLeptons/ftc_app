@@ -94,7 +94,7 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             //CarTurnDegreeDirection(90, "Left");   //turn right
             dropMotor.setTargetPosition(400);                       //lift ramp to drop glyph
             if(dropMotor.isBusy()) dropMotor.setPower(0.1);
-            driveForwardTime(.5,-.5);                              //backup
+            driveTime(.5,-.5);                              //backup
 
             //Finish code
             sleep(10000);
