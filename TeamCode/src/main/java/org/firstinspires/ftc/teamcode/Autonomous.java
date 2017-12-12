@@ -68,11 +68,11 @@ public abstract class Autonomous extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.4;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 0.4;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.2;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = 0.2;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 2.5 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = .1;     // Larger is more responsive, but also less stable
+    static final double     P_TURN_COEFF            = .05;     // Larger is more responsive, but also less stable
     static final double     I_TURN_COEFF            = .1;
     static final double     D_TURN_COEFF            = .1;
 
@@ -572,8 +572,6 @@ public abstract class Autonomous extends LinearOpMode {
      */
     private double getSteer(double error, double PCoeff) {
         return Range.clip(error * PCoeff, -1, 1);
-
-
         /* From PID wiki
         previous_error = 0
         integral = 0
@@ -585,8 +583,22 @@ public abstract class Autonomous extends LinearOpMode {
       previous_error = error
       wait(dt)
       goto loop
-
          */
+    }
+
+    /**
+     * Sets the power of the drop motor to a certain value and stops the autonomous
+     * program until the encoder reaches its target position, the method times out, or
+     * the opmode is no longer active
+     * @param newEncoderPosition the new encoder position in encoder ticks
+     * @param power the power of the motor
+     * @param timeout the amount of seconds to wait before giving up
+     */
+    protected void moveDropMotorTo(int newEncoderPosition, double power, double timeout){
+        double timeoutTime = runtime.seconds() + timeout;
+        dropMotor.setTargetPosition(newEncoderPosition);
+        while (dropMotor.isBusy() && opModeIsActive() && runtime.seconds() < timeoutTime) dropMotor.setPower(power);
+        dropMotor.setPower(0.0);
     }
 }
 
