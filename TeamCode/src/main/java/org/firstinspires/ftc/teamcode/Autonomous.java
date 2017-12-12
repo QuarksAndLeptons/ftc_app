@@ -76,7 +76,7 @@ public abstract class Autonomous extends LinearOpMode {
     static final double     I_TURN_COEFF            = .1;
     static final double     D_TURN_COEFF            = .1;
 
-    static final double     P_DRIVE_COEFF           = .1;     // Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = .05;     // Larger is more responsive, but also less stable
     static final double     I_DRIVE_COEFF           = .1;
     static final double     D_DRIVE_COEFF           = .1;
 
@@ -406,8 +406,10 @@ public abstract class Autonomous extends LinearOpMode {
             rightMotor2.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
-            leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            rightMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            leftMotor.setTargetPositionTolerance(100);
+            rightMotor.setTargetPositionTolerance(100);
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
             leftMotor.setPower(speed);

@@ -82,11 +82,11 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             telemetry.addData("VuMark", "not visible");
             gyroTurn(TURN_SPEED, -2.0);                // Turn  CCW to -5 Degrees
             gyroHold(TURN_SPEED, -2.0, 0.5); // Hold -5 Deg heading for a 1/2 second
-            gyroDrive(DRIVE_SPEED, 27, -5);    // Drive FWD 30 inches
+            gyroDrive(DRIVE_SPEED, 28, -5);    // Drive FWD 30 inches
             gyroHold(TURN_SPEED, -2.0, 0.5); // Hold -5 Deg heading for a 1/2 second
             moveDropMotorTo(300, 0.6, 3.0); //Drop a block
             sleep(2000);
-            gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
+            //gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
             gyroDrive(DRIVE_SPEED, -3, 180);    // Drive FWD 30 inches
 
         } else {
@@ -95,33 +95,33 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                 case 1:
                     gyroTurn(TURN_SPEED, -2.0);                // Turn  CCW to -5 Degrees
                     gyroHold(TURN_SPEED, -2.0, 0.5); // Hold -5 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 27, -5);    // Drive FWD 30 inches
+                    gyroDrive(DRIVE_SPEED, 28, -5);    // Drive FWD 30 inches
                     gyroHold(TURN_SPEED, -2.0, 0.5); // Hold -5 Deg heading for a 1/2 second
                     moveDropMotorTo(300, 0.6, 3.0); //Drop a block
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
+                   // gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
                     gyroDrive(DRIVE_SPEED, -3, 180);    // Drive FWD 30 inches
                     break;
 
                 case 2://Center
                     gyroTurn(TURN_SPEED, -15.0);                // Turn  CCW to -15 Degrees
                     gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 28, -15);    // Drive FWD 29 inches
+                    gyroDrive(DRIVE_SPEED, 29, -15);    // Drive FWD 29 inches
                     gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
                     moveDropMotorTo(300, 0.6, 3.0); //Drop a block
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
+              //      gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
                     gyroDrive(DRIVE_SPEED, -3, 180);    // Drive FWD 29 inches
                     break;
 
                 case 3://Right
                     gyroTurn(TURN_SPEED, -30.0);                // Turn  CCW to -25 Degrees
                     gyroHold(TURN_SPEED, -30.0, 0.5); // Hold -25 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 30, -30);    // Drive FWD 29 inches
+                    gyroDrive(DRIVE_SPEED, 31, -30);    // Drive FWD 29 inches
                     gyroHold(TURN_SPEED, -30.0, 0.5); // Hold -25 Deg heading for a 1/2 second
                     moveDropMotorTo(300, 0.6, 3.0); //Drop a block
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
+                //    gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
                     gyroDrive(DRIVE_SPEED, -3, 180);    // Drive FWD 29 inches
                     break;
 
