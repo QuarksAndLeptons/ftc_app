@@ -72,7 +72,7 @@ public abstract class Autonomous extends LinearOpMode {
     static final double     TURN_SPEED              = 0.2;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 2.5 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = .05;     // Larger is more responsive, but also less stable
+    static final double     P_TURN_COEFF            = .1;     // Larger is more responsive, but also less stable
     static final double     I_TURN_COEFF            = .1;
     static final double     D_TURN_COEFF            = .1;
 

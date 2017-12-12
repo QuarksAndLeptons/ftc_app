@@ -82,7 +82,7 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             telemetry.addData("VuMark", "not visible");
             gyroTurn(TURN_SPEED, -2.0);                // Turn  CCW to -5 Degrees
             gyroHold(TURN_SPEED, -2.0, 0.5); // Hold -5 Deg heading for a 1/2 second
-            gyroDrive(DRIVE_SPEED, 28, -5);    // Drive FWD 30 inches
+            gyroDrive(DRIVE_SPEED, 28, -2);    // Drive FWD 30 inches
             gyroHold(TURN_SPEED, -2.0, 0.5); // Hold -5 Deg heading for a 1/2 second
             moveDropMotorTo(300, 0.6, 3.0); //Drop a block
             sleep(2000);
