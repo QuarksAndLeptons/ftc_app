@@ -94,7 +94,7 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                 case 1:
                     gyroTurn(TURN_SPEED, 28.0);                // Turn  CCW to -25 Degrees
                     gyroHold(TURN_SPEED, 28.0, 0.5); // Hold -25 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 31, 28);    // Drive FWD 29 inches
+                    gyroDrive(DRIVE_SPEED, 32, 28);    // Drive FWD 29 inches
                     gyroHold(TURN_SPEED, 28.0, 0.5); // Hold -25 Deg heading for a 1/2 second
                     moveDropMotorTo(300, 0.6, 3.0); //Drop a block
                     sleep(2000);
