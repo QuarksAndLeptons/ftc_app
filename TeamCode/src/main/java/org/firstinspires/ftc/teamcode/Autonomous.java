@@ -54,8 +54,8 @@ public abstract class Autonomous extends LinearOpMode {
     protected DcMotorEx rightMotor2;
     protected DcMotorEx dropMotor;
     //Instantiate servos
-    protected Servo color_servo;
-    protected Servo rotation_servo;
+    protected Servo blueColorServo;
+    protected Servo jewelRotationServo;
     //Instantiate sensors
     ColorSensor blueSensorColor;
     ColorSensor redSensorColor;
@@ -68,11 +68,11 @@ public abstract class Autonomous extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = 0.25;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = .25;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = 0.5;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = .5;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 2.5 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = .005;     // Larger is more responsive, but also less stable
+    static final double     P_TURN_COEFF            = .05;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = .05;     // Larger is more responsive, but also less stable
 
 
@@ -115,8 +115,8 @@ public abstract class Autonomous extends LinearOpMode {
         dropMotor = (DcMotorEx)hardwareMap.get(DcMotorEx.class,"glyphDropMotor");
         dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //Initialize the servos
-        color_servo = hardwareMap.get(Servo.class, "jewelServo");
-        rotation_servo = hardwareMap.get(Servo.class, "jewelRotationServo");
+        blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
+        jewelRotationServo = hardwareMap.get(Servo.class, "jewelRotationServo");
         //Initialize sensors
         blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
         redSensorColor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "RedColorSensor");
@@ -373,10 +373,13 @@ public abstract class Autonomous extends LinearOpMode {
      * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
      *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
      *                   If a relative angle is required, add/subtract from current heading.
+     * @param timeout the number of seconds to take control of the autonomous program
+     *                before giving up
      */
     protected void gyroDrive ( double speed,
                                double distance,
-                               double angle) {
+                               double angle,
+                               double timeout) {
 
         int     newLeftTarget;
         int     newRightTarget;
@@ -411,9 +414,12 @@ public abstract class Autonomous extends LinearOpMode {
             leftMotor.setPower(speed);
             rightMotor.setPower(speed);
 
+
+            double timeoutTime = runtime.seconds() + timeout;
             // keep looping while we are still active, and BOTH motors are running.
             while (opModeIsActive() &&
-                    (leftMotor.isBusy() && rightMotor.isBusy())) {
+                    (leftMotor.isBusy() && rightMotor.isBusy()) &&
+                    runtime.seconds()<=timeoutTime) {
 
                 // adjust relative speed based on heading error.
                 error = getError(angle);
@@ -455,6 +461,24 @@ public abstract class Autonomous extends LinearOpMode {
     }
 
     /**
+     *  Method to drive on a fixed compass bearing (angle), based on encoder counts.
+     *  Move will stop if either of these conditions occur:
+     *  1) Move gets to the desired position
+     *  2) Driver stops the opmode running.
+     *
+     * @param speed      Target speed for forward motion.  Should allow for _/- variance for adjusting heading
+     * @param distance   Distance (in inches) to move from current position.  Negative distance means move backwards.
+     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
+     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                   If a relative angle is required, add/subtract from current heading.
+     */
+    protected void gyroDrive ( double speed,
+                               double distance,
+                               double angle){
+        gyroDrive(speed, distance, angle, 60);
+    }
+
+    /**
      *  Method to spin on central axis to point in a new direction.
      *  Move will stop if either of these conditions occur:
      *  1) Move gets to the heading (angle)
@@ -473,7 +497,27 @@ public abstract class Autonomous extends LinearOpMode {
             telemetry.update();
         }
     }
-
+    /**
+     *  Method to spin on central axis to point in a new direction.
+     *  Move will stop if either of these conditions occur:
+     *  1) Move gets to the heading (angle)
+     *  2) Driver stops the opmode running.
+     *
+     * @param speed Desired speed of turn.
+     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
+     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                   If a relative angle is required, add/subtract from current heading.
+     * @param timeout the number of seconds to take control of the autonomous program
+     *                before giving up
+     */
+    public void gyroTurn (double speed, double angle, double timeout) {
+        double timeoutTime = runtime.seconds() + timeout;
+        // keep looping while we are still active, and not on heading.
+        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF) && runtime.seconds()<timeoutTime) {
+            // Update telemetry & Allow time for other processes to run.
+            telemetry.update();
+        }
+    }
     /**
      *  Method to obtain & hold a heading for a finite amount of time
      *  Move will stop once the requested time has elapsed

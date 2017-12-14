@@ -3,16 +3,13 @@ package org.firstinspires.ftc.teamcode;
 //Import FTC modules
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
         import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
         import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
         import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-        import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-        import org.firstinspires.ftc.robotcore.external.navigation.Position;
+import org.firstinspires.ftc.robotcore.external.navigation.Position;
         import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 //Import Gyro
@@ -38,7 +35,7 @@ public class PD_Teleop extends Autonomous {
 
 
     // Gyro
-    private DcMotor liftMotor;
+    //private DcMotor liftMotor;
 
 
     //Define opmode
@@ -55,11 +52,11 @@ public class PD_Teleop extends Autonomous {
 
 
 
-        liftMotor = hardwareMap.get(DcMotor.class, "liftMotor");
+       // liftMotor = hardwareMap.get(DcMotor.class, "liftMotor");
 
 
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         dropMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         //Initialize servos
@@ -86,7 +83,7 @@ public class PD_Teleop extends Autonomous {
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         leftMotor2.setDirection(DcMotor.Direction.REVERSE);
         //Reverse the lifting motor so that it goes up when the power is positive
-        liftMotor.setDirection(DcMotor.Direction.REVERSE);
+       // liftMotor.setDirection(DcMotor.Direction.REVERSE);
 
         //Inform the user that he needs to press the play button
         telemetry.addData("Status", "Waiting for play button");
@@ -164,25 +161,25 @@ public class PD_Teleop extends Autonomous {
 
             }
             //Add telemetry data
-            telemetry.addData("Lift motor power", liftMotor.getPower());
+        //    telemetry.addData("Lift motor power", liftMotor.getPower());
             telemetry.addData("Left motor power", leftMotor.getPower());
             telemetry.addData("Right motor power", leftMotor.getPower());
 
             //Jewel servo mechanism
             if (gamepad1.a) {
-                color_servo.setPosition(.3);
+                blueColorServo.setPosition(.3);
             }
             if (gamepad1.a) {
-                rotation_servo.setPosition(.45);
+                jewelRotationServo.setPosition(.45);
             }
             if (gamepad2.x) {
-                rotation_servo.setPosition(.45);
+                jewelRotationServo.setPosition(.45);
             }
 
 
             //Lifting mechanism
             //Stop the lifting motor if it isn't busy
-            if(!liftMotor.isBusy()) {
+            /* if(!liftMotor.isBusy()) {
                 liftMotor.setPower(0.0);
             }
             //Set the target position to base position
@@ -199,7 +196,7 @@ public class PD_Teleop extends Autonomous {
             if(gamepad2.y){
                 liftMotor.setTargetPosition(2390);
                 if(liftMotor.isBusy()) liftMotor.setPower(0.5);
-            }
+            }*/
             //Glyph dropping mechanism
             if(!dropMotor.isBusy()) dropMotor.setPower(0.0);
             if(gamepad2.dpad_up) {
@@ -236,10 +233,10 @@ public class PD_Teleop extends Autonomous {
             //add some debug data
             telemetry.addData("Buttons",(gamepad1.a?"A":"-")+(gamepad1.b?"B":"-")+(gamepad1.x?"X":"-")+(gamepad1.y?"Y":"-"));
             telemetry.addData("Dpad",(gamepad1.dpad_left?"L":"-")+(gamepad1.dpad_right?"R":"-")+(gamepad1.dpad_down?"D":"-")+(gamepad1.dpad_up?"U":"-"));
-            telemetry.addData("Servo Position",rotation_servo.getPosition());
-            telemetry.addData("Lift Position", liftMotor.getCurrentPosition());
-            telemetry.addData("Lift Target", liftMotor.getTargetPosition());
-            telemetry.addData("Lift status", liftMotor.isBusy()?"I'm busy":"I got free time.");
+            telemetry.addData("Servo Position", jewelRotationServo.getPosition());
+            //telemetry.addData("Lift Position", liftMotor.getCurrentPosition());
+            //telemetry.addData("Lift Target", liftMotor.getTargetPosition());
+            //telemetry.addData("Lift status", liftMotor.isBusy()?"I'm busy":"I got free time.");
             telemetry.addData("Drop Position", dropMotor.getCurrentPosition());
 
             //Update the telemetry
@@ -254,7 +251,7 @@ public class PD_Teleop extends Autonomous {
         int newTarget;
         // Ensure that the opmode is still active liftMotor
         if (opModeIsActive()) {
-
+/*
             // Determine new target position, and pass to motor controller
             newTarget = liftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
             liftMotor.setTargetPosition(newTarget);
@@ -265,14 +262,14 @@ public class PD_Teleop extends Autonomous {
             // reset the timeout time and start motion.
             runtime.reset();
             liftMotor.setPower(Math.abs(speed));
-
+*/
             // keep looping while we are still active, and there is time left, and both motors are running.
             // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
             // its target position, the motion will stop.  This is "safer" in the event that the robot will
             // always end the motion as soon as possible.
             // However, if you require that BOTH motors have finished their moves before the robot continues
             // onto the next step, use (isBusy() || isBusy()) in the loop test.
-            while (opModeIsActive() && (runtime.seconds() < timeoutS) && (liftMotor.isBusy())) {
+         /*   while (opModeIsActive() && (runtime.seconds() < timeoutS) && (liftMotor.isBusy())) {
                 // Display it for the driver.
                 telemetry.addData("Path1",  "Running to", newTarget);
                 telemetry.addData("Path2",  "Running at", liftMotor.getCurrentPosition());
@@ -289,9 +286,10 @@ public class PD_Teleop extends Autonomous {
             telemetry.addData("Done?", "Done" );
             telemetry.update();
 
+        */
         }
-    }
+        }
 
-}
+    }
 
 

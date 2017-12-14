@@ -1,5 +1,4 @@
 /*
-TODO Add a timer that says at 25 seconds drop block and back up
 NOTE: a new autonomous method should (in theory) move the drop motor
 to a certain position and give up in a certain amount of time.
 Called moveDropMotorTo(...), this method is used if Vuforia is not recognized
@@ -30,8 +29,8 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
 
         //Set the initial servo positions
-        color_servo.setPosition(.1);
-        rotation_servo.setPosition(.47);
+        blueColorServo.setPosition(.1);
+        jewelRotationServo.setPosition(.47);
 
         //Wait for start
         telemetry.addData("Status", "Waiting for play button");
@@ -47,8 +46,8 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         debugColorSensor(blueSensorColor);
         telemetry.update();
 
-        color_servo.setPosition(1);
-        rotation_servo.setPosition(.5);
+        blueColorServo.setPosition(1);
+        jewelRotationServo.setPosition(.5);
         sleep(2000);
 
 
@@ -56,18 +55,18 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         telemetry.update();
 
         if (blueSensorColor.red() < blueSensorColor.blue()) {  // is red // go froward knock red
-            rotation_servo.setPosition(.2);
+            jewelRotationServo.setPosition(.2);
         }
         if (blueSensorColor.red() > blueSensorColor.blue()) { // not red // go back knock red
-            rotation_servo.setPosition(.8);
+            jewelRotationServo.setPosition(.8);
         }
 
 
         telemetry.update();
 
         sleep(2000);
-        color_servo.setPosition(.35);
-        rotation_servo.setPosition(.47);
+        blueColorServo.setPosition(.35);
+        jewelRotationServo.setPosition(.47);
         sleep(2000);
 
 
@@ -112,10 +111,10 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     break;
 
                 case 3://Right
-                    gyroTurn(TURN_SPEED, -25.0);                // Turn  CCW to -25 Degrees
-                    gyroHold(TURN_SPEED, -25.0, 0.5); // Hold -25 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 31, -25);    // Drive FWD 29 inches
-                    gyroHold(TURN_SPEED, -30.0, 0.5); // Hold -25 Deg heading for a 1/2 second
+                    gyroTurn(TURN_SPEED, -23.0);                // Turn  CCW to -25 Degrees
+                    gyroHold(TURN_SPEED, -23.0, 0.5); // Hold -25 Deg heading for a 1/2 second
+                    gyroDrive(DRIVE_SPEED, 31, -23);    // Drive FWD 29 inches
+                    gyroHold(TURN_SPEED, -23.0, 0.5); // Hold -25 Deg heading for a 1/2 second
                     moveDropMotorTo(300, 0.6, 3.0); //Drop a block
                     sleep(2000);
                 //    gyroDrive(DRIVE_SPEED, 3, 0);   // Drive FWD 29 inches

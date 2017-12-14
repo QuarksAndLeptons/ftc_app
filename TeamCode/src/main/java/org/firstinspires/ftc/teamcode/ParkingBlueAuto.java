@@ -51,8 +51,8 @@ public class ParkingBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
 
         //Set the initial servo positions
-        color_servo.setPosition(.1);
-        rotation_servo.setPosition(.47);
+        blueColorServo.setPosition(.1);
+        jewelRotationServo.setPosition(.47);
 
         //Wait for start
         telemetry.addData("Status", "Waiting for play button");
@@ -67,8 +67,8 @@ public class ParkingBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             debugColorSensor(blueSensorColor);
             telemetry.update();
 
-            color_servo.setPosition(1);
-            rotation_servo.setPosition(.5);
+            blueColorServo.setPosition(1);
+            jewelRotationServo.setPosition(.5);
             sleep(2000);
 
 
@@ -76,18 +76,18 @@ public class ParkingBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             telemetry.update();
 
             if (blueSensorColor.red() < blueSensorColor.blue()) {  // is red // go froward knock red
-                rotation_servo.setPosition(.2);
+                jewelRotationServo.setPosition(.2);
             }
             if (blueSensorColor.red() > blueSensorColor.blue()) { // not red // go back knock red
-                rotation_servo.setPosition(.8);
+                jewelRotationServo.setPosition(.8);
             }
 
 
             telemetry.update();
 
             sleep(2000);
-            color_servo.setPosition(.35);
-            rotation_servo.setPosition(.47);
+            blueColorServo.setPosition(.35);
+            jewelRotationServo.setPosition(.47);
 
             driveForwardDistance(32);
 
