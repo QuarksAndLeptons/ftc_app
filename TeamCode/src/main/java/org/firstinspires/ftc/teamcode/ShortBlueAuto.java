@@ -77,10 +77,9 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "not visible");
-            gyroTurn(TURN_SPEED, -45.0);                // Turn  CCW to -15 Degrees
-            gyroDrive(DRIVE_SPEED, 24, -45.0);    // Drive FWD 29 inches
-            gyroTurn(TURN_SPEED, 90.0);                // Turn  CCW to -15 Degrees
-            gyroHold(TURN_SPEED, 90.0, 0.5); // Hold -15 Deg heading for a 1/2 second
+            gyroDrive(DRIVE_SPEED, 24, 0.0);    // Drive FWD 29 inches
+            gyroTurn(1, 90.0);                // Turn  CCW to -15 Degrees
+            gyroHold(1, 90.0, 0.5); // Hold -15 Deg heading for a 1/2 second
             moveDropMotorTo(300, 0.6, 3.0); //Drop a block
             sleep(2000);
             gyroDrive(DRIVE_SPEED, -6, -90);    // Drive FWD 29 inches

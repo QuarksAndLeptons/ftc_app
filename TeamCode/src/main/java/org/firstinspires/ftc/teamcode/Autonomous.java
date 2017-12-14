@@ -69,7 +69,7 @@ public abstract class Autonomous extends LinearOpMode {
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
     static final double     DRIVE_SPEED             = 0.25;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = 1;     // Nominal half speed for better accuracy.
+    static final double     TURN_SPEED              = .25;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 2.5 ;      // As tight as we can make it with an integer gyro
     static final double     P_TURN_COEFF            = .005;     // Larger is more responsive, but also less stable
@@ -569,8 +569,15 @@ public abstract class Autonomous extends LinearOpMode {
      * @return
      */
     private double getSteer(double error, double PCoeff) {
-        return Range.clip(error * PCoeff, -1, 1);
-        /* From PID wiki
+        return Range.clip(PCoeff * error, -1, 1);
+/*
+        // Perform the primary PID calculation
+        m_result = m_P * m_error + m_I * m_totalError + m_D * (m_error - m_prevError);
+
+        // Set the current error to the previous error for the next cycle.
+        m_prevError = m_error;
+
+         From PID wiki
         previous_error = 0
         integral = 0
     loop:
