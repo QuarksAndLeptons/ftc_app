@@ -17,7 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 @Autonomous(name = "Short Blue Auto", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
 
-public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.AutonomousPIDConcept {
+public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
 
     @Override
@@ -77,16 +77,13 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.AutonomousPIDC
 
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "not visible");
-
-            gyroDrive(DRIVE_SPEED, 29, 0);    // Drive FWD 29 inches
-            gyroHold(TURN_SPEED, 90.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-            gyroTurn(TURN_SPEED, 90.0);                // Turn  CCW to -15 Degrees
-            gyroHold(TURN_SPEED, 90.0, 0.5); // Hold -15 Deg heading for a 1/2 second
+            gyroDrive(DRIVE_SPEED, 28, 0.0);    // Drive FWD 29 inches
+            gyroTurn(TURN_SPEED, 95.0);                // Turn  CCW to -15 Degrees
+            gyroHold(TURN_SPEED, 95.0, 0.5); // Hold -15 Deg heading for a 1/2 second
             moveDropMotorTo(100, 0.6, 3.0); //Drop a block
             sleep(2000);
-            //      gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
-            gyroDrive(DRIVE_SPEED, -6, -90);    // Drive FWD 29 inches
-
+            gyroDrive(DRIVE_SPEED, -6, 90);    // Drive FWD 29 inches
+/*
         } else {
             telemetry.addData("VuMark", "%s visible", vuMark);
             switch (vuMark.ordinal()) {
@@ -123,7 +120,7 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.AutonomousPIDC
                     gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 29 inches
                     break;
 
-
+*/
             }
             debugColorSensor(blueSensorColor);
             telemetry.addData("Status", "Done");
