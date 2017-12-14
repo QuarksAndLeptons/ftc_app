@@ -6,7 +6,9 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -76,6 +78,40 @@ public abstract class AutonomousPIDConcept extends LinearOpMode {
     public static final double NEW_P = 2.5;
     public static final double NEW_I = 0.1;
     public static final double NEW_D = 0.2;
+
+        // get a reference to the motor controller and cast it as an extended functionality controller.
+        // we assume it's a REV Robotics Expansion Hub (which supports the extended controller functions).
+        DcMotorControllerEx leftMotorControllerEx = (DcMotorControllerEx)leftMotor.getController();
+        DcMotorControllerEx rightMotorControllerEx = (DcMotorControllerEx)rightMotor.getController();
+
+
+        // get the port number of our configured motor.
+        int leftMotorIndex = ((DcMotorEx)leftMotor).getPortNumber();
+        int rightMotorIndex = ((DcMotorEx)rightMotor).getPortNumber();
+
+        // get the PID coefficients for the RUN_USING_ENCODER  modes.
+        PIDCoefficients lPidOrig = leftMotorControllerEx.getPIDCoefficients(leftMotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDCoefficients rPidOrig = rightMotorControllerEx.getPIDCoefficients(rightMotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // change coefficients.
+        PIDCoefficients pidNew = new PIDCoefficients(NEW_P, NEW_I, NEW_D);
+        leftMotorControllerEx.setPIDCoefficients(leftMotorIndex, DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
+        rightMotorControllerEx.setPIDCoefficients(rightMotorIndex, DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
+
+
+        // re-read coefficients and verify change.
+        PIDCoefficients lPidModified = leftMotorControllerEx.getPIDCoefficients(leftMotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDCoefficients rPidModified = rightMotorControllerEx.getPIDCoefficients(rightMotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // display info to user.
+
+        telemetry.addData("Runtime", "%.03f", getRuntime());
+        telemetry.addData("Left P,I,D (orig)", "%.04f, %.04f, %.0f", lPidOrig.p, lPidOrig.i, lPidOrig.d);
+        telemetry.addData("Left P,I,D (modified)", "%.04f, %.04f, %.04f", lPidModified.p, lPidModified.i, lPidModified.d);
+        telemetry.addData("Right P,I,D (orig)", "%.04f, %.04f, %.0f", rPidOrig.p, rPidOrig.i, rPidOrig.d);
+        telemetry.addData("Left P,I,D (modified)", "%.04f, %.04f, %.04f", rPidModified.p, rPidModified.i, rPidModified.d);
+        telemetry.update();
+
 
 
     //Initialize Vuforia variables
@@ -338,7 +374,7 @@ public abstract class AutonomousPIDConcept extends LinearOpMode {
     public void gyroTurn (  double speed, double angle) {
 
         // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
+        while (opModeIsActive() && !onHeading(speed, angle, NEW_P)) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
         }
@@ -362,7 +398,7 @@ public abstract class AutonomousPIDConcept extends LinearOpMode {
         holdTimer.reset();
         while (opModeIsActive() && (holdTimer.time() < holdTime)) {
             // Update telemetry & Allow time for other processes to run.
-            onHeading(speed, angle, P_TURN_COEFF);
+            onHeading(speed, angle, NEW_P);
             telemetry.update();
         }
 
