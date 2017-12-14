@@ -81,7 +81,7 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
             gyroDrive(DRIVE_SPEED, 29, -15);    // Drive FWD 29 inches
             gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-            moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+            moveDropMotorTo(100, 0.6, 3.0); //Drop a block
             sleep(2000);
             //      gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
             gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 29 inches
@@ -94,7 +94,7 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     gyroHold(TURN_SPEED, -2.0, 0.5); // Hold -5 Deg heading for a 1/2 second
                     gyroDrive(DRIVE_SPEED, 28, -5);    // Drive FWD 30 inches
                     gyroHold(TURN_SPEED, -2.0, 0.5); // Hold -5 Deg heading for a 1/2 second
-                    moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+                    moveDropMotorTo(100, 0.6, 3.0); //Drop a block
                     sleep(2000);
                    // gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
                     gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 30 inches
@@ -105,7 +105,7 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
                     gyroDrive(DRIVE_SPEED, 29, -15);    // Drive FWD 29 inches
                     gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-                    moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+                    moveDropMotorTo(100, 0.6, 3.0); //Drop a block
                     sleep(2000);
               //      gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
                     gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 29 inches
@@ -116,7 +116,7 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     gyroHold(TURN_SPEED, -25.0, 0.5); // Hold -25 Deg heading for a 1/2 second
                     gyroDrive(DRIVE_SPEED, 31, -25);    // Drive FWD 29 inches
                     gyroHold(TURN_SPEED, -30.0, 0.5); // Hold -25 Deg heading for a 1/2 second
-                    moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+                    moveDropMotorTo(100, 0.6, 3.0); //Drop a block
                     sleep(2000);
                 //    gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
                     gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 29 inches
