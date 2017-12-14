@@ -40,8 +40,7 @@ public class Autonomous_Concept extends org.firstinspires.ftc.teamcode.Autonomou
             waitForStart();
 
             leftDrive(.5);
-            rightDrive(.5
-            );
+            rightDrive(.5);
 
             // get a reference to the motor controller and cast it as an extended functionality controller.
             // we assume it's a REV Robotics Expansion Hub (which supports the extended controller functions).

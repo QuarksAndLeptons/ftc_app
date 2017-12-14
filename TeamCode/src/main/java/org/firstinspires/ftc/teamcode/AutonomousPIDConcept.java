@@ -30,7 +30,7 @@ import java.util.Locale;
  * Created by Micah on 12/5/17.
  */
 
-public abstract class Autonomous extends LinearOpMode {
+public abstract class AutonomousPIDConcept extends LinearOpMode {
     //Initialize and instantiate vuforia variables
     OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia;
@@ -72,14 +72,10 @@ public abstract class Autonomous extends LinearOpMode {
     static final double     TURN_SPEED              = 0.25;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 2.5 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = .1;     // Larger is more responsive, but also less stable
-    static final double     I_TURN_COEFF            = .1;
-    static final double     D_TURN_COEFF            = .1;
 
-    static final double     P_DRIVE_COEFF           = .05;     // Larger is more responsive, but also less stable
-    static final double     I_DRIVE_COEFF           = .1;
-    static final double     D_DRIVE_COEFF           = .1;
-
+    public static final double NEW_P = 2.5;
+    public static final double NEW_I = 0.1;
+    public static final double NEW_D = 0.2;
 
 
     //Initialize Vuforia variables
@@ -225,136 +221,6 @@ public abstract class Autonomous extends LinearOpMode {
 
     }
 
-    /**
-     * Move the forward for a certain amount of time
-     *
-     * @param time  the amount of time to move forward in <b>seconds</b>
-     * @param power the power of each of the motors
-     */
-    protected void driveTime(double time, double power) {
-        leftDrive(power);
-        rightDrive(power);
-        sleep((int) (time * 1000.0));
-        leftDrive(0);
-        rightDrive(0);
-    }
-
-
-    /**
-     * Runs the chassis motors at a given power for a certain number of inches
-     * @Depreciated Use driveForwardDistance()
-     * @param speed the motor power
-     * @param leftInches number of inches for the left motor to turn
-     * @param rightInches number of inches for the right motor to turn
-     * @param timeoutS the number of seconds before giving up
-     */
-    private void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
-
-        // Determine new target position, and pass to motor controller
-        newLeftTarget = leftMotor.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-        newRightTarget = rightMotor2.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-        leftMotor.setTargetPosition(newLeftTarget);
-        leftMotor2.setTargetPosition(newLeftTarget);
-        rightMotor.setTargetPosition(newRightTarget);
-        rightMotor2.setTargetPosition(newRightTarget);
-
-        // Turn On RUN_TO_POSITION
-        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // reset the timeout time and start motion.
-        runtime.reset();
-        leftMotor.setPower(Math.abs(speed));
-        leftMotor2.setPower(Math.abs(speed));
-        rightMotor.setPower(Math.abs(speed));
-        rightMotor2.setPower(Math.abs(speed));
-
-        // keep looping while we are still active, and there is time left, AND at least one motor is running.
-        while (opModeIsActive() &&
-                runtime.seconds() < timeoutS &&
-                leftMotor.isBusy() || rightMotor2.isBusy()) {
-            // Display it for the driver.
-            telemetry.addData("Left Target", "Running to", newLeftTarget);
-            telemetry.addData("Right Target", "Running to", newRightTarget);
-            telemetry.addData("leftMotor", "Running at", leftMotor.getCurrentPosition());
-            telemetry.addData("rightMotor2", "Running at", rightMotor2.getCurrentPosition());
-            telemetry.update();
-        }
-
-        // Stop all motion;
-        leftMotor.setPower(0);
-        leftMotor2.setPower(0);
-        rightMotor.setPower(0);
-        rightMotor2.setPower(0);
-
-        // Turn off RUN_TO_POSITION
-        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        sleep(1000);   // optional pause after each move
-
-        telemetry.addData("Status", "Done moving forward");
-        telemetry.update();
-    }
-
-    /**
-     * Drive forward a certain distance based on encoder values
-     * @param distance the distance to drive forward in <b>inches</b>.
-     */
-    public void driveForwardDistance(double distance) {
-        int iterations = 0;
-        long newLeftTarget = leftMotor2.getCurrentPosition() + (long) (distance * COUNTS_PER_INCH);
-        long newRightTarget = rightMotor.getCurrentPosition() + (long) (distance * COUNTS_PER_INCH);
-        boolean leftIsMoving = true, rightIsMoving = true;
-
-        while ((leftIsMoving||rightIsMoving) && opModeIsActive()){
-            telemetry.addData("Status", "Driving forward " + distance + " inches");
-            telemetry.addData("Left Motor Position", leftMotor2.getCurrentPosition());
-            telemetry.addData("Left Motor Speed", leftMotor.getPowerFloat());
-            telemetry.addData("Right Motor Position", rightMotor.getCurrentPosition());
-            telemetry.addData("Right Motor Speed", rightMotor.getPowerFloat());
-            telemetry.addData("Iterations", ++iterations);
-            if(leftIsMoving){ //Are the left motors moving
-                //Check if the left motors are done moving
-                if(Math.abs(newLeftTarget-leftMotor.getCurrentPosition())<200){
-                    leftMotor.setPower(0);
-                    leftMotor2.setPower(0);
-                    leftIsMoving = false;
-                }
-                //If the motors aren't done moving, keep moving them
-                else if (leftMotor.getCurrentPosition() > newLeftTarget) {
-                    leftMotor.setPower(-.5);
-                    leftMotor2.setPower(-.5);
-                }
-                else {
-                    leftMotor.setPower(.5);
-                    leftMotor2.setPower(.5);
-                }
-            }
-            if(rightIsMoving){ //Are the right motors moving
-                //Check if the right motors are done moving
-                if(Math.abs(newRightTarget-rightMotor2.getCurrentPosition())<200){
-                    rightMotor.setPower(0);
-                    rightMotor2.setPower(0);
-                    leftIsMoving = false;
-                }
-                //If the motors aren't done moving, keep moving them
-                else if (rightMotor.getCurrentPosition() > newRightTarget) {
-                    rightMotor.setPower(-.5);
-                    rightMotor2.setPower(-.5);
-                }
-                else {
-                    rightMotor.setPower(.5);
-                    rightMotor2.setPower(.5);
-                }
-            }
-        }
-    }
 
     /**
      * Displays the red, green, and blue values on telemetry.
@@ -421,7 +287,7 @@ public abstract class Autonomous extends LinearOpMode {
 
                 // adjust relative speed based on heading error.
                 error = getError(angle);
-                steer = getSteer(error, P_DRIVE_COEFF);
+                steer = getSteer(error, NEW_P);
 
                 // if driving in reverse, the motor correction also needs to be reversed
                 if (distance < 0)
@@ -512,10 +378,10 @@ public abstract class Autonomous extends LinearOpMode {
      * @param angle     Absolute Angle (in Degrees) relative to last gyro reset.
      *                  0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
      *                  If a relative angle is required, add/subtract from current heading.
-     * @param PCoeff    Proportional Gain coefficient
+     * @param NEW_P    Proportional Gain coefficient
      * @return
      */
-    private boolean onHeading(double speed, double angle, double PCoeff) {
+    private boolean onHeading(double speed, double angle, double NEW_P) {
         double   error ;
         double   steer ;
         boolean  onTarget = false ;
@@ -532,7 +398,7 @@ public abstract class Autonomous extends LinearOpMode {
             onTarget = true;
         }
         else {
-            steer = getSteer(error, PCoeff);
+            steer = getSteer(error, NEW_P);
             rightSpeed  = speed * steer;
             leftSpeed   = -rightSpeed;
         }
@@ -569,11 +435,11 @@ public abstract class Autonomous extends LinearOpMode {
     /**
      * returns desired steering force.  +/- 1 range.  +ve = steer left
      * @param error   Error angle in robot relative degrees
-     * @param PCoeff  Proportional Gain Coefficient
+     * @param NEW_P  Proportional Gain Coefficient
      * @return
      */
-    private double getSteer(double error, double PCoeff) {
-        return Range.clip(error * PCoeff, -1, 1);
+    private double getSteer(double error, double NEW_P) {
+        return Range.clip(error * NEW_P, -1, 1);
         /* From PID wiki
         previous_error = 0
         integral = 0
