@@ -58,7 +58,6 @@ public abstract class Autonomous extends LinearOpMode {
     protected Servo jewelRotationServo;
     //Instantiate sensors
     ColorSensor blueSensorColor;
-    ColorSensor redSensorColor;
 
     //Initlize encoder variables
     protected double COUNTS_PER_MOTOR_REV = 1120;    // eg: Andymark Encoder
@@ -69,10 +68,10 @@ public abstract class Autonomous extends LinearOpMode {
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
     static final double     DRIVE_SPEED             = 0.5;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = .5;     // Nominal half speed for better accuracy.
+    static final double     TURN_SPEED              = 0.5;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 2.5 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = .05;     // Larger is more responsive, but also less stable
+    static final double     P_TURN_COEFF            = .02;     // Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = .05;     // Larger is more responsive, but also less stable
 
 
@@ -88,7 +87,7 @@ public abstract class Autonomous extends LinearOpMode {
      */
     protected void initializeHardware(){
         //Give the OK message
-        telemetry.addData("Status", "Initializing motors");
+        telemetry.addData("Status", "Initializing hardware");
         telemetry.update();
 
         //Initialize robot hardware
@@ -103,7 +102,7 @@ public abstract class Autonomous extends LinearOpMode {
         rightMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         rightMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        //Set the motor modes to normal
+        //Set the motor modes
         leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -119,7 +118,6 @@ public abstract class Autonomous extends LinearOpMode {
         jewelRotationServo = hardwareMap.get(Servo.class, "jewelRotationServo");
         //Initialize sensors
         blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
-        redSensorColor = hardwareMap.get(ModernRoboticsI2cColorSensor.class, "RedColorSensor");
 
 
         //Initialize Vuforia extension
@@ -490,12 +488,7 @@ public abstract class Autonomous extends LinearOpMode {
      *                   If a relative angle is required, add/subtract from current heading.
      */
     public void gyroTurn (  double speed, double angle) {
-
-        // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF)) {
-            // Update telemetry & Allow time for other processes to run.
-            telemetry.update();
-        }
+        gyroTurn(speed, angle, 60);
     }
     /**
      *  Method to spin on central axis to point in a new direction.
@@ -511,12 +504,25 @@ public abstract class Autonomous extends LinearOpMode {
      *                before giving up
      */
     public void gyroTurn (double speed, double angle, double timeout) {
+        //Ensure the motors are in the right configuration
+        leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        leftMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         double timeoutTime = runtime.seconds() + timeout;
         // keep looping while we are still active, and not on heading.
         while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF) && runtime.seconds()<timeoutTime) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
         }
+
+
+        //Ensure the motors are in the normal configuration
+        leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     /**
      *  Method to obtain & hold a heading for a finite amount of time

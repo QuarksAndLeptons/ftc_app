@@ -5,6 +5,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -20,10 +21,19 @@ public class Teleop extends org.firstinspires.ftc.teamcode.Autonomous {
     //Define opmode
     @Override public void runOpMode() {
         //This code runs immediately after the "init" button is pressed.
-        //Inform the user that the opmode has been initialized.
 
+        //Initialize the hardware
         initializeHardware();
-        // Wait for the game to start (driver presses PLAY)
+
+        //Reset the motor modes so the robot doesn't drive erratically
+        leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        // Wait for the game to start (driver presses PLAY)\
+        telemetry.addData("Status", "Waiting for play button");
+        telemetry.update();
         waitForStart();
 
         // run until the end of the match (driver presses STOP)
@@ -33,86 +43,24 @@ public class Teleop extends org.firstinspires.ftc.teamcode.Autonomous {
             telemetry.addData("Left Trigger", gamepad2.left_trigger );
             //Control the chassis
             angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-            double angle;
-            angle = AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
+            double angle = AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
             telemetry.addData("angle", angle);
-            telemetry.update();
 
-            if (gamepad1.left_trigger < .5 && gamepad1.right_trigger < .5) {
-                if ( 0 <= angle && angle <= 180) {
+            leftMotor.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x);
+            leftMotor2.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x);
+            rightMotor2.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x);
+            rightMotor.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x);
 
-                    leftMotor.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x));
-                    leftMotor2.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x));
-                    rightMotor2.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x));
-                    rightMotor.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x));
-
-                }
-                if ( 0 > angle && angle > -180) {
-
-                    leftMotor.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x));
-                    leftMotor2.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x));
-                    rightMotor2.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x));
-                    rightMotor.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x));
-
-                }
-            }
-            if (gamepad1.left_trigger > .5 && gamepad1.right_trigger < .5) {
-
-                leftMotor.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x));
-                leftMotor2.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x));
-                rightMotor2.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x));
-                rightMotor.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x));
-
-            }
-
-
-
-            if (gamepad1.left_trigger < .5 && gamepad1.right_trigger > .5 ) {
-                if ( 0 <= angle && angle <= 180) {
-
-                    leftMotor.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-                    leftMotor2.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-                    rightMotor2.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-                    rightMotor.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-
-                }
-                if ( 0 > angle && angle > -180) {
-
-                    leftMotor.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-                    leftMotor2.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-                    rightMotor2.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-                    rightMotor.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-
-                }
-            }
-            if (gamepad1.left_trigger > .5 && gamepad1.right_trigger > .5) {
-
-                leftMotor.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-                leftMotor2.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-                rightMotor2.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-                rightMotor.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-
-            }
             //Add telemetry data
             //    telemetry.addData("Lift motor power", liftMotor.getPower());
             telemetry.addData("Left motor power", leftMotor.getPower());
-            telemetry.addData("Right motor power", leftMotor.getPower());
-
-            //Jewel servo mechanism
-            if (gamepad1.a) {
-                blueColorServo.setPosition(.3);
-            }
-            if (gamepad1.a) {
-                jewelRotationServo.setPosition(.45);
-            }
-            if (gamepad2.x) {
-                jewelRotationServo.setPosition(.45);
-            }
+            telemetry.addData("Right motor power", rightMotor.getPower());
 
 
             //Lifting mechanism
             //Stop the lifting motor if it isn't busy
-            /* if(!liftMotor.isBusy()) {
+            /*
+            if(!liftMotor.isBusy()) {
                 liftMotor.setPower(0.0);
             }
             //Set the target position to base position
@@ -129,7 +77,9 @@ public class Teleop extends org.firstinspires.ftc.teamcode.Autonomous {
             if(gamepad2.y){
                 liftMotor.setTargetPosition(2390);
                 if(liftMotor.isBusy()) liftMotor.setPower(0.5);
-            }*/
+            }
+            */
+
             //Glyph dropping mechanism
             if(!dropMotor.isBusy()) dropMotor.setPower(0.0);
             if(gamepad2.dpad_up) {
@@ -138,7 +88,7 @@ public class Teleop extends org.firstinspires.ftc.teamcode.Autonomous {
             }
             if (gamepad2.dpad_down){
                 dropMotor.setTargetPosition(0);
-                dropMotor.setPower(-0.25);
+                dropMotor.setPower(0.25);
             }
             if(gamepad2.dpad_right) {
                 int dropPos = dropMotor.getCurrentPosition();
@@ -148,21 +98,24 @@ public class Teleop extends org.firstinspires.ftc.teamcode.Autonomous {
             if (gamepad2.dpad_left){
                 int dropPos = dropMotor.getCurrentPosition();
                 dropMotor.setTargetPosition(dropPos - 50);
-                dropMotor.setPower(-0.25);
+                dropMotor.setPower(0.25);
             }
             //Drop motor
             if(gamepad2.y){
                 dropMotor.setTargetPosition(400);
-                if(dropMotor.isBusy()) dropMotor.setPower(0.1);
+                if(dropMotor.isBusy()) dropMotor.setPower(0.6);
             }
             if(gamepad2.a){
                 dropMotor.setTargetPosition(0);
-                if(dropMotor.isBusy()) dropMotor.setPower(0.1);
+                if(dropMotor.isBusy()) dropMotor.setPower(0.6);
             }
             if(gamepad2.b){
                 dropMotor.setTargetPosition(400);
-                if(dropMotor.isBusy()) dropMotor.setPower(0.1);
+                if(dropMotor.isBusy()) dropMotor.setPower(0.6);
             }
+            if(!dropMotor.isBusy())dropMotor.setPower(0.0);
+
+
             //add some debug data
             telemetry.addData("Buttons",(gamepad1.a?"A":"-")+(gamepad1.b?"B":"-")+(gamepad1.x?"X":"-")+(gamepad1.y?"Y":"-"));
             telemetry.addData("Dpad",(gamepad1.dpad_left?"L":"-")+(gamepad1.dpad_right?"R":"-")+(gamepad1.dpad_down?"D":"-")+(gamepad1.dpad_up?"U":"-"));

@@ -44,7 +44,7 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         runtime.reset();
 
 
-        debugColorSensor(redSensorColor);
+        debugColorSensor(blueSensorColor);
         telemetry.update();
 
         blueColorServo.setPosition(1);
@@ -52,13 +52,13 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         sleep(2000);
 
 
-        debugColorSensor(redSensorColor);
+        debugColorSensor(blueSensorColor);
         telemetry.update();
 
-        if (redSensorColor.red() > redSensorColor.blue()) {  // is red // go froward knock red
+        if (blueSensorColor.red() > blueSensorColor.blue()) {  // is red // go froward knock red
             jewelRotationServo.setPosition(.2);
         }
-        if (redSensorColor.red() < redSensorColor.blue()) { // not red // go back knock red
+        if (blueSensorColor.red() < blueSensorColor.blue()) { // not red // go back knock red
             jewelRotationServo.setPosition(.8);
         }
 

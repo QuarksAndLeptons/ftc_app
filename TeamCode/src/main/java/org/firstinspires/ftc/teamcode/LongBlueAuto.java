@@ -1,11 +1,3 @@
-/*
-NOTE: a new autonomous method should (in theory) move the drop motor
-to a certain position and give up in a certain amount of time.
-Called moveDropMotorTo(...), this method is used if Vuforia is not recognized
-or it refers to the center position.  It has not been tested at the time
-of this commit
-*/
-
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;

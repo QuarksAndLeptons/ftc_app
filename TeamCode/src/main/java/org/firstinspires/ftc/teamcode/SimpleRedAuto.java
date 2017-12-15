@@ -164,16 +164,6 @@ public class SimpleRedAuto extends LinearOpMode {
 
         }
 
-        // eg: Run wheels in tank mode (note: The joystick goes negative when pushed forwards)
-     /*  leftMotor.setPower(.5);
-        rightMotor.setPower(.5);
-        leftMotor2.setPower(.5);
-        rightMotor2.setPower(.5);
-        runtime.reset(); */
-
-
-
-
     }
 }
 

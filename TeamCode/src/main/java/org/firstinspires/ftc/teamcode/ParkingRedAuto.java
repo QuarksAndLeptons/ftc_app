@@ -64,7 +64,7 @@ public class ParkingRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         //The start button has been pressed.
         while (opModeIsActive() && done == false) {
 
-            debugColorSensor(redSensorColor);
+            debugColorSensor(blueSensorColor);
             telemetry.update();
 
             blueColorServo.setPosition(1);
@@ -72,13 +72,13 @@ public class ParkingRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             sleep(2000);
 
 
-            debugColorSensor(redSensorColor);
+            debugColorSensor(blueSensorColor);
             telemetry.update();
 
-            if (redSensorColor.red() > redSensorColor.blue()) {  // is blue // go forward knock blue
+            if (blueSensorColor.red() > blueSensorColor.blue()) {  // is blue // go forward knock blue
                 jewelRotationServo.setPosition(.2);
             }
-            if (redSensorColor.red() < redSensorColor.blue()) { // not blue // go back knock blue
+            if (blueSensorColor.red() < blueSensorColor.blue()) { // not blue // go back knock blue
                 jewelRotationServo.setPosition(.8);
             }
 
@@ -96,7 +96,7 @@ public class ParkingRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             sleep(10000);
             done = true;
         }
-        debugColorSensor(redSensorColor);
+        debugColorSensor(blueSensorColor);
         telemetry.addData("Status", "Done");
         telemetry.update();
     }
