@@ -68,11 +68,11 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
         //Is VuMark unknown?
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            //TODO This is the "center" code.  Change it here, then copy and paste for center behavior.
+            //TODO This is the "right" code.  Change it here, then copy and paste for right behavior.
             telemetry.addData("VuMark", "not visible");
-            gyroDrive(DRIVE_SPEED, 38, 1);    // Drive FWD 29 inches
-            gyroTurn(TURN_SPEED, 100.0);                // Turn  CCW to -15 Degrees
-            gyroHold(TURN_SPEED, 100.0, 0.5); // Hold -15 Deg heading for a 1/2 second
+            gyroDrive(DRIVE_SPEED, 46, 1);    // Drive FWD 29 inches
+            gyroTurn(TURN_SPEED, 60.0);                // Turn  CCW to -15 Degrees
+            gyroHold(TURN_SPEED, 60.0, 0.5); // Hold -15 Deg heading for a 1/2 second
             gyroDrive(DRIVE_SPEED, 2, 95);    // Drive FWD 29 inches
             moveDropMotorTo(300, 0.6, 3.0); //Drop a block
             sleep(2000);
@@ -92,7 +92,7 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     break;
 
                 case 2://Center
-                    //TODO This code does not work yet.  Edit it in the "Vumark unknown" code.
+                    //TODO This code is updated.  Edit Right code in the "Vumark unknown" code.
                     telemetry.addData("VuMark", "not visible");
                     gyroDrive(DRIVE_SPEED, 38, 1);    // Drive FWD 29 inches
                     gyroTurn(TURN_SPEED, 100.0);                // Turn  CCW to -15 Degrees
@@ -104,7 +104,8 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     break;
 
                 case 3://Right
-                    //TODO
+                    //TODO. Edit Right Code in the Vumark unkown code.
+
                     break;
 
             }
