@@ -506,8 +506,8 @@ public abstract class Autonomous extends LinearOpMode {
     public void gyroTurn (double speed, double angle, double timeout) {
         //Ensure the motors are in the right configuration
         leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        leftMotor.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
+        rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         double timeoutTime = runtime.seconds() + timeout;
@@ -516,13 +516,6 @@ public abstract class Autonomous extends LinearOpMode {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
         }
-
-
-        //Ensure the motors are in the normal configuration
-        leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     /**
      *  Method to obtain & hold a heading for a finite amount of time
