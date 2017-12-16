@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
@@ -18,6 +19,7 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
  */
 
 @Autonomous(name="Concept: Change PID Controller", group = "Examples")
+@Disabled
 public class Autonomous_Concept extends LinearOpMode {
 
     // our DC motor.

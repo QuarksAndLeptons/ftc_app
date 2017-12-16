@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 //Import FTC modules
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 
 //Define as teleop
 @TeleOp(name = "PD_Teleop", group = "Linear Opmode")
-
+@Disabled
 
 
 public class PD_Teleop extends Autonomous {

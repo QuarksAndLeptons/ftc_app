@@ -55,20 +55,20 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         debugColorSensor(blueSensorColor);
         telemetry.update();
 
-        if (blueSensorColor.red() > blueSensorColor.blue()) {  // is red // go froward knock red
-            jewelRotationServo.setPosition(.2);
-        }
-        if (blueSensorColor.red() < blueSensorColor.blue()) { // not red // go back knock red
+        if (blueSensorColor.red() > blueSensorColor.blue()) { // is red, go back knock blue
             jewelRotationServo.setPosition(.8);
+        }
+        if (blueSensorColor.red() < blueSensorColor.blue()) { // not red, go forward knock blue
+            jewelRotationServo.setPosition(.2);
         }
 
 
         telemetry.update();
 
-        sleep(2000);
+        sleep(1000);
         blueColorServo.setPosition(.35);
         jewelRotationServo.setPosition(.47);
-        sleep(2000);
+        sleep(1000);
 
 
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
@@ -77,13 +77,12 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "not visible");
-            gyroTurn(TURN_SPEED, 20.0);                // Turn  CCW to -15 Degrees
+            gyroTurn(TURN_SPEED, 20.0,3);                // Turn  CCW to -15 Degrees
             gyroHold(TURN_SPEED, 20.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-            gyroDrive(DRIVE_SPEED, 29, 20);    // Drive FWD 29 inches
+            gyroDrive(DRIVE_SPEED, 29, 20, 9);    // Drive FWD 29 inches
             gyroHold(TURN_SPEED, 20.0, 0.5); // Hold -15 Deg heading for a 1/2 second
             moveDropMotorTo(300, 0.6, 3.0); //Drop a block
             sleep(2000);
-            //      gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
             gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 29 inches
 
 
@@ -92,9 +91,9 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             telemetry.addData("VuMark", "%s visible", vuMark);
             switch (vuMark.ordinal()) {
                 case 1:
-                    gyroTurn(TURN_SPEED, 2.0);                // Turn  CCW to -25 Degrees
+                    gyroTurn(TURN_SPEED, 2.0, 1);                // Turn  CCW to -25 Degrees
                     gyroHold(TURN_SPEED, 27.0, 0.5); // Hold -25 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 32, 28);    // Drive FWD 29 inches
+                    gyroDrive(DRIVE_SPEED, 32, 28, 9);    // Drive FWD 29 inches
                     gyroHold(TURN_SPEED, 27.0, 0.5); // Hold -25 Deg heading for a 1/2 second
                     moveDropMotorTo(300, 0.6, 3.0); //Drop a block
                     sleep(2000);
@@ -103,25 +102,23 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     break;
 
                 case 2://Center
-                    gyroTurn(TURN_SPEED, 20.0);                // Turn  CCW to -15 Degrees
-                    gyroHold(TURN_SPEED, 20.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 29, 20);    // Drive FWD 29 inches
-                    gyroHold(TURN_SPEED, 20.0, 0.5); // Hold -15 Deg heading for a 1/2 second
+                    gyroTurn(TURN_SPEED, 20.0, 3);                   // Turn 20 degrees to the left
+                    gyroHold(TURN_SPEED, 20.0, 0.5);                // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 29, 20, 9);        // Drive forward 29 inches
+                    gyroHold(TURN_SPEED, 20.0, 0.5);                 // Hold for half a second
                     moveDropMotorTo(300, 0.6, 3.0); //Drop a block
                     sleep(2000);
-              //      gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
-                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 29 inches
+                    gyroDrive(DRIVE_SPEED, -6, 180);                 // Drive back six inches
                     break;
 
                 case 3://Right
-                    gyroTurn(TURN_SPEED, 10.0);                // Turn  CCW to -5 Degrees
-                    gyroHold(TURN_SPEED, 10.0, 0.5); // Hold -5 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 29, 10.0);    // Drive FWD 30 inches
-                    gyroHold(TURN_SPEED, 10.0, 0.5); // Hold -5 Deg heading for a 1/2 second
+                    gyroTurn(TURN_SPEED, 10.0, 2);                  // Turn  CCW to -5 Degrees
+                    gyroHold(TURN_SPEED, 10.0, 0.5);                // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 29, 10.0, 9);    // Drive FWD 30 inches
+                    gyroHold(TURN_SPEED, 10.0, 0.5);                // Hold for half a second
                     moveDropMotorTo(300, 0.6, 3.0); //Drop a block
                     sleep(2000);
-                    // gyroDrive(DRIVE_SPEED, 3, 0);    // Drive FWD 29 inches
-                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 30 inches
+                    gyroDrive(DRIVE_SPEED, -6, 180);                // Drive back 6 inches
                     break;
 
 
