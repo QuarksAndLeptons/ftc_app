@@ -1,6 +1,9 @@
+
+
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.sun.tools.javac.comp.Todo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
@@ -8,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 @Autonomous(name = "Short Blue Auto", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
 
-public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
+public class ShortRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
 
     @Override
@@ -38,7 +41,7 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         debugColorSensor(blueSensorColor);
         telemetry.update();
 
-        blueColorServo.setPosition(.9);
+        blueColorServo.setPosition(.95);
         jewelRotationServo.setPosition(.5);
         sleep(2000);
 
@@ -46,10 +49,10 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         debugColorSensor(blueSensorColor);
         telemetry.update();
 
-        if (blueSensorColor.red() < blueSensorColor.blue()) {  // is red // go froward knock red
+        if (blueSensorColor.red() > blueSensorColor.blue()) {  // is red // go froward knock red
             jewelRotationServo.setPosition(.2);
         }
-        if (blueSensorColor.red() > blueSensorColor.blue()) { // not red // go back knock red
+        if (blueSensorColor.red() < blueSensorColor.blue()) { // not red // go back knock red
             jewelRotationServo.setPosition(.8);
         }
 
@@ -68,11 +71,12 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
         //Is VuMark unknown?
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
+            //TODO This is the ShortBlueAuto Code. Change variables to turn CW (-neg) for Short Red Stone
             telemetry.addData("VuMark", "not visible");
-            gyroDrive(DRIVE_SPEED, 30, 1);    // Drive FWD 29 inches
-            gyroTurn(TURN_SPEED, 45.0);                // Turn  CCW to -15 Degrees
-            gyroHold(TURN_SPEED, 45.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-            gyroDrive(DRIVE_SPEED, 4, 60);    // Drive FWD 29 inches
+            gyroDrive(DRIVE_SPEED, 46, 1);    // Drive FWD 29 inches
+            gyroTurn(TURN_SPEED, 60.0);                // Turn  CCW to -15 Degrees
+            gyroHold(TURN_SPEED, 60.0, 0.5); // Hold -15 Deg heading for a 1/2 second
+            gyroDrive(DRIVE_SPEED, 2, 95);    // Drive FWD 29 inches
             moveDropMotorTo(300, 0.6, 3.0); //Drop a block
             sleep(2000);
             gyroDrive(DRIVE_SPEED, -6, -90);    // Drive FWD 29 inches

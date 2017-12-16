@@ -38,7 +38,7 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         debugColorSensor(blueSensorColor);
         telemetry.update();
 
-        blueColorServo.setPosition(1);
+        blueColorServo.setPosition(.9);
         jewelRotationServo.setPosition(.5);
         sleep(2000);
 

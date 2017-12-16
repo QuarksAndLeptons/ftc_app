@@ -47,7 +47,7 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         debugColorSensor(blueSensorColor);
         telemetry.update();
 
-        blueColorServo.setPosition(1);
+        blueColorServo.setPosition(.95);
         jewelRotationServo.setPosition(.5);
         sleep(2000);
 
@@ -92,10 +92,10 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             telemetry.addData("VuMark", "%s visible", vuMark);
             switch (vuMark.ordinal()) {
                 case 1:
-                    gyroTurn(TURN_SPEED, 28.0);                // Turn  CCW to -25 Degrees
-                    gyroHold(TURN_SPEED, 28.0, 0.5); // Hold -25 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 31, 28);    // Drive FWD 29 inches
-                    gyroHold(TURN_SPEED, 28.0, 0.5); // Hold -25 Deg heading for a 1/2 second
+                    gyroTurn(TURN_SPEED, 2.0);                // Turn  CCW to -25 Degrees
+                    gyroHold(TURN_SPEED, 27.0, 0.5); // Hold -25 Deg heading for a 1/2 second
+                    gyroDrive(DRIVE_SPEED, 32, 28);    // Drive FWD 29 inches
+                    gyroHold(TURN_SPEED, 27.0, 0.5); // Hold -25 Deg heading for a 1/2 second
                     moveDropMotorTo(300, 0.6, 3.0); //Drop a block
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 29 inches
