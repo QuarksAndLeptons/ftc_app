@@ -45,16 +45,28 @@ public class Teleop extends org.firstinspires.ftc.teamcode.Autonomous {
             angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             double angle = AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
             telemetry.addData("angle", angle);
-
-            leftMotor.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x);
-            leftMotor2.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x);
-            rightMotor2.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x);
-            rightMotor.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x);
-
+            if (gamepad1.left_trigger < .5 && gamepad1.right_trigger < .5 ) {
+                leftMotor.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x);
+                leftMotor2.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x);
+                rightMotor2.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x);
+                rightMotor.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x);
+            }
+            if (gamepad1.left_trigger < .5 && gamepad1.right_trigger > .5 ) {
+                leftMotor.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
+                leftMotor2.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
+                rightMotor2.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
+                rightMotor.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
+            }
             //Add telemetry data
             //    telemetry.addData("Lift motor power", liftMotor.getPower());
             telemetry.addData("Left motor power", leftMotor.getPower());
             telemetry.addData("Right motor power", rightMotor.getPower());
+
+            if(gamepad1.a) {
+                blueColorServo.setPosition(.1);
+                jewelRotationServo.setPosition(47);
+
+            }
 
 
             //Lifting mechanism
@@ -81,7 +93,7 @@ public class Teleop extends org.firstinspires.ftc.teamcode.Autonomous {
             */
 
             //Glyph dropping mechanism
-            if(!dropMotor.isBusy()) dropMotor.setPower(0.0);
+            /* if(!dropMotor.isBusy()) dropMotor.setPower(0.0);
             if(gamepad2.dpad_up) {
                 dropMotor.setTargetPosition(400);
                 dropMotor.setPower(0.25);
@@ -114,7 +126,7 @@ public class Teleop extends org.firstinspires.ftc.teamcode.Autonomous {
                 if(dropMotor.isBusy()) dropMotor.setPower(0.6);
             }
             if(!dropMotor.isBusy())dropMotor.setPower(0.0);
-
+            */
 
             //add some debug data
             telemetry.addData("Buttons",(gamepad1.a?"A":"-")+(gamepad1.b?"B":"-")+(gamepad1.x?"X":"-")+(gamepad1.y?"Y":"-"));
