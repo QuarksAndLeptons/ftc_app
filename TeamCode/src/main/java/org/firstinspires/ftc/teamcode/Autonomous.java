@@ -693,7 +693,7 @@ public abstract class Autonomous extends LinearOpMode {
      *              downward speed, and +1.0 is the maximum upward speed.
     **/
     protected void liftGlyphs(double speed){
-        glyphLifter.setPosition(Range.clip(speed, 0.1, 0.9)/2.0+0.5);
+        glyphLifter.setPosition(Range.clip(speed, 0.15, 0.85)/2.0+0.5);
     }
 }
 
