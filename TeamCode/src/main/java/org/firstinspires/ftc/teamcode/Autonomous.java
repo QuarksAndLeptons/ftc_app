@@ -55,9 +55,10 @@ public abstract class Autonomous extends LinearOpMode {
     protected DcMotorEx rightMotor2;
     @Deprecated protected DcMotorEx dropMotor;
     //Instantiate servos
-    protected Servo blueColorServo;
-    protected Servo jewelRotationServo;
+    @Deprecated protected Servo blueColorServo;
+    @Deprecated protected Servo jewelRotationServo;
     protected Servo glyphGrabber0, glyphGrabber1, glyphGrabber2, glyphGrabber3, glyphLifter;
+
     //Instantiate sensors
     ColorSensor blueSensorColor;
 
@@ -112,10 +113,11 @@ public abstract class Autonomous extends LinearOpMode {
         //Reverse the right motors so all motors move forward when set to a positive speed.
         rightMotor.setDirection(DcMotorEx.Direction.REVERSE);
         rightMotor2.setDirection(DcMotor.Direction.REVERSE);
-        //Now initialize the drop motor (which currently doesn't exist
+
+        //Now initialize the drop motor (which currently doesn't exist)
         //TODO remove this code
-        dropMotor = (DcMotorEx)hardwareMap.get(DcMotorEx.class,"glyphDropMotor");
-        dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //dropMotor = (DcMotorEx)hardwareMap.get(DcMotorEx.class,"glyphDropMotor");
+        //dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         //Initialize glyph lifting mechanism
         glyphLifter = hardwareMap.get(Servo.class, "glyphLift");
@@ -125,8 +127,8 @@ public abstract class Autonomous extends LinearOpMode {
         glyphGrabber3 = hardwareMap.get(Servo.class, "glyphBottomRight");
 
         //Initialize the servos
-        blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
-        jewelRotationServo = hardwareMap.get(Servo.class, "jewelRotationServo");
+        // blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
+        // jewelRotationServo = hardwareMap.get(Servo.class, "jewelRotationServo");
         //Initialize sensors
         blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
 
