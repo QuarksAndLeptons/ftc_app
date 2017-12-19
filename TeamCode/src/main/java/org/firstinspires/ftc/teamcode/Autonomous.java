@@ -53,10 +53,11 @@ public abstract class Autonomous extends LinearOpMode {
     protected DcMotorEx rightMotor;
     protected DcMotorEx leftMotor2;
     protected DcMotorEx rightMotor2;
-    protected DcMotorEx dropMotor;
+    @Deprecated protected DcMotorEx dropMotor;
     //Instantiate servos
     protected Servo blueColorServo;
     protected Servo jewelRotationServo;
+    protected Servo glyphGrabber0, glyphGrabber1, glyphGrabber2, glyphGrabber3, glyphLifter;
     //Instantiate sensors
     ColorSensor blueSensorColor;
 
@@ -111,9 +112,18 @@ public abstract class Autonomous extends LinearOpMode {
         //Reverse the right motors so all motors move forward when set to a positive speed.
         rightMotor.setDirection(DcMotorEx.Direction.REVERSE);
         rightMotor2.setDirection(DcMotor.Direction.REVERSE);
-        //Now initialize the drop motor
+        //Now initialize the drop motor (which currently doesn't exist
+        //TODO remove this code
         dropMotor = (DcMotorEx)hardwareMap.get(DcMotorEx.class,"glyphDropMotor");
         dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        //Initialize glyph lifting mechanism
+        glyphLifter = hardwareMap.get(Servo.class, "glyphLift");
+        glyphGrabber0 = hardwareMap.get(Servo.class, "glyphTopLeft");
+        glyphGrabber1 = hardwareMap.get(Servo.class, "glyphTopRight");
+        glyphGrabber2 = hardwareMap.get(Servo.class, "glyphBottomLeft");
+        glyphGrabber3 = hardwareMap.get(Servo.class, "glyphBottomRight");
+
         //Initialize the servos
         blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
         jewelRotationServo = hardwareMap.get(Servo.class, "jewelRotationServo");
@@ -152,6 +162,7 @@ public abstract class Autonomous extends LinearOpMode {
 
         // Set up our telemetry dashboard
         composeTelemetry();
+        // Set the g
     }
 
     /**
@@ -639,6 +650,8 @@ public abstract class Autonomous extends LinearOpMode {
      * Sets the power of the drop motor to a certain value and stops the autonomous
      * program until the encoder reaches its target position, the method times out, or
      * the opmode is no longer active
+     *
+     * @deprecated  dropMotor currently does not exist on the robot!
      * @param newEncoderPosition the new encoder position in encoder ticks
      * @param power the power of the motor
      * @param timeout the amount of seconds to wait before giving up
@@ -648,6 +661,37 @@ public abstract class Autonomous extends LinearOpMode {
         dropMotor.setTargetPosition(newEncoderPosition);
         while (dropMotor.isBusy() && opModeIsActive() && runtime.seconds() < timeoutTime) dropMotor.setPower(power);
         dropMotor.setPower(0.0);
+    }
+
+    /**
+     * Grab the glyphs
+     */
+    protected void grabGlyphs(){
+        glyphGrabber0.setPosition(0.25);
+        glyphGrabber1.setPosition(0.5);
+        glyphGrabber2.setPosition(0.72);
+        glyphGrabber3.setPosition(0.5);
+    }
+
+    /**
+     * Release the glyphs
+     */
+    protected void releaseGlyphs(){
+        glyphGrabber0.setPosition(0.0);
+        glyphGrabber1.setPosition(1.0);
+        glyphGrabber2.setPosition(1.0);
+        glyphGrabber3.setPosition(0.0);
+    }
+
+    /**
+     * Sets the speed of the lifting mechanism.
+     * NOTE: the glyph lifting motor behaves like a continuous rotation servo, so this method
+     * converts this value to the servo equivalent.
+     * @param speed the speed of the glyph-lifting mechanism, where -1.0 is the maximum
+     *              downward speed, and +1.0 is the maximum upward speed.
+    **/
+    protected void liftGlyphs(double speed){
+        glyphLifter.setPosition(Range.clip(speed, 0.1, 0.9)/2.0+0.5);
     }
 }
 

@@ -3,13 +3,10 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.sun.tools.javac.comp.Todo;
-
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 
 @Autonomous(name = "Short Red Auto", group = "Linear Opmode")
-// @Autonomous(...) is the other common choice
 
 public class ShortRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
