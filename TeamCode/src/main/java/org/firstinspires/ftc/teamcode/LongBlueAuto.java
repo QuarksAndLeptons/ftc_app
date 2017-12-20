@@ -38,10 +38,13 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         debugColorSensor(blueSensorColor);
         telemetry.update();
 
-        blueColorServo.setPosition(.9);
+//Grab initial glyph
         jewelRotationServo.setPosition(.5);
+        blueColorServo.setPosition(.91);
+        grabLowerGlyphs();
+        liftGlyphs(.8);
         sleep(2000);
-
+        glyphLifter.setPosition(.5);
 
         debugColorSensor(blueSensorColor);
         telemetry.update();
@@ -62,21 +65,18 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         sleep(1000);
 
 
+
         RelicRecoveryVuMark vuMark = RelicRecoveryVuMark.from(relicTemplate);
 
         telemetry.addData("Identified Vumark", vuMark.name());
 
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            telemetry.addData("VuMark", "not visible");
-            grabLowerGlyphs(); //Grab initial glyph
-            liftGlyphs(.8);
-            sleep(1000);
-            liftGlyphs(0);
-            gyroTurn(TURN_SPEED, -15.0, 4);                // Turn 15 degrees to teh right
-            gyroHold(TURN_SPEED, -15.0, 0.5); // Hold for half a second
-            gyroDrive(DRIVE_SPEED, 29, -15, 10);    // Drive forward 29 inches
-            gyroHold(TURN_SPEED, -15.0, 0.5); // Hold for half a second
-            liftGlyphs(-.8);
+            grabLowerGlyphs();
+            gyroDrive(DRIVE_SPEED, 24, 0, 5);    // Drive forward 29 inches
+            gyroTurn(TURN_SPEED, -30.0, 5);                // Turn 15 degrees to teh right
+            gyroHold(TURN_SPEED, -30.0, 0.5); // Hold for half a second
+            gyroDrive(DRIVE_SPEED, 6, -30, 5);    // Drive forward 29 inches
+            gyroHold(TURN_SPEED, -30.0, 0.5); // Hold for half a second
             sleep(1000);
             releaseGlyphs(); //release initial glyph
             sleep(2000);
@@ -86,33 +86,43 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             telemetry.addData("VuMark", "%s visible", vuMark);
             switch (vuMark.ordinal()) {
                 case 1: //Left
-                    gyroTurn(TURN_SPEED, -2.0, 2);                // Turn  CCW to -5 Degrees
-                    gyroHold(TURN_SPEED, -2.0, 0.5); // Hold -5 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 28, -5, 7);    // Drive FWD 30 inches
-                    gyroHold(TURN_SPEED, -2.0, 0.5); // Hold -5 Deg heading for a 1/2 second
-                    moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+                    grabLowerGlyphs();
+                    gyroTurn(TURN_SPEED, 15.0, 4);                // Turn 15 degrees to teh right
+                    gyroHold(TURN_SPEED, 15.0, 0.5); // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 29, 15, 10);    // Drive forward 29 inches
+                    gyroTurn(TURN_SPEED, -45.0, 4);                // Turn 15 degrees to teh right
+                    gyroHold(TURN_SPEED, -45, 0.5); // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 7, -45, 10);    // Drive forward 29 inches
+                    sleep(1000);
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 30 inches
+                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
                     break;
 
                 case 2://Center
-                    gyroTurn(TURN_SPEED, -15.0, 3);                // Turn  CCW to -15 Degrees
-                    gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 29, -15, 7);    // Drive FWD 29 inches
-                    gyroHold(TURN_SPEED, -15.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-                    moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+                    grabLowerGlyphs();
+                    gyroDrive(DRIVE_SPEED, 24, 0, 5);    // Drive forward 29 inches
+                    gyroTurn(TURN_SPEED, -30.0, 4);                // Turn 15 degrees to teh right
+                    gyroHold(TURN_SPEED, -30.0, 0.5); // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 6, -30, 5);    // Drive forward 29 inches
+                    gyroHold(TURN_SPEED, -30.0, 0.5); // Hold for half a second
+                    sleep(1000);
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 29 inches
+                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
                     break;
 
                 case 3://Right
-                    gyroTurn(TURN_SPEED, -23.0, 4);                // Turn  CCW to -25 Degrees
-                    gyroHold(TURN_SPEED, -23.0, 0.5); // Hold -25 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 31, -23, 7);    // Drive FWD 29 inches
-                    gyroHold(TURN_SPEED, -23.0, 0.5); // Hold -25 Deg heading for a 1/2 second
-                    moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+                    grabLowerGlyphs();
+                    gyroDrive(DRIVE_SPEED, 24, 0, 5);    // Drive forward 29 inches
+                    gyroTurn(TURN_SPEED, -53.0, 4);                // Turn 15 degrees to teh right
+                    gyroHold(TURN_SPEED, -53.0, 0.5); // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 15, -53, 5);    // Drive forward 29 inches
+                    gyroHold(TURN_SPEED, -53.0, 0.5); // Hold for half a second
+                    sleep(1000);
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 29 inches
+                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
                     break;
 
 

@@ -679,10 +679,10 @@ public abstract class Autonomous extends LinearOpMode {
      * Release the glyphs
      */
     protected void releaseGlyphs(){
-        glyphGrabber0.setPosition(0.0);
-        glyphGrabber1.setPosition(1.0);
-        glyphGrabber2.setPosition(1.0);
-        glyphGrabber3.setPosition(0.0);
+        glyphGrabber0.setPosition(0.05);
+        glyphGrabber1.setPosition(.95);
+        glyphGrabber2.setPosition(0.95);
+        glyphGrabber3.setPosition(0.15);
     }
 
     protected void grabUpperGlyphs(){
