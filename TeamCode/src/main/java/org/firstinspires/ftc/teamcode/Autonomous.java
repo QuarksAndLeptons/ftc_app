@@ -55,8 +55,8 @@ public abstract class Autonomous extends LinearOpMode {
     protected DcMotorEx rightMotor2;
     @Deprecated protected DcMotorEx dropMotor;
     //Instantiate servos
-    @Deprecated protected Servo blueColorServo;
-    @Deprecated protected Servo jewelRotationServo;
+    protected Servo blueColorServo;
+    protected Servo jewelRotationServo;
     protected Servo glyphGrabber0, glyphGrabber1, glyphGrabber2, glyphGrabber3, glyphLifter;
 
     //Instantiate sensors
@@ -127,8 +127,8 @@ public abstract class Autonomous extends LinearOpMode {
         glyphGrabber3 = hardwareMap.get(Servo.class, "glyphBottomRight");
 
         //Initialize the servos
-        // blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
-        // jewelRotationServo = hardwareMap.get(Servo.class, "jewelRotationServo");
+        blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
+        jewelRotationServo = hardwareMap.get(Servo.class, "jewelRotationServo");
         //Initialize sensors
         blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
 
@@ -685,6 +685,16 @@ public abstract class Autonomous extends LinearOpMode {
         glyphGrabber3.setPosition(0.0);
     }
 
+    protected void grabUpperGlyphs(){
+        glyphGrabber0.setPosition(0.25);
+        glyphGrabber1.setPosition(0.5);
+
+    }
+
+    protected void grabLowerGlyphs(){
+        glyphGrabber2.setPosition(0.72);
+        glyphGrabber3.setPosition(0.5);
+    }
     /**
      * Sets the speed of the lifting mechanism.
      * NOTE: the glyph lifting motor behaves like a continuous rotation servo, so this method

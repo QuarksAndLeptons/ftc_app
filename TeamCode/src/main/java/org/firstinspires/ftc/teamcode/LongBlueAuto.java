@@ -68,18 +68,24 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "not visible");
+            grabLowerGlyphs(); //Grab initial glyph
+            liftGlyphs(.8);
+            sleep(1000);
+            liftGlyphs(0);
             gyroTurn(TURN_SPEED, -15.0, 4);                // Turn 15 degrees to teh right
             gyroHold(TURN_SPEED, -15.0, 0.5); // Hold for half a second
             gyroDrive(DRIVE_SPEED, 29, -15, 10);    // Drive forward 29 inches
             gyroHold(TURN_SPEED, -15.0, 0.5); // Hold for half a second
-            moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+            liftGlyphs(-.8);
+            sleep(1000);
+            releaseGlyphs(); //release initial glyph
             sleep(2000);
             gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
 
         } else {
             telemetry.addData("VuMark", "%s visible", vuMark);
             switch (vuMark.ordinal()) {
-                case 1:
+                case 1: //Left
                     gyroTurn(TURN_SPEED, -2.0, 2);                // Turn  CCW to -5 Degrees
                     gyroHold(TURN_SPEED, -2.0, 0.5); // Hold -5 Deg heading for a 1/2 second
                     gyroDrive(DRIVE_SPEED, 28, -5, 7);    // Drive FWD 30 inches
