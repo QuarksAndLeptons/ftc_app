@@ -38,9 +38,13 @@ public class ShortRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         debugColorSensor(blueSensorColor);
         telemetry.update();
 
-        blueColorServo.setPosition(.95);
+        //Grab initial glyph
         jewelRotationServo.setPosition(.5);
+        blueColorServo.setPosition(.91);
+        grabLowerGlyphs();
+        liftGlyphs(.8);
         sleep(2000);
+        glyphLifter.setPosition(.5);
 
 
         debugColorSensor(blueSensorColor);
@@ -74,9 +78,10 @@ public class ShortRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             gyroTurn(TURN_SPEED, 60.0, 5);               // Turn left 60 Degrees
             gyroHold(TURN_SPEED, 60.0, 0.5); // Stop for 1/2 second, holding direction
             gyroDrive(DRIVE_SPEED, 2, 95, 1);    // Drive forward 2 inches while turning 35 degrees
-            moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+            sleep(1000);
+            releaseGlyphs(); //release initial glyph
             sleep(2000);
-            gyroDrive(DRIVE_SPEED, -6, -90);    // Drive backward 6 inches
+            gyroDrive(DRIVE_SPEED, -6, 90);    // Drive backward six inches
         }
         else { // This must be a VuMark
             telemetry.addData("VuMark", "%s visible", vuMark);
@@ -86,9 +91,10 @@ public class ShortRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     gyroTurn(TURN_SPEED, 95.0, 6);                // Turn 65 Degrees to the right
                     gyroHold(TURN_SPEED, 95.0, 0.5); // Hold for a half-second
                     gyroDrive(DRIVE_SPEED, 3, 95, 2);    // Drive forward 3 inches
-                    moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+                    sleep(1000);
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, -90);    // Drive back 6 inches
+                    gyroDrive(DRIVE_SPEED, -6, 90);    // Drive backward six inches
                     break;
 
                 case 2://Center
@@ -97,9 +103,10 @@ public class ShortRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     gyroTurn(TURN_SPEED, 100.0);                // Turn 100 degrees to the left
                     gyroHold(TURN_SPEED, 100.0, 0.5); // Hold for a half-second
                     gyroDrive(DRIVE_SPEED, 2, 95);    // Drive forward 2 inches
-                    moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+                    sleep(1000);
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, -90);    // Drive backward six inches
+                    gyroDrive(DRIVE_SPEED, -6, 90);    // Drive backward six inches
                     break;
 
                 case 3://Right
@@ -108,9 +115,10 @@ public class ShortRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     gyroTurn(TURN_SPEED, 60.0, 5);                // Turn 60 degrees to the left
                     gyroHold(TURN_SPEED, 60.0, 0.5); // Hold for a half-second
                     gyroDrive(DRIVE_SPEED, 5, 65, 3);    // Drive forward 5 inches
-                    moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+                    sleep(1000);
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, -90);    // Drive backward 6 inches
+                    gyroDrive(DRIVE_SPEED, -6, 90);    // Drive backward six inches
                     break;
 
             }

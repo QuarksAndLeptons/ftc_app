@@ -47,9 +47,13 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         debugColorSensor(blueSensorColor);
         telemetry.update();
 
-        blueColorServo.setPosition(.95);
+        //Grab initial glyph
         jewelRotationServo.setPosition(.5);
+        blueColorServo.setPosition(.91);
+        grabLowerGlyphs();
+        liftGlyphs(.8);
         sleep(2000);
+        glyphLifter.setPosition(.5);
 
 
         debugColorSensor(blueSensorColor);
@@ -81,9 +85,10 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             gyroHold(TURN_SPEED, 20.0, 0.5); // Hold -15 Deg heading for a 1/2 second
             gyroDrive(DRIVE_SPEED, 29, 20, 9);    // Drive FWD 29 inches
             gyroHold(TURN_SPEED, 20.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-            moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+            sleep(1000);
+            releaseGlyphs(); //release initial glyph
             sleep(2000);
-            gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 29 inches
+            gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
 
 
 
@@ -95,9 +100,10 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     gyroHold(TURN_SPEED, 27.0, 0.5); // Hold -25 Deg heading for a 1/2 second
                     gyroDrive(DRIVE_SPEED, 32, 28, 9);    // Drive FWD 29 inches
                     gyroHold(TURN_SPEED, 27.0, 0.5); // Hold -25 Deg heading for a 1/2 second
-                    moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+                    sleep(1000);
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive FWD 29 inches
+                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
 
                     break;
 
@@ -106,9 +112,10 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     gyroHold(TURN_SPEED, 20.0, 0.5);                // Hold for half a second
                     gyroDrive(DRIVE_SPEED, 29, 20, 9);        // Drive forward 29 inches
                     gyroHold(TURN_SPEED, 20.0, 0.5);                 // Hold for half a second
-                    moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+                    sleep(1000);
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 180);                 // Drive back six inches
+                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
                     break;
 
                 case 3://Right
@@ -116,9 +123,10 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
                     gyroHold(TURN_SPEED, 10.0, 0.5);                // Hold for half a second
                     gyroDrive(DRIVE_SPEED, 29, 10.0, 9);    // Drive FWD 30 inches
                     gyroHold(TURN_SPEED, 10.0, 0.5);                // Hold for half a second
-                    moveDropMotorTo(300, 0.6, 3.0); //Drop a block
+                    sleep(1000);
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 180);                // Drive back 6 inches
+                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
                     break;
 
 
