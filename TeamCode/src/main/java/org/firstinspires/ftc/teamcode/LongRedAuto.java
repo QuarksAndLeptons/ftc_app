@@ -79,6 +79,8 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
         telemetry.addData("Identified Vumark", vuMark.name());
 
+//TODO tune new angles and distances for new drop mechanism
+
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "not visible");
             gyroTurn(TURN_SPEED, 20.0,3);                // Turn  CCW to -15 Degrees

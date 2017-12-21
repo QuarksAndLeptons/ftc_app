@@ -73,6 +73,9 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
         telemetry.addData("Identified Vumark", vuMark.name());
 
+
+        //TODO tune new angles and distances for new drop mechanism
+
         //Is VuMark unknown?
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             telemetry.addData("VuMark", "not visible");
