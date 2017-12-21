@@ -33,10 +33,12 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 
 @Autonomous(name = "Blue Jewell Auto", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
+@Disabled
 
 public class SimpleBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 

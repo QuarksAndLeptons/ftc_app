@@ -36,6 +36,7 @@ import android.graphics.Color;
 
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cColorSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -58,7 +59,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 @Autonomous(name = "Red Jewell Auto", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
-
+@Disabled
 public class SimpleRedAuto extends LinearOpMode {
 
     /* Declare OpMode members. */
