@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.hardware.PIDCoefficients;
  */
 
 @Autonomous(name="Concept: Change PID Controller", group = "Examples")
-@Disabled
+
 public class Autonomous_Concept extends LinearOpMode {
 
     // our DC motor.
