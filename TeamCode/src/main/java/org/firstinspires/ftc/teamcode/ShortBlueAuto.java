@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
@@ -20,6 +19,8 @@ public class ShortBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         //Initalize the hardware
         initializeHardware();
 
+        //set new PID Values
+        setPID(.005,0,0);
 
         //Set the initial servo positions
         blueColorServo.setPosition(.1);

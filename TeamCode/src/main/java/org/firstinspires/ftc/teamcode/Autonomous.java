@@ -6,7 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -73,10 +75,53 @@ public abstract class Autonomous extends LinearOpMode {
     static final double     TURN_SPEED              = .5;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 2.5 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = .02;     // Larger is more responsive, but also less stable
-    static final double     P_DRIVE_COEFF           = .05;     // Larger is more responsive, but also less stable
+    static final double     P_TURN_COEFF            = 1;     // .02 Larger is more responsive, but also less stable
+    static final double     P_DRIVE_COEFF           = 1;     // .05 Larger is more responsive, but also less stable
 
 
+
+    protected void setPID(double NEW_P, double NEW_I, double NEW_D) {
+
+
+        // get a reference to the motor controller and cast it as an extended functionality controller.
+        // we assume it's a REV Robotics Expansion Hub (which supports the extended controller functions).
+        DcMotorControllerEx lmotorControllerEx = (DcMotorControllerEx) leftMotor.getController();
+        DcMotorControllerEx rmotorControllerEx = (DcMotorControllerEx) rightMotor.getController();
+
+        // get the port number of our configured motor.
+        int lmotorIndex = ((DcMotorEx) leftMotor).getPortNumber();
+        int rmotorIndex = ((DcMotorEx) rightMotor).getPortNumber();
+
+        // get the PID coefficients for the RUN_USING_ENCODER  modes.
+        PIDCoefficients lpidOrig = lmotorControllerEx.getPIDCoefficients(lmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDCoefficients rpidOrig = rmotorControllerEx.getPIDCoefficients(rmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // change coefficients.
+        PIDCoefficients pidNew = new PIDCoefficients(NEW_P, NEW_I, NEW_D);
+        lmotorControllerEx.setPIDCoefficients(lmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
+        rmotorControllerEx.setPIDCoefficients(rmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER, pidNew);
+
+        // re-read coefficients and verify change.
+        PIDCoefficients lpidModified = lmotorControllerEx.getPIDCoefficients(lmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDCoefficients rpidModified = rmotorControllerEx.getPIDCoefficients(rmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // display info to user.
+        while(opModeIsActive()) {
+            telemetry.addData("Runtime", "%.03f", getRuntime());
+            telemetry.addData("P,I,D (orig)", "%.04f, %.04f, %.0f",
+                    lpidOrig.p, lpidOrig.i, lpidOrig.d);
+            telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
+                    lpidModified.p, lpidModified.i, lpidModified.d);
+            telemetry.addData("Runtime", "%.03f", getRuntime());
+            telemetry.addData("P,I,D (orig)", "%.04f, %.04f, %.0f",
+                    rpidOrig.p, rpidOrig.i, rpidOrig.d);
+            telemetry.addData("P,I,D (modified)", "%.04f, %.04f, %.04f",
+                    rpidModified.p, rpidModified.i, rpidModified.d);
+            telemetry.update();
+
+        }
+
+    }
 
 
     //Initialize Vuforia variables
@@ -315,7 +360,7 @@ public abstract class Autonomous extends LinearOpMode {
      * Drive forward a certain distance based on encoder values
      * @param distance the distance to drive forward in <b>inches</b>.
      */
-    public void driveForwardDistance(double distance) {
+    @Deprecated public void driveForwardDistance(double distance) {
         int iterations = 0;
         long newLeftTarget = leftMotor2.getCurrentPosition() + (long) (distance * COUNTS_PER_INCH);
         long newRightTarget = rightMotor.getCurrentPosition() + (long) (distance * COUNTS_PER_INCH);
@@ -424,8 +469,8 @@ public abstract class Autonomous extends LinearOpMode {
             rightMotor.setTargetPositionTolerance(100);
             // start motion.
             speed = Range.clip(Math.abs(speed), 0.0, 1.0);
-            leftMotor.setPower(speed);
-            rightMotor.setPower(speed);
+            leftDrive(speed);
+            rightDrive(speed);
 
 
             double timeoutTime = runtime.seconds() + timeout;
@@ -628,7 +673,9 @@ public abstract class Autonomous extends LinearOpMode {
      */
     private double getSteer(double error, double PCoeff) {
         return Range.clip(PCoeff * error, -1, 1);
-/*
+
+
+        /*
         // Perform the primary PID calculation
         m_result = m_P * m_error + m_I * m_totalError + m_D * (m_error - m_prevError);
 
