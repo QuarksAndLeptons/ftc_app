@@ -588,7 +588,7 @@ public abstract class Autonomous extends LinearOpMode {
         }
         else {
             steer = getSteer(error, PCoeff);
-            rightSpeed = (Range.clip(speed * steer, .1,1);
+            rightSpeed = (Range.clip(speed * steer, .1,1));
             leftSpeed   = -rightSpeed;
         }
 
