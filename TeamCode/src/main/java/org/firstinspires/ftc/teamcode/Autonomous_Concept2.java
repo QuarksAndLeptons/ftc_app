@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @Autonomous(name="Auto_Concept 2 PID", group="Exercises")
-@Disabled
+
 public class Autonomous_Concept2 extends LinearOpMode
 {
     DcMotor leftMotor;

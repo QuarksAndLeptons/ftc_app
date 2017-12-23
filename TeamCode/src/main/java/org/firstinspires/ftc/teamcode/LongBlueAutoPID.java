@@ -5,10 +5,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 
-@Autonomous(name = "Long Blue Auto", group = "Linear Opmode")
+@Autonomous(name = "Long Blue Auto PID", group = "Linear Opmode")
 // @Autonomous(...) is the other common choice
 
-public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
+public class LongBlueAutoPID extends org.firstinspires.ftc.teamcode.Autonomous {
 
 
     @Override
@@ -18,8 +18,6 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
 
         //Initalize the hardware
         initializeHardware();
-
-
 
         //Set the initial servo positions
         blueColorServo.setPosition(.1);
@@ -72,16 +70,10 @@ public class LongBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         telemetry.addData("Identified Vumark", vuMark.name());
 
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            grabLowerGlyphs();
-            gyroDrive(DRIVE_SPEED, 6, 0, 10);    // Drive forward 29 inches
-            gyroTurn(TURN_SPEED, -30.0, 10);                // Turn 15 degrees to the right
-            gyroHold(TURN_SPEED, -30.0, 0.5); // Hold for half a second
-            gyroDrive(DRIVE_SPEED, 6, -30, 10);    // Drive forward 6 inches
-            gyroHold(TURN_SPEED, -30.0, 0.5); // Hold for half a second
-            sleep(1000);
-            releaseGlyphs(); //release initial glyph
-            sleep(2000);
-            gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward 6 inches
+            pidDrive.setSetpoint(0);
+            pidDrive.setOutputRange(0, power);
+            pidDrive.setInputRange(-90, 90);
+            pidDrive.enable();
 
         } else {
             telemetry.addData("VuMark", "%s visible", vuMark);

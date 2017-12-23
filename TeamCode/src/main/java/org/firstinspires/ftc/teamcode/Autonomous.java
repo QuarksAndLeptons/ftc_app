@@ -26,11 +26,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 
 import java.util.Locale;
 
+import static java.lang.Math.abs;
+
 /**
  * Created by Micah on 12/5/17.
  */
 @Disabled
-public abstract class Autonomous extends LinearOpMode {
+public abstract class Autonomous extends Autonomous_Concept2 {
     //Initialize and instantiate vuforia variables
     OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia;
@@ -69,11 +71,11 @@ public abstract class Autonomous extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = .2;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = .2;     // Nominal half speed for better accuracy.
+    static final double     DRIVE_SPEED             = .25;     // Nominal speed for better accuracy.
+    static final double     TURN_SPEED              = .25;     // Nominal half speed for better accuracy.
 
     static final double     HEADING_THRESHOLD       = 2.5 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = .02;     // .02 Larger is more responsive, but also less stable
+    static final double     P_TURN_COEFF            = .05;     // .02 Larger is more responsive, but also less stable
     static final double     P_DRIVE_COEFF           = .05;     // .05 Larger is more responsive, but also less stable
 
 
@@ -278,10 +280,10 @@ public abstract class Autonomous extends LinearOpMode {
 
         // reset the timeout time and start motion.
         runtime.reset();
-        leftMotor.setPower(Math.abs(speed));
-        leftMotor2.setPower(Math.abs(speed));
-        rightMotor.setPower(Math.abs(speed));
-        rightMotor2.setPower(Math.abs(speed));
+        leftMotor.setPower(abs(speed));
+        leftMotor2.setPower(abs(speed));
+        rightMotor.setPower(abs(speed));
+        rightMotor2.setPower(abs(speed));
 
         // keep looping while we are still active, and there is time left, AND at least one motor is running.
         while (opModeIsActive() &&
@@ -331,7 +333,7 @@ public abstract class Autonomous extends LinearOpMode {
             telemetry.addData("Iterations", ++iterations);
             if(leftIsMoving){ //Are the left motors moving
                 //Check if the left motors are done moving
-                if(Math.abs(newLeftTarget-leftMotor.getCurrentPosition())<200){
+                if(abs(newLeftTarget-leftMotor.getCurrentPosition())<200){
                     leftMotor.setPower(0);
                     leftMotor2.setPower(0);
                     leftIsMoving = false;
@@ -348,7 +350,7 @@ public abstract class Autonomous extends LinearOpMode {
             }
             if(rightIsMoving){ //Are the right motors moving
                 //Check if the right motors are done moving
-                if(Math.abs(newRightTarget-rightMotor2.getCurrentPosition())<200){
+                if(abs(newRightTarget-rightMotor2.getCurrentPosition())<200){
                     rightMotor.setPower(0);
                     rightMotor2.setPower(0);
                     leftIsMoving = false;
@@ -449,7 +451,7 @@ public abstract class Autonomous extends LinearOpMode {
                 telemetry.addData("right", rightSpeed);
                 telemetry.update();
                 // Normalize speeds if either one exceeds +/- 1.0;
-                max = Math.max(Math.abs(leftSpeed), Math.abs(rightSpeed));
+                max = Math.max(abs(leftSpeed), abs(rightSpeed));
                 if (max > 1.0)
                 {
                     leftSpeed /= max;
@@ -580,7 +582,7 @@ public abstract class Autonomous extends LinearOpMode {
         // determine turn power based on +/- error
         error = getError(angle);
 
-        if (Math.abs(error) <= HEADING_THRESHOLD) {
+        if (abs(error) <= HEADING_THRESHOLD) {
             steer = 0.0;
             leftSpeed  = 0.0;
             rightSpeed = 0.0;
@@ -588,7 +590,7 @@ public abstract class Autonomous extends LinearOpMode {
         }
         else {
             steer = getSteer(error, PCoeff);
-            rightSpeed = (Range.clip(speed * steer, .1,1));
+            rightSpeed  = speed * steer;
             leftSpeed   = -rightSpeed;
         }
 

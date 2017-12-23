@@ -89,7 +89,7 @@ public class ParkingBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             sleep(2000);
             blueColorServo.setPosition(.35);
             jewelRotationServo.setPosition(.47);
-
+            
             driveForwardDistance(32);
 
 
