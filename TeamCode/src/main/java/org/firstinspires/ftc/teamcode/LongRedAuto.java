@@ -28,8 +28,6 @@ public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
         //Initalize the hardware
         initializeHardware();
 
-        //set new PID Values
-        setPID(.005,0,0);
 
         //Set the initial servo positions
         blueColorServo.setPosition(.1);
