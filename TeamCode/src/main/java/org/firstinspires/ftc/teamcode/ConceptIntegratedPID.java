@@ -8,9 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 public class ConceptIntegratedPID extends Team6475Controls {
 
-    public static final double NEW_P = 2.5;
-    public static final double NEW_I = 0.1;
-    public static final double NEW_D = 0.2;
+
 
     @Override
     public void runOpMode() {
@@ -32,6 +30,7 @@ public class ConceptIntegratedPID extends Team6475Controls {
 
 
         setPID(2.5,.1,.2);
+
     }
 
 }
