@@ -6,7 +6,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorControllerEx;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PIDCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -42,9 +44,9 @@ public abstract class Team6475Controls extends LinearOpMode {
 
     // The IMU sensor object
     protected BNO055IMU imu;
-    Orientation             lastAngles = new Orientation();
-    double                  globalAngle, power = .30, correction;
-    PIDController           pidRotate, pidDrive;
+    Orientation lastAngles = new Orientation();
+    double globalAngle, power = .30, correction;
+    PIDController pidRotate, pidDrive;
 
     // Orientation and acceleration variables from the built in 9-axis accelerometer
     protected Orientation angles;
@@ -57,7 +59,8 @@ public abstract class Team6475Controls extends LinearOpMode {
     protected DcMotorEx rightMotor;
     protected DcMotorEx leftMotor2;
     protected DcMotorEx rightMotor2;
-    @Deprecated protected DcMotorEx dropMotor;
+    @Deprecated
+    protected DcMotorEx dropMotor;
 
     //Instantiate servos
     protected Servo blueColorServo;
@@ -75,13 +78,12 @@ public abstract class Team6475Controls extends LinearOpMode {
 
     // These constants define the desired driving/control characteristics
     // The can/should be tweaked to suite the specific robot drive train.
-    static final double     DRIVE_SPEED             = .25;     // Nominal speed for better accuracy.
-    static final double     TURN_SPEED              = .25;     // Nominal half speed for better accuracy.
+    static final double DRIVE_SPEED = .25;     // Nominal speed for better accuracy.
+    static final double TURN_SPEED = .25;     // Nominal half speed for better accuracy.
 
-    static final double     HEADING_THRESHOLD       = 2.5 ;      // As tight as we can make it with an integer gyro
-    static final double     P_TURN_COEFF            = .05;     // .02 Larger is more responsive, but also less stable
-    static final double     P_DRIVE_COEFF           = .05;     // .05 Larger is more responsive, but also less stable
-
+    static final double HEADING_THRESHOLD = 2.5;      // As tight as we can make it with an integer gyro
+    static final double P_TURN_COEFF = .05;     // .02 Larger is more responsive, but also less stable
+    static final double P_DRIVE_COEFF = .05;     // .05 Larger is more responsive, but also less stable
 
 
 
@@ -94,17 +96,17 @@ public abstract class Team6475Controls extends LinearOpMode {
      * Initializes all of the motors and servos.
      * <b>Be sure to call this before waitForStart()</b>
      */
-    protected void initializeHardware(){
+    protected void initializeHardware() {
         //Give the OK message
         telemetry.addData("Status", "Initializing hardware");
         telemetry.update();
 
         //Initialize robot hardware
         //Begin with the chassis
-        leftMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"leftFront");
-        rightMotor = (DcMotorEx)hardwareMap.get(DcMotor.class,"rightFront");
-        leftMotor2 = (DcMotorEx)hardwareMap.get(DcMotor.class,"leftRear");
-        rightMotor2 = (DcMotorEx)hardwareMap.get(DcMotor.class,"rightRear");
+        leftMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftFront");
+        rightMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightFront");
+        leftMotor2 = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftRear");
+        rightMotor2 = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightRear");
         //Reset the encoders on the chassis to 0
         leftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         leftMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -124,7 +126,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-                //Initialize glyph lifting mechanism
+        //Initialize glyph lifting mechanism
         glyphLifter = hardwareMap.get(Servo.class, "glyphLift");
         glyphGrabber0 = hardwareMap.get(Servo.class, "glyphTopLeft");
         glyphGrabber1 = hardwareMap.get(Servo.class, "glyphTopRight");
@@ -179,8 +181,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         telemetry.update();
 
         // make sure the imu gyro is calibrated before continuing.
-        while (!isStopRequested() && !imu.isGyroCalibrated())
-        {
+        while (!isStopRequested() && !imu.isGyroCalibrated()) {
             sleep(50);
             idle();
         }
@@ -194,7 +195,7 @@ public abstract class Team6475Controls extends LinearOpMode {
      * Begin Vuforia tracking and caliberate gyro.
      * <b>Call this <i>after</i> waitForStart()</b>
      */
-    protected void startAdvancedSensing(){
+    protected void startAdvancedSensing() {
         //Do some calibration and activation
         // Start the logging of measured acceleration
         imu.startAccelerationIntegration(new Position(), new Velocity(), 40);
@@ -212,20 +213,11 @@ public abstract class Team6475Controls extends LinearOpMode {
             angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             gravity = imu.getGravity();
         });
-        telemetry.addLine()
-                .addData("status", () -> imu.getSystemStatus().toShortString())
-                .addData("calib", () -> imu.getCalibrationStatus().toString());
-        telemetry.addLine()
-                .addData("heading", () -> formatAngle(angles.angleUnit, angles.firstAngle))
-                .addData("roll", () -> formatAngle(angles.angleUnit, angles.secondAngle))
-                .addData("pitch", () -> formatAngle(angles.angleUnit, angles.thirdAngle));
-        telemetry.addLine()
-                .addData("grvty", () -> gravity.toString())
+        telemetry.addLine().addData("status", () -> imu.getSystemStatus().toShortString()).addData("calib", () -> imu.getCalibrationStatus().toString());
+        telemetry.addLine().addData("heading", () -> formatAngle(angles.angleUnit, angles.firstAngle)).addData("roll", () -> formatAngle(angles.angleUnit, angles.secondAngle)).addData("pitch", () -> formatAngle(angles.angleUnit, angles.thirdAngle));
+        telemetry.addLine().addData("grvty", () -> gravity.toString())
 
-                .addData("mag", () -> String.format(Locale.getDefault(), "%.3f",
-                        Math.sqrt(gravity.xAccel * gravity.xAccel
-                                + gravity.yAccel * gravity.yAccel
-                                + gravity.zAccel * gravity.zAccel)));
+                .addData("mag", () -> String.format(Locale.getDefault(), "%.3f", Math.sqrt(gravity.xAccel * gravity.xAccel + gravity.yAccel * gravity.yAccel + gravity.zAccel * gravity.zAccel)));
     }
 
     private String formatAngle(AngleUnit angleUnit, double angle) {
@@ -239,6 +231,7 @@ public abstract class Team6475Controls extends LinearOpMode {
 
     /**
      * Sets the power of both right motors
+     *
      * @param power the power of each of the motors
      */
     protected void rightDrive(double power) {
@@ -248,6 +241,7 @@ public abstract class Team6475Controls extends LinearOpMode {
 
     /**
      * Sets the power of both left motors
+     *
      * @param power the power of each of the motors
      */
     protected void leftDrive(double power) {
@@ -259,46 +253,43 @@ public abstract class Team6475Controls extends LinearOpMode {
     /**
      * Displays the red, green, and blue values on telemetry.
      * <b>Note: </b> this method does not call telemetry.update()
-     *
      */
-    protected void debugColorSensor(ColorSensor sensor){
+    protected void debugColorSensor(ColorSensor sensor) {
         telemetry.addData("Red  ", blueSensorColor.red());
         telemetry.addData("Green", blueSensorColor.green());
         telemetry.addData("Blue ", blueSensorColor.blue());
     }
-    /**
-     *  Method to drive on a fixed compass bearing (angle), based on encoder counts.
-     *  Move will stop if either of these conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Driver stops the opmode running.
-     *
-     * @param speed      Target speed for forward motion.  Should allow for _/- variance for adjusting heading
-     * @param distance   Distance (in inches) to move from current position.  Negative distance means move backwards.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
-     * @param timeout the number of seconds to take control of the autonomous program
-     *                before giving up
-     */
-    protected void gyroDrive (  double speed,
-                               double distance,
-                               double angle,
-                               double timeout) {
 
-        int     newLeftTarget;
-        int     newRightTarget;
-        int     moveCounts;
-        double  max;
-        double  error;
-        double  steer;
-        double  leftSpeed;
-        double  rightSpeed;
+    /**
+     * Method to drive on a fixed compass bearing (angle), based on encoder counts.
+     * Move will stop if either of these conditions occur:
+     * 1) Move gets to the desired position
+     * 2) Driver stops the opmode running.
+     *
+     * @param speed    Target speed for forward motion.  Should allow for _/- variance for adjusting heading
+     * @param distance Distance (in inches) to move from current position.  Negative distance means move backwards.
+     * @param angle    Absolute Angle (in Degrees) relative to last gyro reset.
+     *                 0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                 If a relative angle is required, add/subtract from current heading.
+     * @param timeout  the number of seconds to take control of the autonomous program
+     *                 before giving up
+     */
+    protected void gyroDrive(double speed, double distance, double angle, double timeout) {
+
+        int newLeftTarget;
+        int newRightTarget;
+        int moveCounts;
+        double max;
+        double error;
+        double steer;
+        double leftSpeed;
+        double rightSpeed;
 
         // Ensure that the opmode is still active
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            moveCounts = (int)(distance * COUNTS_PER_INCH);
+            moveCounts = (int) (distance * COUNTS_PER_INCH);
             newLeftTarget = leftMotor.getCurrentPosition() + moveCounts;
             newRightTarget = rightMotor.getCurrentPosition() + moveCounts;
 
@@ -314,34 +305,30 @@ public abstract class Team6475Controls extends LinearOpMode {
             leftMotor.setTargetPositionTolerance(100);
             rightMotor.setTargetPositionTolerance(100);
             // start motion.
-            speed = Range.clip (speed, -1.0, 1.0);
+            speed = Range.clip(speed, -1.0, 1.0);
             leftDrive(speed);
             rightDrive(speed);
 
 
             double timeoutTime = runtime.seconds() + timeout;
             // keep looping while we are still active, and BOTH motors are running.
-            while (opModeIsActive() &&
-                    (leftMotor.isBusy() && rightMotor.isBusy()) &&
-                    runtime.seconds()<=timeoutTime) {
+            while (opModeIsActive() && (leftMotor.isBusy() && rightMotor.isBusy()) && runtime.seconds() <= timeoutTime) {
 
                 // adjust relative speed based on heading error.
                 error = getError(angle);
                 steer = getSteer(error, P_DRIVE_COEFF);
 
                 // if driving in reverse, the motor correction also needs to be reversed
-                if (distance < 0)
-                    steer *= -1.0;
+                if (distance < 0) steer *= -1.0;
 
                 leftSpeed = speed - steer;
                 rightSpeed = speed + steer;
-                telemetry.addData("left: ", leftSpeed );
+                telemetry.addData("left: ", leftSpeed);
                 telemetry.addData("right", rightSpeed);
                 telemetry.update();
                 // Normalize speeds if either one exceeds +/- 1.0;
                 max = Math.max(abs(leftSpeed), abs(rightSpeed));
-                if (max > 1.0)
-                {
+                if (max > 1.0) {
                     leftSpeed /= max;
                     rightSpeed /= max;
                 }
@@ -350,11 +337,10 @@ public abstract class Team6475Controls extends LinearOpMode {
                 rightDrive(rightSpeed);
 
                 // Display drive status for the driver.
-                telemetry.addData("Err/St",  "%5.1f/%5.1f",  error, steer);
-                telemetry.addData("Target",  "%7d:%7d",      newLeftTarget,  newRightTarget);
-                telemetry.addData("Actual",  "%7d:%7d",      leftMotor.getCurrentPosition(),
-                        rightMotor.getCurrentPosition());
-                telemetry.addData("Speed",   "%5.2f:%5.2f",  leftSpeed, rightSpeed);
+                telemetry.addData("Err/St", "%5.1f/%5.1f", error, steer);
+                telemetry.addData("Target", "%7d:%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Actual", "%7d:%7d", leftMotor.getCurrentPosition(), rightMotor.getCurrentPosition());
+                telemetry.addData("Speed", "%5.2f:%5.2f", leftSpeed, rightSpeed);
                 telemetry.update();
             }
 
@@ -365,51 +351,50 @@ public abstract class Team6475Controls extends LinearOpMode {
     }
 
     /**
-     *  Method to drive on a fixed compass bearing (angle), based on encoder counts.
-     *  Move will stop if either of these conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Driver stops the opmode running.
+     * Method to drive on a fixed compass bearing (angle), based on encoder counts.
+     * Move will stop if either of these conditions occur:
+     * 1) Move gets to the desired position
+     * 2) Driver stops the opmode running.
      *
-     * @param speed      Target speed for forward motion.  Should allow for _/- variance for adjusting heading
-     * @param distance   Distance (in inches) to move from current position.  Negative distance means move backwards.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
+     * @param speed    Target speed for forward motion.  Should allow for _/- variance for adjusting heading
+     * @param distance Distance (in inches) to move from current position.  Negative distance means move backwards.
+     * @param angle    Absolute Angle (in Degrees) relative to last gyro reset.
+     *                 0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                 If a relative angle is required, add/subtract from current heading.
      */
-    protected void gyroDrive ( double speed,
-                               double distance,
-                               double angle){
+    protected void gyroDrive(double speed, double distance, double angle) {
         gyroDrive(speed, distance, angle, 60);
     }
 
     /**
-     *  Method to spin on central axis to point in a new direction.
-     *  Move will stop if either of these conditions occur:
-     *  1) Move gets to the heading (angle)
-     *  2) Driver stops the opmode running.
+     * Method to spin on central axis to point in a new direction.
+     * Move will stop if either of these conditions occur:
+     * 1) Move gets to the heading (angle)
+     * 2) Driver stops the opmode running.
      *
      * @param speed Desired speed of turn.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
+     * @param angle Absolute Angle (in Degrees) relative to last gyro reset.
+     *              0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *              If a relative angle is required, add/subtract from current heading.
      */
-    public void gyroTurn (  double speed, double angle) {
+    public void gyroTurn(double speed, double angle) {
         gyroTurn(speed, angle, 60);
     }
+
     /**
-     *  Method to spin on central axis to point in a new direction.
-     *  Move will stop if either of these conditions occur:
-     *  1) Move gets to the heading (angle)
-     *  2) Driver stops the opmode running.
+     * Method to spin on central axis to point in a new direction.
+     * Move will stop if either of these conditions occur:
+     * 1) Move gets to the heading (angle)
+     * 2) Driver stops the opmode running.
      *
-     * @param speed Desired speed of turn.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
+     * @param speed   Desired speed of turn.
+     * @param angle   Absolute Angle (in Degrees) relative to last gyro reset.
+     *                0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                If a relative angle is required, add/subtract from current heading.
      * @param timeout the number of seconds to take control of the autonomous program
      *                before giving up
      */
-    public void gyroTurn (double speed, double angle, double timeout) {
+    public void gyroTurn(double speed, double angle, double timeout) {
         //Ensure the motors are in the right configuration
         leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -418,22 +403,23 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         double timeoutTime = runtime.seconds() + timeout;
         // keep looping while we are still active, and not on heading.
-        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF) && runtime.seconds()<timeoutTime) {
+        while (opModeIsActive() && !onHeading(speed, angle, P_TURN_COEFF) && runtime.seconds() < timeoutTime) {
             // Update telemetry & Allow time for other processes to run.
             telemetry.update();
         }
     }
+
     /**
-     *  Method to obtain & hold a heading for a finite amount of time
-     *  Move will stop once the requested time has elapsed
+     * Method to obtain & hold a heading for a finite amount of time
+     * Move will stop once the requested time has elapsed
      *
-     * @param speed      Desired speed of turn.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
-     * @param holdTime   Length of time (in seconds) to hold the specified heading.
+     * @param speed    Desired speed of turn.
+     * @param angle    Absolute Angle (in Degrees) relative to last gyro reset.
+     *                 0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                 If a relative angle is required, add/subtract from current heading.
+     * @param holdTime Length of time (in seconds) to hold the specified heading.
      */
-    public void gyroHold( double speed, double angle, double holdTime) {
+    public void gyroHold(double speed, double angle, double holdTime) {
 
         ElapsedTime holdTimer = new ElapsedTime();
 
@@ -453,17 +439,17 @@ public abstract class Team6475Controls extends LinearOpMode {
     /**
      * Perform one cycle of closed loop heading control.
      *
-     * @param speed     Desired speed of turn.
-     * @param angle     Absolute Angle (in Degrees) relative to last gyro reset.
-     *                  0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                  If a relative angle is required, add/subtract from current heading.
-     * @param PCoeff    Proportional Gain coefficient
+     * @param speed  Desired speed of turn.
+     * @param angle  Absolute Angle (in Degrees) relative to last gyro reset.
+     *               0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *               If a relative angle is required, add/subtract from current heading.
+     * @param PCoeff Proportional Gain coefficient
      * @return
      */
     private boolean onHeading(double speed, double angle, double PCoeff) {
-        double   error ;
-        double   steer ;
-        boolean  onTarget = false ;
+        double error;
+        double steer;
+        boolean onTarget = false;
         double leftSpeed;
         double rightSpeed;
 
@@ -472,14 +458,13 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         if (abs(error) <= HEADING_THRESHOLD) {
             steer = 0.0;
-            leftSpeed  = 0.0;
+            leftSpeed = 0.0;
             rightSpeed = 0.0;
             onTarget = true;
-        }
-        else {
+        } else {
             steer = getSteer(error, PCoeff);
-            rightSpeed  = speed * steer;
-            leftSpeed   = -rightSpeed;
+            rightSpeed = speed * steer;
+            leftSpeed = -rightSpeed;
         }
 
         // Send desired speeds to motors.
@@ -496,9 +481,10 @@ public abstract class Team6475Controls extends LinearOpMode {
 
     /**
      * getError determines the error between the target angle and the robot's current heading
-     * @param   targetAngle  Desired angle (relative to global reference established at last Gyro Reset).
-     * @return  error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
-     *          +ve error means the robot should turn LEFT (CCW) to reduce error.
+     *
+     * @param targetAngle Desired angle (relative to global reference established at last Gyro Reset).
+     * @return error angle: Degrees in the range +/- 180. Centered on the robot's frame of reference
+     * +ve error means the robot should turn LEFT (CCW) to reduce error.
      */
     private double getError(double targetAngle) {
 
@@ -506,20 +492,20 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         // calculate error in -179 to +180 range  (
         robotError = targetAngle - imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle;
-        while (robotError > 180)  robotError -= 360;
+        while (robotError > 180) robotError -= 360;
         while (robotError <= -180) robotError += 360;
         return robotError;
     }
 
     /**
      * returns desired steering force.  +/- 1 range.  +ve = steer left
-     * @param error   Error angle in robot relative degrees
-     * @param PCoeff  Proportional Gain Coefficient
+     *
+     * @param error  Error angle in robot relative degrees
+     * @param PCoeff Proportional Gain Coefficient
      * @return
      */
     private double getSteer(double error, double PCoeff) {
         return Range.clip(PCoeff * error, -1, 1);
-
 
 
     }
@@ -529,15 +515,15 @@ public abstract class Team6475Controls extends LinearOpMode {
      * program until the encoder reaches its target position, the method times out, or
      * the opmode is no longer active
      *
-     * @deprecated  dropMotor currently does not exist on the robot!
+     * @deprecated dropMotor currently does not exist on the robot!
      * @param newEncoderPosition the new encoder position in encoder ticks
      * @param power the power of the motor
      * @param timeout the amount of seconds to wait before giving up
      */
-     /**
+    /**
      * Grab the glyphs
      */
-    protected void grabGlyphs(){
+    protected void grabGlyphs() {
         glyphGrabber0.setPosition(0.25);
         glyphGrabber1.setPosition(0.5);
         glyphGrabber2.setPosition(0.72);
@@ -547,59 +533,59 @@ public abstract class Team6475Controls extends LinearOpMode {
     /**
      * Release the glyphs
      */
-    protected void releaseGlyphs(){
+    protected void releaseGlyphs() {
         glyphGrabber0.setPosition(0.05);
         glyphGrabber1.setPosition(.95);
         glyphGrabber2.setPosition(0.95);
         glyphGrabber3.setPosition(0.15);
     }
 
-    protected void grabUpperGlyphs(){
+    protected void grabUpperGlyphs() {
         glyphGrabber0.setPosition(0.25);
         glyphGrabber1.setPosition(0.5);
 
     }
 
-    protected void grabLowerGlyphs(){
+    protected void grabLowerGlyphs() {
         glyphGrabber2.setPosition(0.70);  //.95 is opn
         glyphGrabber3.setPosition(0.52); //.15 is open
     }
+
     /**
      * Sets the speed of the lifting mechanism.
      * NOTE: the glyph lifting motor behaves like a continuous rotation servo, so this method
      * converts this value to the servo equivalent.
+     *
      * @param speed the speed of the glyph-lifting mechanism, where -1.0 is the maximum
      *              downward speed, and +1.0 is the maximum upward speed.
-    **/
-    protected void liftGlyphs(double speed){
-        glyphLifter.setPosition(Range.clip(speed, 0.15, 0.85)/2.0+0.5);
+     **/
+    protected void liftGlyphs(double speed) {
+        glyphLifter.setPosition(Range.clip(speed, 0.15, 0.85) / 2.0 + 0.5);
     }
 
     // Set up parameters for driving in a straight line.
+
     /**
-     *  Method to drive on a fixed compass bearing (angle), based on encoder counts.
-     *  Move will stop if either of these conditions occur:
-     *  1) Move gets to the desired position
-     *  2) Driver stops the opmode running.
+     * Method to drive on a fixed compass bearing (angle), based on encoder counts.
+     * Move will stop if either of these conditions occur:
+     * 1) Move gets to the desired position
+     * 2) Driver stops the opmode running.
      *
-     * @param power      Target speed for forward motion.  Should allow for _/- variance for adjusting heading
-     * @param distance   Distance (in inches) to move from current position.  Negative distance means move backwards.
-     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
-     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
-     *                   If a relative angle is required, add/subtract from current heading.
-     * @param timeout the number of seconds to take control of the autonomous program
-     *                before giving up
+     * @param power    Target speed for forward motion.  Should allow for _/- variance for adjusting heading
+     * @param distance Distance (in inches) to move from current position.  Negative distance means move backwards.
+     * @param angle    Absolute Angle (in Degrees) relative to last gyro reset.
+     *                 0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                 If a relative angle is required, add/subtract from current heading.
+     * @param timeout  the number of seconds to take control of the autonomous program
+     *                 before giving up
      */
 
-    protected void Drive (  double power,
-                            double distance,
-                            double angle,
-                            double timeout) {
+    protected void Drive(double power, double distance, double angle, double timeout) {
         int newLeftTarget;
         int newRightTarget;
         int moveCounts;
-        double  leftPower;
-        double  rightPower;
+        double leftPower;
+        double rightPower;
 
         pidDrive.setSetpoint(angle);
         pidDrive.setOutputRange(0, power);
@@ -611,7 +597,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         if (opModeIsActive()) {
 
             // Determine new target position, and pass to motor controller
-            moveCounts = (int)(distance * COUNTS_PER_INCH);
+            moveCounts = (int) (distance * COUNTS_PER_INCH);
             newLeftTarget = leftMotor.getCurrentPosition() + moveCounts;
             newRightTarget = rightMotor.getCurrentPosition() + moveCounts;
 
@@ -631,33 +617,29 @@ public abstract class Team6475Controls extends LinearOpMode {
 
             double timeoutTime = runtime.seconds() + timeout;
             // keep looping while we are still active, and BOTH motors are running.
-            while (opModeIsActive() &&
-                    (leftMotor.isBusy() && rightMotor.isBusy()) &&
-                    runtime.seconds()<=timeoutTime) {
+            while (opModeIsActive() && (leftMotor.isBusy() && rightMotor.isBusy()) && runtime.seconds() <= timeoutTime) {
                 correction = pidDrive.performPID(getAngle());
 
                 // if driving in reverse, the motor correction also needs to be reversed
-                if (distance < 0)
-                    correction *= -1.0;
+                if (distance < 0) correction *= -1.0;
 
                 leftPower = power - correction;
                 rightPower = power + correction;
 
                 telemetry.addData("1 imu heading", lastAngles.firstAngle);
-            telemetry.addData("2 global heading", globalAngle);
-            telemetry.addData("3 correction", correction);
+                telemetry.addData("2 global heading", globalAngle);
+                telemetry.addData("3 correction", correction);
                 // Display drive status for the driver.
-                telemetry.addData("Target",  "%7d:%7d",      newLeftTarget,  newRightTarget);
-                telemetry.addData("Actual",  "%7d:%7d",      leftMotor.getCurrentPosition(),
-                        rightMotor.getCurrentPosition());
-                telemetry.addData("Speed",   "%5.2f:%5.2f",  leftPower, rightPower);
+                telemetry.addData("Target", "%7d:%7d", newLeftTarget, newRightTarget);
+                telemetry.addData("Actual", "%7d:%7d", leftMotor.getCurrentPosition(), rightMotor.getCurrentPosition());
+                telemetry.addData("Speed", "%5.2f:%5.2f", leftPower, rightPower);
                 telemetry.update();
-            telemetry.update();
+                telemetry.update();
 
-            // set power levels.
+                // set power levels.
 
-            leftDrive(leftPower);
-            rightDrive(rightPower);
+                leftDrive(leftPower);
+                rightDrive(rightPower);
 
             }
         }
@@ -667,18 +649,18 @@ public abstract class Team6475Controls extends LinearOpMode {
     /**
      * Resets the cumulative angle tracking to zero.
      */
-    private void resetAngle()
-    {
+    private void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
         globalAngle = 0;
     }
+
     /**
      * Get current cumulative angle rotation from last reset.
+     *
      * @return Angle in degrees. + = left, - = right from zero point.
      */
-    private double getAngle()
-    {
+    private double getAngle() {
         // We experimentally determined the Z axis is the axis we want to use for heading angle.
         // We have to process the angle because the imu works in euler angles so the Z axis is
         // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
@@ -688,10 +670,8 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
-        if (deltaAngle < -180)
-            deltaAngle += 360;
-        else if (deltaAngle > 180)
-            deltaAngle -= 360;
+        if (deltaAngle < -180) deltaAngle += 360;
+        else if (deltaAngle > 180) deltaAngle -= 360;
 
         globalAngle += deltaAngle;
 
@@ -702,10 +682,10 @@ public abstract class Team6475Controls extends LinearOpMode {
 
     /**
      * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+     *
      * @param degrees Degrees to turn, + is left - is right
      */
-    protected void TurnToHeading (int degrees, double power)
-    {
+    protected void TurnToHeading(int degrees, double power) {
         // restart imu angle tracking.
         //resetAngle();
 
@@ -731,26 +711,21 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         // rotate until turn is completed.
 
-        if (degrees < 0)
-        {
+        if (degrees < 0) {
             // On right turn we have to get off zero first.
-            while (opModeIsActive() && getAngle() == 0)
-            {
+            while (opModeIsActive() && getAngle() == 0) {
                 leftDrive(-power);
                 rightDrive(power);
                 sleep(100);
             }
 
-            do
-            {
+            do {
                 power = pidRotate.performPID(getAngle()); // power will be - on right turn.
                 leftDrive(power);
                 rightDrive(-power);
             } while (opModeIsActive() && !pidRotate.onTarget());
-        }
-        else    // left turn.
-            do
-            {
+        } else    // left turn.
+            do {
                 power = pidRotate.performPID(getAngle()); // power will be + on left turn.
                 leftDrive(power);
                 rightDrive(-power);
@@ -769,8 +744,7 @@ public abstract class Team6475Controls extends LinearOpMode {
 
 
     //TODO class or method?
-    public class PIDController
-    {
+    public class PIDController {
         private double m_P;                                 // factor for "proportional" control
         private double m_I;                                 // factor for "integral" control
         private double m_D;                                 // factor for "derivative" control
@@ -790,12 +764,12 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         /**
          * Allocate a PID object with the given constants for P, I, D
+         *
          * @param Kp the proportional coefficient
          * @param Ki the integral coefficient
          * @param Kd the derivative coefficient
          */
-        public PIDController(double Kp, double Ki, double Kd)
-        {
+        public PIDController(double Kp, double Ki, double Kd) {
             m_P = Kp;
             m_I = Ki;
             m_D = Kd;
@@ -806,33 +780,26 @@ public abstract class Team6475Controls extends LinearOpMode {
          * This should only be called by the PIDTask
          * and is created during initialization.
          */
-        private void calculate()
-        {
-            int     sign = 1;
+        private void calculate() {
+            int sign = 1;
 
             // If enabled then proceed into controller calculations
-            if (m_enabled)
-            {
+            if (m_enabled) {
                 // Calculate the error signal
                 m_error = m_setpoint - m_input;
 
                 // If continuous is set to true allow wrap around
-                if (m_continuous)
-                {
-                    if (Math.abs(m_error) > (m_maximumInput - m_minimumInput) / 2)
-                    {
-                        if (m_error > 0)
-                            m_error = m_error - m_maximumInput + m_minimumInput;
-                        else
-                            m_error = m_error + m_maximumInput - m_minimumInput;
+                if (m_continuous) {
+                    if (Math.abs(m_error) > (m_maximumInput - m_minimumInput) / 2) {
+                        if (m_error > 0) m_error = m_error - m_maximumInput + m_minimumInput;
+                        else m_error = m_error + m_maximumInput - m_minimumInput;
                     }
                 }
 
                 // Integrate the errors as long as the upcoming integrator does
                 // not exceed the minimum and maximum output thresholds.
 
-                if ((Math.abs(m_totalError + m_error) * m_I < m_maximumOutput) &&
-                        (Math.abs(m_totalError + m_error) * m_I > m_minimumOutput))
+                if ((Math.abs(m_totalError + m_error) * m_I < m_maximumOutput) && (Math.abs(m_totalError + m_error) * m_I > m_minimumOutput))
                     m_totalError += m_error;
 
                 // Perform the primary PID calculation
@@ -845,22 +812,20 @@ public abstract class Team6475Controls extends LinearOpMode {
 
                 // Make sure the final result is within bounds. If we constrain the result, we make
                 // sure the sign of the constrained result matches the original result sign.
-                if (Math.abs(m_result) > m_maximumOutput)
-                    m_result = m_maximumOutput * sign;
-                else if (Math.abs(m_result) < m_minimumOutput)
-                    m_result = m_minimumOutput * sign;
+                if (Math.abs(m_result) > m_maximumOutput) m_result = m_maximumOutput * sign;
+                else if (Math.abs(m_result) < m_minimumOutput) m_result = m_minimumOutput * sign;
             }
         }
 
         /**
          * Set the PID Controller gain parameters.
          * Set the proportional, integral, and differential coefficients.
+         *
          * @param p Proportional coefficient
          * @param i Integral coefficient
          * @param d Differential coefficient
          */
-        public void setPID(double p, double i, double d)
-        {
+        public void setPID(double p, double i, double d) {
             m_P = p;
             m_I = i;
             m_D = d;
@@ -868,6 +833,7 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         /**
          * Get the Proportional coefficient
+         *
          * @return proportional coefficient
          */
         public double getP() {
@@ -876,6 +842,7 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         /**
          * Get the Integral coefficient
+         *
          * @return integral coefficient
          */
         public double getI() {
@@ -884,6 +851,7 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         /**
          * Get the Differential coefficient
+         *
          * @return differential coefficient
          */
         public double getD() {
@@ -893,31 +861,32 @@ public abstract class Team6475Controls extends LinearOpMode {
         /**
          * Return the current PID result for the last input set with setInput().
          * This is always centered on zero and constrained the the max and min outs
+         *
          * @return the latest calculated output
          */
-        public double performPID()
-        {
+        public double performPID() {
             calculate();
             return m_result;
         }
 
         /**
          * Return the current PID result for the specified input.
+         *
          * @param input The input value to be used to calculate the PID result.
-         * This is always centered on zero and constrained the the max and min outs
+         *              This is always centered on zero and constrained the the max and min outs
          * @return the latest calculated output
          */
-        public double performPID(double input)
-        {
+        public double performPID(double input) {
             setInput(input);
             return performPID();
         }
 
         /**
-         *  Set the PID controller to consider the input to be continuous,
-         *  Rather then using the max and min in as constraints, it considers them to
-         *  be the same point and automatically calculates the shortest route to
-         *  the setpoint.
+         * Set the PID controller to consider the input to be continuous,
+         * Rather then using the max and min in as constraints, it considers them to
+         * be the same point and automatically calculates the shortest route to
+         * the setpoint.
+         *
          * @param continuous Set to true turns on continuous, false turns off continuous
          */
         public void setContinuous(boolean continuous) {
@@ -925,10 +894,10 @@ public abstract class Team6475Controls extends LinearOpMode {
         }
 
         /**
-         *  Set the PID controller to consider the input to be continuous,
-         *  Rather then using the max and min in as constraints, it considers them to
-         *  be the same point and automatically calculates the shortest route to
-         *  the setpoint.
+         * Set the PID controller to consider the input to be continuous,
+         * Rather then using the max and min in as constraints, it considers them to
+         * be the same point and automatically calculates the shortest route to
+         * the setpoint.
          */
         public void setContinuous() {
             this.setContinuous(true);
@@ -940,8 +909,7 @@ public abstract class Team6475Controls extends LinearOpMode {
          * @param minimumInput the minimum value expected from the input, always positive
          * @param maximumInput the maximum value expected from the output, always positive
          */
-        public void setInputRange(double minimumInput, double maximumInput)
-        {
+        public void setInputRange(double minimumInput, double maximumInput) {
             m_minimumInput = Math.abs(minimumInput);
             m_maximumInput = Math.abs(maximumInput);
             setSetpoint(m_setpoint);
@@ -953,37 +921,31 @@ public abstract class Team6475Controls extends LinearOpMode {
          * @param minimumOutput the minimum value to write to the output, always positive
          * @param maximumOutput the maximum value to write to the output, always positive
          */
-        public void setOutputRange(double minimumOutput, double maximumOutput)
-        {
+        public void setOutputRange(double minimumOutput, double maximumOutput) {
             m_minimumOutput = Math.abs(minimumOutput);
             m_maximumOutput = Math.abs(maximumOutput);
         }
 
         /**
          * Set the setpoint for the PIDController
+         *
          * @param setpoint the desired setpoint
          */
-        public void setSetpoint(double setpoint)
-        {
-            int     sign = 1;
+        public void setSetpoint(double setpoint) {
+            int sign = 1;
 
-            if (m_maximumInput > m_minimumInput)
-            {
+            if (m_maximumInput > m_minimumInput) {
                 if (setpoint < 0) sign = -1;
 
-                if (Math.abs(setpoint) > m_maximumInput)
-                    m_setpoint = m_maximumInput * sign;
-                else if (Math.abs(setpoint) < m_minimumInput)
-                    m_setpoint = m_minimumInput * sign;
-                else
-                    m_setpoint = setpoint;
-            }
-            else
-                m_setpoint = setpoint;
+                if (Math.abs(setpoint) > m_maximumInput) m_setpoint = m_maximumInput * sign;
+                else if (Math.abs(setpoint) < m_minimumInput) m_setpoint = m_minimumInput * sign;
+                else m_setpoint = setpoint;
+            } else m_setpoint = setpoint;
         }
 
         /**
          * Returns the current setpoint of the PIDController
+         *
          * @return the current setpoint
          */
         public double getSetpoint() {
@@ -992,6 +954,7 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         /**
          * Retruns the current difference of the input from the setpoint
+         *
          * @return the current error
          */
         public synchronized double getError() {
@@ -1001,6 +964,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         /**
          * Set the percentage error which is considered tolerable for use with
          * OnTarget. (Input of 15.0 = 15 percent)
+         *
          * @param percent error which is tolerable
          */
         public void setTolerance(double percent) {
@@ -1011,10 +975,10 @@ public abstract class Team6475Controls extends LinearOpMode {
          * Return true if the error is within the percentage of the total input range,
          * determined by setTolerance. This assumes that the maximum and minimum input
          * were set using setInputRange.
+         *
          * @return true if the error is less than the tolerance
          */
-        public boolean onTarget()
-        {
+        public boolean onTarget() {
             return (Math.abs(m_error) < Math.abs(m_tolerance / 100 * (m_maximumInput - m_minimumInput)));
         }
 
@@ -1035,8 +999,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         /**
          * Reset the previous error,, the integral term, and disable the controller.
          */
-        public void reset()
-        {
+        public void reset() {
             disable();
             m_prevError = 0;
             m_totalError = 0;
@@ -1045,27 +1008,75 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         /**
          * Set the input value to be used by the next call to performPID().
+         *
          * @param input Input value to the PID calculation.
          */
-        public void setInput(double input)
-        {
-            int     sign = 1;
+        public void setInput(double input) {
+            int sign = 1;
 
-            if (m_maximumInput > m_minimumInput)
-            {
+            if (m_maximumInput > m_minimumInput) {
                 if (input < 0) sign = -1;
 
-                if (Math.abs(input) > m_maximumInput)
-                    m_input = m_maximumInput * sign;
-                else if (Math.abs(input) < m_minimumInput)
-                    m_input = m_minimumInput * sign;
-                else
-                    m_input = input;
-            }
-            else
-                m_input = input;
+                if (Math.abs(input) > m_maximumInput) m_input = m_maximumInput * sign;
+                else if (Math.abs(input) < m_minimumInput) m_input = m_minimumInput * sign;
+                else m_input = input;
+            } else m_input = input;
         }
     }
+    /**
+     * Set the input value for integrated PID.
+     *
+     * @param NEW_P Input value to the PID calculation.
+     * @param NEW_I
+     * @param NEW_D
+     *
+     */
+    protected void setPID(double NEW_P, double NEW_I, double NEW_D) {
+        /**
+         * Created by tom on 9/26/17.
+         * This assumes that you are using a REV Robotics Expansion Hub
+         * as your DC motor controller. This op mode uses the extended/enhanced
+         * PID-related functions of the DcMotorControllerEx class.
+         * The REV Robotics Expansion Hub supports the extended motor controller
+         * functions, but other controllers (such as the Modern Robotics and
+         * Hitechnic DC Motor Controllers) do not.
+         */
 
+        // get a reference to the motor controller and cast it as an extended functionality controller.
+        // we assume it's a REV Robotics Expansion Hub (which supports the extended controller functions).
+        DcMotorControllerEx lmotorControllerEx = (DcMotorControllerEx) leftMotor.getController();
+        DcMotorControllerEx rmotorControllerEx = (DcMotorControllerEx) rightMotor.getController();
+
+        // get the port number of our configured motor.
+        int lmotorIndex = ((DcMotorEx) leftMotor).getPortNumber();
+        int rmotorIndex = ((DcMotorEx) rightMotor).getPortNumber();
+
+        // get the PID coefficients for the RUN_USING_ENCODER  modes.
+        PIDCoefficients lpidOrig = lmotorControllerEx.getPIDCoefficients(lmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDCoefficients rpidOrig = rmotorControllerEx.getPIDCoefficients(rmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // change coefficients.
+        PIDCoefficients lpidNew = new PIDCoefficients(NEW_P, NEW_I, NEW_D);
+        PIDCoefficients rpidNew = new PIDCoefficients(NEW_P, NEW_I, NEW_D);
+        lmotorControllerEx.setPIDCoefficients(lmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER, lpidNew);
+        rmotorControllerEx.setPIDCoefficients(rmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER, rpidNew);
+
+        // re-read coefficients and verify change.
+        PIDCoefficients lpidModified = lmotorControllerEx.getPIDCoefficients(lmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+        PIDCoefficients rpidModified = lmotorControllerEx.getPIDCoefficients(rmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // display info to user.
+        while (opModeIsActive())
+
+        {
+            telemetry.addData("Runtime", "%.03f", getRuntime());
+            telemetry.addData("Left P,I,D (orig)", "%.04f, %.04f, %.0f", lpidOrig.p, lpidOrig.i, lpidOrig.d);
+            telemetry.addData("Right P,I,D (orig)", "%.04f, %.04f, %.0f", rpidOrig.p, rpidOrig.i, rpidOrig.d);
+            telemetry.addData("Left P,I,D (modified)", "%.04f, %.04f, %.04f", lpidModified.p, lpidModified.i, lpidModified.d);
+            telemetry.addData("Right P,I,D (modified)", "%.04f, %.04f, %.04f", rpidModified.p, rpidModified.i, rpidModified.d);
+
+            telemetry.update();
+
+        }
+    }
 }
-
