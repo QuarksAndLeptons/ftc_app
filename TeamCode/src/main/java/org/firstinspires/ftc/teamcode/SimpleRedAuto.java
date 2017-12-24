@@ -58,7 +58,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 @Autonomous(name = "Red Jewell Auto", group = "Linear Opmode")
-// @Autonomous(...) is the other common choice
+// @Team6475Controls(...) is the other common choice
 @Disabled
 public class SimpleRedAuto extends LinearOpMode {
 

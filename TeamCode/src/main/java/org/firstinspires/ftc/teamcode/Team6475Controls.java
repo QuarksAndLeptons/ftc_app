@@ -32,7 +32,7 @@ import static java.lang.Math.abs;
  * Created by Micah on 12/5/17.
  */
 @Disabled
-public abstract class Autonomous extends Autonomous_Concept2 {
+public abstract class Team6475Controls extends LinearOpMode {
     //Initialize and instantiate vuforia variables
     OpenGLMatrix lastLocation = null;
     VuforiaLocalizer vuforia;
@@ -42,6 +42,9 @@ public abstract class Autonomous extends Autonomous_Concept2 {
 
     // The IMU sensor object
     protected BNO055IMU imu;
+    Orientation             lastAngles = new Orientation();
+    double                  globalAngle, power = .30, correction;
+    PIDController           pidRotate, pidDrive;
 
     // Orientation and acceleration variables from the built in 9-axis accelerometer
     protected Orientation angles;
@@ -55,6 +58,7 @@ public abstract class Autonomous extends Autonomous_Concept2 {
     protected DcMotorEx leftMotor2;
     protected DcMotorEx rightMotor2;
     @Deprecated protected DcMotorEx dropMotor;
+
     //Instantiate servos
     protected Servo blueColorServo;
     protected Servo jewelRotationServo;
@@ -115,13 +119,12 @@ public abstract class Autonomous extends Autonomous_Concept2 {
         //Reverse the right motors so all motors move forward when set to a positive speed.
         rightMotor.setDirection(DcMotorEx.Direction.REVERSE);
         rightMotor2.setDirection(DcMotor.Direction.REVERSE);
+        rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //Now initialize the drop motor (which currently doesn't exist)
-        //TODO remove this code
-        //dropMotor = (DcMotorEx)hardwareMap.get(DcMotorEx.class,"glyphDropMotor");
-        //dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Initialize glyph lifting mechanism
+                //Initialize glyph lifting mechanism
         glyphLifter = hardwareMap.get(Servo.class, "glyphLift");
         glyphGrabber0 = hardwareMap.get(Servo.class, "glyphTopLeft");
         glyphGrabber1 = hardwareMap.get(Servo.class, "glyphTopRight");
@@ -163,6 +166,24 @@ public abstract class Autonomous extends Autonomous_Concept2 {
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parametersG);
+
+
+        // Set PID proportional value to start reducing power at about 50 degrees of rotation.
+        pidRotate = new PIDController(.005, 0, 0);
+
+        // Set PID proportional value to produce non-zero correction value when robot veers off
+        // straight line. P value controls how sensitive the correction is.
+        pidDrive = new PIDController(.015, 0, .015); //Oscillation starts at Kp=.030
+
+        telemetry.addData("Mode", "calibrating...");
+        telemetry.update();
+
+        // make sure the imu gyro is calibrated before continuing.
+        while (!isStopRequested() && !imu.isGyroCalibrated())
+        {
+            sleep(50);
+            idle();
+        }
 
         // Set up our telemetry dashboard
         composeTelemetry();
@@ -233,139 +254,6 @@ public abstract class Autonomous extends Autonomous_Concept2 {
         leftMotor.setPower(power);
         leftMotor2.setPower(power);
 
-    }
-
-
-
-    /**
-     * Move the forward for a certain amount of time
-     *
-     * @param time  the amount of time to move forward in <b>seconds</b>
-     * @param power the power of each of the motors
-     */
-    protected void driveTime(double time, double power) {
-        leftDrive(power);
-        rightDrive(power);
-        sleep((int) (time * 1000.0));
-        leftDrive(0);
-        rightDrive(0);
-    }
-
-
-    /**
-     * Runs the chassis motors at a given power for a certain number of inches
-     * @Depreciated Use driveForwardDistance()
-     * @param speed the motor power
-     * @param leftInches number of inches for the left motor to turn
-     * @param rightInches number of inches for the right motor to turn
-     * @param timeoutS the number of seconds before giving up
-     */
-    private void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
-        int newLeftTarget;
-        int newRightTarget;
-
-        // Determine new target position, and pass to motor controller
-        newLeftTarget = leftMotor.getCurrentPosition() + (int) (leftInches * COUNTS_PER_INCH);
-        newRightTarget = rightMotor2.getCurrentPosition() + (int) (rightInches * COUNTS_PER_INCH);
-        leftMotor.setTargetPosition(newLeftTarget);
-        leftMotor2.setTargetPosition(newLeftTarget);
-        rightMotor.setTargetPosition(newRightTarget);
-        rightMotor2.setTargetPosition(newRightTarget);
-
-        // Turn On RUN_TO_POSITION
-        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor2.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // reset the timeout time and start motion.
-        runtime.reset();
-        leftMotor.setPower(abs(speed));
-        leftMotor2.setPower(abs(speed));
-        rightMotor.setPower(abs(speed));
-        rightMotor2.setPower(abs(speed));
-
-        // keep looping while we are still active, and there is time left, AND at least one motor is running.
-        while (opModeIsActive() &&
-                runtime.seconds() < timeoutS &&
-                leftMotor.isBusy() || rightMotor2.isBusy()) {
-            // Display it for the driver.
-            telemetry.addData("Left Target", "Running to", newLeftTarget);
-            telemetry.addData("Right Target", "Running to", newRightTarget);
-            telemetry.addData("leftMotor", "Running at", leftMotor.getCurrentPosition());
-            telemetry.addData("rightMotor2", "Running at", rightMotor2.getCurrentPosition());
-            telemetry.update();
-        }
-
-        // Stop all motion;
-        leftMotor.setPower(0);
-        leftMotor2.setPower(0);
-        rightMotor.setPower(0);
-        rightMotor2.setPower(0);
-
-        // Turn off RUN_TO_POSITION
-        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor2.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        sleep(1000);   // optional pause after each move
-
-        telemetry.addData("Status", "Done moving forward");
-        telemetry.update();
-    }
-
-    /**
-     * Drive forward a certain distance based on encoder values
-     * @param distance the distance to drive forward in <b>inches</b>.
-     */
-    @Deprecated public void driveForwardDistance(double distance) {
-        int iterations = 0;
-        long newLeftTarget = leftMotor2.getCurrentPosition() + (long) (distance * COUNTS_PER_INCH);
-        long newRightTarget = rightMotor.getCurrentPosition() + (long) (distance * COUNTS_PER_INCH);
-        boolean leftIsMoving = true, rightIsMoving = true;
-
-        while ((leftIsMoving||rightIsMoving) && opModeIsActive()){
-            telemetry.addData("Status", "Driving forward " + distance + " inches");
-            telemetry.addData("Left Motor Position", leftMotor2.getCurrentPosition());
-            telemetry.addData("Left Motor Speed", leftMotor.getPowerFloat());
-            telemetry.addData("Right Motor Position", rightMotor.getCurrentPosition());
-            telemetry.addData("Right Motor Speed", rightMotor.getPowerFloat());
-            telemetry.addData("Iterations", ++iterations);
-            if(leftIsMoving){ //Are the left motors moving
-                //Check if the left motors are done moving
-                if(abs(newLeftTarget-leftMotor.getCurrentPosition())<200){
-                    leftMotor.setPower(0);
-                    leftMotor2.setPower(0);
-                    leftIsMoving = false;
-                }
-                //If the motors aren't done moving, keep moving them
-                else if (leftMotor.getCurrentPosition() > newLeftTarget) {
-                    leftMotor.setPower(-.5);
-                    leftMotor2.setPower(-.5);
-                }
-                else {
-                    leftMotor.setPower(.5);
-                    leftMotor2.setPower(.5);
-                }
-            }
-            if(rightIsMoving){ //Are the right motors moving
-                //Check if the right motors are done moving
-                if(abs(newRightTarget-rightMotor2.getCurrentPosition())<200){
-                    rightMotor.setPower(0);
-                    rightMotor2.setPower(0);
-                    leftIsMoving = false;
-                }
-                //If the motors aren't done moving, keep moving them
-                else if (rightMotor.getCurrentPosition() > newRightTarget) {
-                    rightMotor.setPower(-.5);
-                    rightMotor2.setPower(-.5);
-                }
-                else {
-                    rightMotor.setPower(.5);
-                    rightMotor2.setPower(.5);
-                }
-            }
-        }
     }
 
     /**
@@ -633,25 +521,7 @@ public abstract class Autonomous extends Autonomous_Concept2 {
         return Range.clip(PCoeff * error, -1, 1);
 
 
-        /*
-        // Perform the primary PID calculation
-        m_result = m_P * m_error + m_I * m_totalError + m_D * (m_error - m_prevError);
 
-        // Set the current error to the previous error for the next cycle.
-        m_prevError = m_error;
-
-         From PID wiki
-        previous_error = 0
-        integral = 0
-    loop:
-      error = setpoint - measured_value
-      integral = integral + error*dt
-      derivative = (error - previous_error)/dt
-      output = Kp*error + Ki*integral + Kd*derivative
-      previous_error = error
-      wait(dt)
-      goto loop
-         */
     }
 
     /**
@@ -664,14 +534,7 @@ public abstract class Autonomous extends Autonomous_Concept2 {
      * @param power the power of the motor
      * @param timeout the amount of seconds to wait before giving up
      */
-    protected void moveDropMotorTo(int newEncoderPosition, double power, double timeout){
-        double timeoutTime = runtime.seconds() + timeout;
-        dropMotor.setTargetPosition(newEncoderPosition);
-        while (dropMotor.isBusy() && opModeIsActive() && runtime.seconds() < timeoutTime) dropMotor.setPower(power);
-        dropMotor.setPower(0.0);
-    }
-
-    /**
+     /**
      * Grab the glyphs
      */
     protected void grabGlyphs(){
@@ -711,5 +574,498 @@ public abstract class Autonomous extends Autonomous_Concept2 {
     protected void liftGlyphs(double speed){
         glyphLifter.setPosition(Range.clip(speed, 0.15, 0.85)/2.0+0.5);
     }
+
+    // Set up parameters for driving in a straight line.
+    /**
+     *  Method to drive on a fixed compass bearing (angle), based on encoder counts.
+     *  Move will stop if either of these conditions occur:
+     *  1) Move gets to the desired position
+     *  2) Driver stops the opmode running.
+     *
+     * @param power      Target speed for forward motion.  Should allow for _/- variance for adjusting heading
+     * @param distance   Distance (in inches) to move from current position.  Negative distance means move backwards.
+     * @param angle      Absolute Angle (in Degrees) relative to last gyro reset.
+     *                   0 = fwd. +ve is CCW from fwd. -ve is CW from forward.
+     *                   If a relative angle is required, add/subtract from current heading.
+     * @param timeout the number of seconds to take control of the autonomous program
+     *                before giving up
+     */
+
+    protected void Drive (  double power,
+                            double distance,
+                            double angle,
+                            double timeout) {
+        int newLeftTarget;
+        int newRightTarget;
+        int moveCounts;
+        double  leftPower;
+        double  rightPower;
+
+        pidDrive.setSetpoint(angle);
+        pidDrive.setOutputRange(0, power);
+        pidDrive.setInputRange(-90, 90);
+        pidDrive.enable();
+
+        // drive until end of period.
+
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            moveCounts = (int)(distance * COUNTS_PER_INCH);
+            newLeftTarget = leftMotor.getCurrentPosition() + moveCounts;
+            newRightTarget = rightMotor.getCurrentPosition() + moveCounts;
+
+            // Set Target and Turn On RUN_TO_POSITION
+            leftMotor.setTargetPosition(newLeftTarget);
+            leftMotor2.setTargetPosition(newLeftTarget);
+            rightMotor.setTargetPosition(newRightTarget);
+            rightMotor2.setTargetPosition(newRightTarget);
+
+            // Turn On RUN_TO_POSITION
+            leftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            rightMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
+            leftMotor.setTargetPositionTolerance(100);
+            rightMotor.setTargetPositionTolerance(100);
+
+            // Use PID with imu input to drive in a straight line.
+
+            double timeoutTime = runtime.seconds() + timeout;
+            // keep looping while we are still active, and BOTH motors are running.
+            while (opModeIsActive() &&
+                    (leftMotor.isBusy() && rightMotor.isBusy()) &&
+                    runtime.seconds()<=timeoutTime) {
+                correction = pidDrive.performPID(getAngle());
+
+                // if driving in reverse, the motor correction also needs to be reversed
+                if (distance < 0)
+                    correction *= -1.0;
+
+                leftPower = power - correction;
+                rightPower = power + correction;
+
+                telemetry.addData("1 imu heading", lastAngles.firstAngle);
+            telemetry.addData("2 global heading", globalAngle);
+            telemetry.addData("3 correction", correction);
+                // Display drive status for the driver.
+                telemetry.addData("Target",  "%7d:%7d",      newLeftTarget,  newRightTarget);
+                telemetry.addData("Actual",  "%7d:%7d",      leftMotor.getCurrentPosition(),
+                        rightMotor.getCurrentPosition());
+                telemetry.addData("Speed",   "%5.2f:%5.2f",  leftPower, rightPower);
+                telemetry.update();
+            telemetry.update();
+
+            // set power levels.
+
+            leftDrive(leftPower);
+            rightDrive(rightPower);
+
+            }
+        }
+    }
+
+
+    /**
+     * Resets the cumulative angle tracking to zero.
+     */
+    private void resetAngle()
+    {
+        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        globalAngle = 0;
+    }
+    /**
+     * Get current cumulative angle rotation from last reset.
+     * @return Angle in degrees. + = left, - = right from zero point.
+     */
+    private double getAngle()
+    {
+        // We experimentally determined the Z axis is the axis we want to use for heading angle.
+        // We have to process the angle because the imu works in euler angles so the Z axis is
+        // returned as 0 to +180 or 0 to -180 rolling back to -179 or +179 when rotation passes
+        // 180 degrees. We detect this transition and track the total cumulative angle of rotation.
+
+        Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+
+        double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
+
+        if (deltaAngle < -180)
+            deltaAngle += 360;
+        else if (deltaAngle > 180)
+            deltaAngle -= 360;
+
+        globalAngle += deltaAngle;
+
+        lastAngles = angles;
+
+        return globalAngle;
+    }
+
+    /**
+     * Rotate left or right the number of degrees. Does not support turning more than 180 degrees.
+     * @param degrees Degrees to turn, + is left - is right
+     */
+    protected void TurnToHeading (int degrees, double power)
+    {
+        // restart imu angle tracking.
+        //resetAngle();
+
+        // start pid controller. PID controller will monitor the turn angle with respect to the
+        // target angle and reduce power as we approach the target angle with a minimum of 20%.
+        // This is to prevent the robots momentum from overshooting the turn after we turn off the
+        // power. The PID controller reports onTarget() = true when the difference between turn
+        // angle and target angle is within 2% of target (tolerance). This helps prevent overshoot.
+        // The minimum power is determined by testing and must enough to prevent motor stall and
+        // complete the turn. Note: if the gap between the starting power and the stall (minimum)
+        // power is small, overshoot may still occur. Overshoot is dependant on the motor and
+        // gearing configuration, starting power, weight of the robot and the on target tolerance.
+
+        pidRotate.reset();
+        pidRotate.setSetpoint(degrees);
+        pidRotate.setInputRange(0, 90);
+        pidRotate.setOutputRange(.20, power);
+        pidRotate.setTolerance(2);
+        pidRotate.enable();
+
+        // getAngle() returns + when rotating counter clockwise (left) and - when rotating
+        // clockwise (right).
+
+        // rotate until turn is completed.
+
+        if (degrees < 0)
+        {
+            // On right turn we have to get off zero first.
+            while (opModeIsActive() && getAngle() == 0)
+            {
+                leftDrive(-power);
+                rightDrive(power);
+                sleep(100);
+            }
+
+            do
+            {
+                power = pidRotate.performPID(getAngle()); // power will be - on right turn.
+                leftDrive(power);
+                rightDrive(-power);
+            } while (opModeIsActive() && !pidRotate.onTarget());
+        }
+        else    // left turn.
+            do
+            {
+                power = pidRotate.performPID(getAngle()); // power will be + on left turn.
+                leftDrive(power);
+                rightDrive(-power);
+            } while (opModeIsActive() && !pidRotate.onTarget());
+
+        // turn the motors off.
+        rightDrive(0);
+        leftDrive(0);
+
+        // wait for rotation to stop.
+        sleep(500);
+
+        // reset angle tracking on new heading.
+        //resetAngle();
+    }
+
+
+    //TODO class or method?
+    public class PIDController
+    {
+        private double m_P;                                 // factor for "proportional" control
+        private double m_I;                                 // factor for "integral" control
+        private double m_D;                                 // factor for "derivative" control
+        private double m_input;                 // sensor input for pid controller
+        private double m_maximumOutput = 1.0;   // |maximum output|
+        private double m_minimumOutput = -1.0;  // |minimum output|
+        private double m_maximumInput = 0.0;    // maximum input - limit setpoint to this
+        private double m_minimumInput = 0.0;    // minimum input - limit setpoint to this
+        private boolean m_continuous = false;   // do the endpoints wrap around? eg. Absolute encoder
+        private boolean m_enabled = false;              //is the pid controller enabled
+        private double m_prevError = 0.0;           // the prior sensor input (used to compute velocity)
+        private double m_totalError = 0.0;      //the sum of the errors for use in the integral calc
+        private double m_tolerance = 0.05;          //the percentage error that is considered on target
+        private double m_setpoint = 0.0;
+        private double m_error = 0.0;
+        private double m_result = 0.0;
+
+        /**
+         * Allocate a PID object with the given constants for P, I, D
+         * @param Kp the proportional coefficient
+         * @param Ki the integral coefficient
+         * @param Kd the derivative coefficient
+         */
+        public PIDController(double Kp, double Ki, double Kd)
+        {
+            m_P = Kp;
+            m_I = Ki;
+            m_D = Kd;
+        }
+
+        /**
+         * Read the input, calculate the output accordingly, and write to the output.
+         * This should only be called by the PIDTask
+         * and is created during initialization.
+         */
+        private void calculate()
+        {
+            int     sign = 1;
+
+            // If enabled then proceed into controller calculations
+            if (m_enabled)
+            {
+                // Calculate the error signal
+                m_error = m_setpoint - m_input;
+
+                // If continuous is set to true allow wrap around
+                if (m_continuous)
+                {
+                    if (Math.abs(m_error) > (m_maximumInput - m_minimumInput) / 2)
+                    {
+                        if (m_error > 0)
+                            m_error = m_error - m_maximumInput + m_minimumInput;
+                        else
+                            m_error = m_error + m_maximumInput - m_minimumInput;
+                    }
+                }
+
+                // Integrate the errors as long as the upcoming integrator does
+                // not exceed the minimum and maximum output thresholds.
+
+                if ((Math.abs(m_totalError + m_error) * m_I < m_maximumOutput) &&
+                        (Math.abs(m_totalError + m_error) * m_I > m_minimumOutput))
+                    m_totalError += m_error;
+
+                // Perform the primary PID calculation
+                m_result = m_P * m_error + m_I * m_totalError + m_D * (m_error - m_prevError);
+
+                // Set the current error to the previous error for the next cycle.
+                m_prevError = m_error;
+
+                if (m_result < 0) sign = -1;    // Record sign of result.
+
+                // Make sure the final result is within bounds. If we constrain the result, we make
+                // sure the sign of the constrained result matches the original result sign.
+                if (Math.abs(m_result) > m_maximumOutput)
+                    m_result = m_maximumOutput * sign;
+                else if (Math.abs(m_result) < m_minimumOutput)
+                    m_result = m_minimumOutput * sign;
+            }
+        }
+
+        /**
+         * Set the PID Controller gain parameters.
+         * Set the proportional, integral, and differential coefficients.
+         * @param p Proportional coefficient
+         * @param i Integral coefficient
+         * @param d Differential coefficient
+         */
+        public void setPID(double p, double i, double d)
+        {
+            m_P = p;
+            m_I = i;
+            m_D = d;
+        }
+
+        /**
+         * Get the Proportional coefficient
+         * @return proportional coefficient
+         */
+        public double getP() {
+            return m_P;
+        }
+
+        /**
+         * Get the Integral coefficient
+         * @return integral coefficient
+         */
+        public double getI() {
+            return m_I;
+        }
+
+        /**
+         * Get the Differential coefficient
+         * @return differential coefficient
+         */
+        public double getD() {
+            return m_D;
+        }
+
+        /**
+         * Return the current PID result for the last input set with setInput().
+         * This is always centered on zero and constrained the the max and min outs
+         * @return the latest calculated output
+         */
+        public double performPID()
+        {
+            calculate();
+            return m_result;
+        }
+
+        /**
+         * Return the current PID result for the specified input.
+         * @param input The input value to be used to calculate the PID result.
+         * This is always centered on zero and constrained the the max and min outs
+         * @return the latest calculated output
+         */
+        public double performPID(double input)
+        {
+            setInput(input);
+            return performPID();
+        }
+
+        /**
+         *  Set the PID controller to consider the input to be continuous,
+         *  Rather then using the max and min in as constraints, it considers them to
+         *  be the same point and automatically calculates the shortest route to
+         *  the setpoint.
+         * @param continuous Set to true turns on continuous, false turns off continuous
+         */
+        public void setContinuous(boolean continuous) {
+            m_continuous = continuous;
+        }
+
+        /**
+         *  Set the PID controller to consider the input to be continuous,
+         *  Rather then using the max and min in as constraints, it considers them to
+         *  be the same point and automatically calculates the shortest route to
+         *  the setpoint.
+         */
+        public void setContinuous() {
+            this.setContinuous(true);
+        }
+
+        /**
+         * Sets the maximum and minimum values expected from the input.
+         *
+         * @param minimumInput the minimum value expected from the input, always positive
+         * @param maximumInput the maximum value expected from the output, always positive
+         */
+        public void setInputRange(double minimumInput, double maximumInput)
+        {
+            m_minimumInput = Math.abs(minimumInput);
+            m_maximumInput = Math.abs(maximumInput);
+            setSetpoint(m_setpoint);
+        }
+
+        /**
+         * Sets the minimum and maximum values to write.
+         *
+         * @param minimumOutput the minimum value to write to the output, always positive
+         * @param maximumOutput the maximum value to write to the output, always positive
+         */
+        public void setOutputRange(double minimumOutput, double maximumOutput)
+        {
+            m_minimumOutput = Math.abs(minimumOutput);
+            m_maximumOutput = Math.abs(maximumOutput);
+        }
+
+        /**
+         * Set the setpoint for the PIDController
+         * @param setpoint the desired setpoint
+         */
+        public void setSetpoint(double setpoint)
+        {
+            int     sign = 1;
+
+            if (m_maximumInput > m_minimumInput)
+            {
+                if (setpoint < 0) sign = -1;
+
+                if (Math.abs(setpoint) > m_maximumInput)
+                    m_setpoint = m_maximumInput * sign;
+                else if (Math.abs(setpoint) < m_minimumInput)
+                    m_setpoint = m_minimumInput * sign;
+                else
+                    m_setpoint = setpoint;
+            }
+            else
+                m_setpoint = setpoint;
+        }
+
+        /**
+         * Returns the current setpoint of the PIDController
+         * @return the current setpoint
+         */
+        public double getSetpoint() {
+            return m_setpoint;
+        }
+
+        /**
+         * Retruns the current difference of the input from the setpoint
+         * @return the current error
+         */
+        public synchronized double getError() {
+            return m_error;
+        }
+
+        /**
+         * Set the percentage error which is considered tolerable for use with
+         * OnTarget. (Input of 15.0 = 15 percent)
+         * @param percent error which is tolerable
+         */
+        public void setTolerance(double percent) {
+            m_tolerance = percent;
+        }
+
+        /**
+         * Return true if the error is within the percentage of the total input range,
+         * determined by setTolerance. This assumes that the maximum and minimum input
+         * were set using setInputRange.
+         * @return true if the error is less than the tolerance
+         */
+        public boolean onTarget()
+        {
+            return (Math.abs(m_error) < Math.abs(m_tolerance / 100 * (m_maximumInput - m_minimumInput)));
+        }
+
+        /**
+         * Begin running the PIDController
+         */
+        public void enable() {
+            m_enabled = true;
+        }
+
+        /**
+         * Stop running the PIDController.
+         */
+        public void disable() {
+            m_enabled = false;
+        }
+
+        /**
+         * Reset the previous error,, the integral term, and disable the controller.
+         */
+        public void reset()
+        {
+            disable();
+            m_prevError = 0;
+            m_totalError = 0;
+            m_result = 0;
+        }
+
+        /**
+         * Set the input value to be used by the next call to performPID().
+         * @param input Input value to the PID calculation.
+         */
+        public void setInput(double input)
+        {
+            int     sign = 1;
+
+            if (m_maximumInput > m_minimumInput)
+            {
+                if (input < 0) sign = -1;
+
+                if (Math.abs(input) > m_maximumInput)
+                    m_input = m_maximumInput * sign;
+                else if (Math.abs(input) < m_minimumInput)
+                    m_input = m_minimumInput * sign;
+                else
+                    m_input = input;
+            }
+            else
+                m_input = input;
+        }
+    }
+
 }
 

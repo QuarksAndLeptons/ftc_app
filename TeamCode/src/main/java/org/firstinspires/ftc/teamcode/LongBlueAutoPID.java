@@ -2,13 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
-
 
 @Autonomous(name = "Long Blue Auto PID", group = "Linear Opmode")
-// @Autonomous(...) is the other common choice
+// @Team6475Controls(...) is the other common choice
 
-public class LongBlueAutoPID extends org.firstinspires.ftc.teamcode.Autonomous {
+public class LongBlueAutoPID extends Team6475Controls {
 
 
     @Override
@@ -20,8 +18,8 @@ public class LongBlueAutoPID extends org.firstinspires.ftc.teamcode.Autonomous {
         initializeHardware();
 
         //Set the initial servo positions
-        blueColorServo.setPosition(.1);
-        jewelRotationServo.setPosition(.47);
+        //  blueColorServo.setPosition(.1);
+        //jewelRotationServo.setPosition(.47);
 
         //Wait for start
         telemetry.addData("Status", "Waiting for play button");
@@ -34,10 +32,18 @@ public class LongBlueAutoPID extends org.firstinspires.ftc.teamcode.Autonomous {
         runtime.reset();
 
 
+        Drive(.5, 24, 0, 10);
+
+        TurnToHeading(45,.3);
+
+
+
+
+/*
         debugColorSensor(blueSensorColor);
         telemetry.update();
 
-//Grab initial glyph
+        //Grab initial glyph
         jewelRotationServo.setPosition(.5);
         blueColorServo.setPosition(.91);
         grabLowerGlyphs();
@@ -127,9 +133,11 @@ public class LongBlueAutoPID extends org.firstinspires.ftc.teamcode.Autonomous {
 
         }
     }
+
 }
 
+*/
 
 
-
-
+    }
+}

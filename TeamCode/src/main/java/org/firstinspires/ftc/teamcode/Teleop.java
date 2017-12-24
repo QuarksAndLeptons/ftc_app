@@ -2,12 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 //Import FTC modules
 
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -16,7 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 //Define as teleop
 @TeleOp(name = "Current Teleoperation", group = "Linear Opmode")
 
-public class Teleop extends org.firstinspires.ftc.teamcode.Autonomous {
+public class Teleop extends Team6475Controls {
 
     //Define opmode
     @Override public void runOpMode() {
@@ -99,8 +95,7 @@ public class Teleop extends org.firstinspires.ftc.teamcode.Autonomous {
             //Glyph dropping mechanism
             /* if(!dropMotor.isBusy()) dropMotor.setPower(0.0);
             if(gamepad2.dpad_up) {
-                dropMotor.setTargetPosition(400);
-                dropMotor.setPower(0.25);
+
             }
             if (gamepad2.dpad_down){
                 dropMotor.setTargetPosition(0);

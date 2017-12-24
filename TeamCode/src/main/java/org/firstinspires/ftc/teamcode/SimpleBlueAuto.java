@@ -37,10 +37,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 
 @Autonomous(name = "Blue Jewell Auto", group = "Linear Opmode")
-// @Autonomous(...) is the other common choice
+// @Team6475Controls(...) is the other common choice
 @Disabled
 
-public class SimpleBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
+public class SimpleBlueAuto extends Team6475Controls {
 
 
     @Override

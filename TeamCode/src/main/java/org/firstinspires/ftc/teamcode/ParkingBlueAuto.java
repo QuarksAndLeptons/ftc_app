@@ -37,9 +37,9 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 
 @Autonomous(name = "Blue Parking Auto", group = "Linear Opmode")
-// @Autonomous(...) is the other common choice
+// @Team6475Controls(...) is the other common choice
 @Disabled
-public class ParkingBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
+public class ParkingBlueAuto extends Team6475Controls {
 
 
     @Override
@@ -90,7 +90,8 @@ public class ParkingBlueAuto extends org.firstinspires.ftc.teamcode.Autonomous {
             blueColorServo.setPosition(.35);
             jewelRotationServo.setPosition(.47);
             
-            driveForwardDistance(32);
+            gyroDrive(.2,32,0);
+
 
 
             //Finish code

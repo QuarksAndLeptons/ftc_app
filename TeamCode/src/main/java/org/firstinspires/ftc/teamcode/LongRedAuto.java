@@ -15,9 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.RelicRecoveryVuMark;
 
 
 @Autonomous(name = "Long Red Auto", group = "Linear Opmode")
-// @Autonomous(...) is the other common choice
+// @Team6475Controls(...) is the other common choice
 
-public class LongRedAuto extends org.firstinspires.ftc.teamcode.Autonomous {
+public class LongRedAuto extends Team6475Controls {
 
 
     @Override

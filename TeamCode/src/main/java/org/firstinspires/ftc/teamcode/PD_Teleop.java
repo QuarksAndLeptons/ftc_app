@@ -21,7 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Position;
 @Disabled
 
 
-public class PD_Teleop extends Autonomous {
+public class PD_Teleop extends Team6475Controls {
 
     //Declare runtime variable
     private ElapsedTime runtime = new ElapsedTime();
