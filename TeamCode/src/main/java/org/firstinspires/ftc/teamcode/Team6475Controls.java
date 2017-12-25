@@ -81,7 +81,7 @@ public abstract class Team6475Controls extends LinearOpMode {
     static final double TURN_SPEED = .3;     // Nominal half speed for better accuracy.
 
     static final double HEADING_THRESHOLD = 2.5;      // As tight as we can make it with an integer gyro
-    static final double P_TURN_COEFF = .015;     // .02 Larger is more responsive, but also less stable
+    static final double P_TURN_COEFF = .005;     // .02 Larger is more responsive, but also less stable
     static final double P_DRIVE_COEFF = .015;     // .05 Larger is more responsive, but also less stable
 
 
@@ -121,9 +121,9 @@ public abstract class Team6475Controls extends LinearOpMode {
         rightMotor.setDirection(DcMotorEx.Direction.REVERSE);
         rightMotor2.setDirection(DcMotor.Direction.REVERSE);
         rightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        leftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
         //Initialize glyph lifting mechanism
         glyphLifter = hardwareMap.get(Servo.class, "glyphLift");
@@ -504,7 +504,7 @@ public abstract class Team6475Controls extends LinearOpMode {
      * @return
      */
     private double getSteer(double error, double PCoeff) {
-        return Range.clip(PCoeff * error, -1, 1);
+        return Range.clip(PCoeff * error, -1, 1);  //PCoeff *
 
 
     }
@@ -580,6 +580,12 @@ public abstract class Team6475Controls extends LinearOpMode {
      */
 
     protected void Drive(double power, double distance, double angle, double timeout) {
+        //Ensure the motors are in the right configuration
+        leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
         int newLeftTarget;
         int newRightTarget;
         int moveCounts;
@@ -587,8 +593,8 @@ public abstract class Team6475Controls extends LinearOpMode {
         double rightPower;
 
         pidDrive.setSetpoint(angle);
-        pidDrive.setOutputRange(0, power);
-        pidDrive.setInputRange(-90, 90);
+        pidDrive.setOutputRange(.1, power);
+        pidDrive.setInputRange(-179, 180);
         pidDrive.enable();
 
         // drive until end of period.
@@ -602,15 +608,13 @@ public abstract class Team6475Controls extends LinearOpMode {
 
             // Set Target and Turn On RUN_TO_POSITION
             leftMotor.setTargetPosition(newLeftTarget);
-            leftMotor2.setTargetPosition(newLeftTarget);
             rightMotor.setTargetPosition(newRightTarget);
-            rightMotor2.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
             leftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             rightMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            leftMotor.setTargetPositionTolerance(100);
-            rightMotor.setTargetPositionTolerance(100);
+            //leftMotor.setTargetPositionTolerance(100);
+            //rightMotor.setTargetPositionTolerance(100);
 
             // Use PID with imu input to drive in a straight line.
 
@@ -697,11 +701,16 @@ public abstract class Team6475Controls extends LinearOpMode {
         // complete the turn. Note: if the gap between the starting power and the stall (minimum)
         // power is small, overshoot may still occur. Overshoot is dependant on the motor and
         // gearing configuration, starting power, weight of the robot and the on target tolerance.
+        //Ensure the motors are in the right configuration
+        leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
-        pidRotate.setInputRange(0, 90);
-        pidRotate.setOutputRange(.20, power);
+        pidRotate.setInputRange(-179, 180);
+        pidRotate.setOutputRange(.30, power);
         pidRotate.setTolerance(2);
         pidRotate.enable();
 
@@ -713,21 +722,21 @@ public abstract class Team6475Controls extends LinearOpMode {
         if (degrees < 0) {
             // On right turn we have to get off zero first.
             while (opModeIsActive() && getAngle() == 0) {
-                leftDrive(-power);
-                rightDrive(power);
+                leftDrive(power);
+                rightDrive(-power);
                 sleep(100);
             }
 
             do {
                 power = pidRotate.performPID(getAngle()); // power will be - on right turn.
-                leftDrive(power);
-                rightDrive(-power);
+                leftDrive(-power);
+                rightDrive(power);
             } while (opModeIsActive() && !pidRotate.onTarget());
         } else    // left turn.
             do {
                 power = pidRotate.performPID(getAngle()); // power will be + on left turn.
-                leftDrive(power);
-                rightDrive(-power);
+                leftDrive(-power);
+                rightDrive(power);
             } while (opModeIsActive() && !pidRotate.onTarget());
 
         // turn the motors off.
@@ -737,9 +746,10 @@ public abstract class Team6475Controls extends LinearOpMode {
         // wait for rotation to stop.
         sleep(500);
 
-        // reset angle tracking on new heading.
-        //resetAngle();
+
     }
+
+
 
 
     //TODO class or method?
@@ -909,8 +919,8 @@ public abstract class Team6475Controls extends LinearOpMode {
          * @param maximumInput the maximum value expected from the output, always positive
          */
         public void setInputRange(double minimumInput, double maximumInput) {
-            m_minimumInput = Math.abs(minimumInput);
-            m_maximumInput = Math.abs(maximumInput);
+            m_minimumInput = (minimumInput);
+            m_maximumInput = (maximumInput);
             setSetpoint(m_setpoint);
         }
 

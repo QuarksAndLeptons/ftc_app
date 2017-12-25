@@ -31,6 +31,8 @@ public class ConceptIntegratedPID extends Team6475Controls {
 
         setPID(2.5,.1,.2);
 
+gyroDrive(.3,100,0);
+
     }
 
 }

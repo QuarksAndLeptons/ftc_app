@@ -29,10 +29,11 @@ public class ConceptPIDController extends Team6475Controls {
         runtime.reset();
 
 
-        Drive(.5, 24, 0, 10);
+       Drive(.5, 24, 0, 10);
 
-        TurnToHeading(45,.3);
+        TurnToHeading(-90,.5);
 
+        telemetry.update();
 
 
     }
