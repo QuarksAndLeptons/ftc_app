@@ -43,8 +43,8 @@ public abstract class Team6475Controls extends LinearOpMode {
 
     // The IMU sensor object
     protected BNO055IMU imu;
-    Orientation lastAngles = new Orientation();
-    double globalAngle, power = .30, correction;
+    Orientation             lastAngles = new Orientation();
+    double absoluteAngle, power = .30, correction;
     PIDController pidRotate, pidDrive;
 
     // Orientation and acceleration variables from the built in 9-axis accelerometer
@@ -133,8 +133,8 @@ public abstract class Team6475Controls extends LinearOpMode {
         glyphGrabber3 = hardwareMap.get(Servo.class, "glyphBottomRight");
 
         //Initialize the servos
-        blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
-        jewelRotationServo = hardwareMap.get(Servo.class, "jewelRotationServo");
+       // blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
+        //jewelRotationServo = hardwareMap.get(Servo.class, "jewelRotationServo");
         //Initialize sensors
         blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
 
@@ -462,7 +462,7 @@ public abstract class Team6475Controls extends LinearOpMode {
             onTarget = true;
         } else {
             steer = getSteer(error, PCoeff);
-            rightSpeed = speed * steer;
+            rightSpeed = Range.clip(speed * steer,.1,1);
             leftSpeed = -rightSpeed;
         }
 
@@ -504,7 +504,7 @@ public abstract class Team6475Controls extends LinearOpMode {
      * @return
      */
     private double getSteer(double error, double PCoeff) {
-        return Range.clip(PCoeff * error, -1, 1);  //PCoeff *
+        return Range.clip(PCoeff * error, -1, 1);
 
 
     }
@@ -613,8 +613,8 @@ public abstract class Team6475Controls extends LinearOpMode {
             // Turn On RUN_TO_POSITION
             leftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
             rightMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
-            //leftMotor.setTargetPositionTolerance(100);
-            //rightMotor.setTargetPositionTolerance(100);
+            leftMotor.setTargetPositionTolerance(100);
+            rightMotor.setTargetPositionTolerance(100);
 
             // Use PID with imu input to drive in a straight line.
 
@@ -629,8 +629,8 @@ public abstract class Team6475Controls extends LinearOpMode {
                 leftPower = power - correction;
                 rightPower = power + correction;
 
-                telemetry.addData("1 imu heading", lastAngles.firstAngle);
-                telemetry.addData("2 global heading", globalAngle);
+                telemetry.addData("1 imu heading", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+                telemetry.addData("2 global heading", absoluteAngle);
                 telemetry.addData("3 correction", correction);
                 // Display drive status for the driver.
                 telemetry.addData("Target", "%7d:%7d", newLeftTarget, newRightTarget);
@@ -649,14 +649,7 @@ public abstract class Team6475Controls extends LinearOpMode {
     }
 
 
-    /**
-     * Resets the cumulative angle tracking to zero.
-     */
-    private void resetAngle() {
-        lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
 
-        globalAngle = 0;
-    }
 
     /**
      * Get current cumulative angle rotation from last reset.
@@ -673,14 +666,16 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
 
+
         if (deltaAngle < -180) deltaAngle += 360;
         else if (deltaAngle > 180) deltaAngle -= 360;
 
-        globalAngle += deltaAngle;
-
         lastAngles = angles;
 
-        return globalAngle;
+        absoluteAngle += deltaAngle;
+
+        return absoluteAngle;
+
     }
 
     /**
@@ -702,6 +697,11 @@ public abstract class Team6475Controls extends LinearOpMode {
         // power is small, overshoot may still occur. Overshoot is dependant on the motor and
         // gearing configuration, starting power, weight of the robot and the on target tolerance.
         //Ensure the motors are in the right configuration
+        //Reset the encoders on the chassis to 0
+        leftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        leftMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        rightMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -739,6 +739,11 @@ public abstract class Team6475Controls extends LinearOpMode {
                 rightDrive(power);
             } while (opModeIsActive() && !pidRotate.onTarget());
 
+        telemetry.addData("1 imu heading", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
+        telemetry.addData("2 global heading", absoluteAngle);
+        telemetry.addData("3 correction", correction);
+        telemetry.update();
+
         // turn the motors off.
         rightDrive(0);
         leftDrive(0);
@@ -766,7 +771,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         private boolean m_enabled = false;              //is the pid controller enabled
         private double m_prevError = 0.0;           // the prior sensor input (used to compute velocity)
         private double m_totalError = 0.0;      //the sum of the errors for use in the integral calc
-        private double m_tolerance = 0.05;          //the percentage error that is considered on target
+        private double m_tolerance = 0.02;          //the percentage error that is considered on target
         private double m_setpoint = 0.0;
         private double m_error = 0.0;
         private double m_result = 0.0;
@@ -915,8 +920,8 @@ public abstract class Team6475Controls extends LinearOpMode {
         /**
          * Sets the maximum and minimum values expected from the input.
          *
-         * @param minimumInput the minimum value expected from the input, always positive
-         * @param maximumInput the maximum value expected from the output, always positive
+         * @param minimumInput the minimum value expected from the input
+         * @param maximumInput the maximum value expected from the output
          */
         public void setInputRange(double minimumInput, double maximumInput) {
             m_minimumInput = (minimumInput);
