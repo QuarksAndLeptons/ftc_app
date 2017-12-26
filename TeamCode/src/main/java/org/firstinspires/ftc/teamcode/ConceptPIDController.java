@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 // @Team6475Controls(...) is the other common choice
 
 public class ConceptPIDController extends Team6475Controls {
+//TODO determine why it turns slightly at the conclusion on steps
 
 
     @Override
@@ -28,9 +29,14 @@ public class ConceptPIDController extends Team6475Controls {
 
         runtime.reset();
 
-        Drive(.5,24,10,10);
+        Drive(.5,24,0,10);
+        gyroHold(.2,0,.5);
 
-        //TurnToHeading(-90,.5);
+        TurnToHeading(-90,.5);
+        gyroHold(.2,-90,.5);
+
+        Drive(.5,24,-90,10);
+        gyroHold(.2,-90,.5);
 
 
         telemetry.update();
