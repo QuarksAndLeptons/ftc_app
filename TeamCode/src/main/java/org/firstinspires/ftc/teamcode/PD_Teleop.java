@@ -58,8 +58,7 @@ public class PD_Teleop extends Team6475Controls {
 
         //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         //liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        dropMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        dropMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
         //Initialize servos
 
         //left_intake = hardwareMap.get(Servo.class, "left_intake");
@@ -198,6 +197,9 @@ public class PD_Teleop extends Team6475Controls {
                 liftMotor.setTargetPosition(2390);
                 if(liftMotor.isBusy()) liftMotor.setPower(0.5);
             }*/
+
+            //TODO Change drop motor to glyph drop code
+            /*
             //Glyph dropping mechanism
             if(!dropMotor.isBusy()) dropMotor.setPower(0.0);
             if(gamepad2.dpad_up) {
@@ -231,6 +233,7 @@ public class PD_Teleop extends Team6475Controls {
                 dropMotor.setTargetPosition(400);
                 if(dropMotor.isBusy()) dropMotor.setPower(0.1);
             }
+            */
             //add some debug data
             telemetry.addData("Buttons",(gamepad1.a?"A":"-")+(gamepad1.b?"B":"-")+(gamepad1.x?"X":"-")+(gamepad1.y?"Y":"-"));
             telemetry.addData("Dpad",(gamepad1.dpad_left?"L":"-")+(gamepad1.dpad_right?"R":"-")+(gamepad1.dpad_down?"D":"-")+(gamepad1.dpad_up?"U":"-"));
@@ -238,7 +241,6 @@ public class PD_Teleop extends Team6475Controls {
             //telemetry.addData("Lift Position", liftMotor.getCurrentPosition());
             //telemetry.addData("Lift Target", liftMotor.getTargetPosition());
             //telemetry.addData("Lift status", liftMotor.isBusy()?"I'm busy":"I got free time.");
-            telemetry.addData("Drop Position", dropMotor.getCurrentPosition());
 
             //Update the telemetry
             telemetry.update();

@@ -20,7 +20,6 @@ public class LongBlueAuto extends Team6475Controls {
         initializeHardware();
 
 
-
         //Set the initial servo positions
         blueColorServo.setPosition(.1);
         jewelRotationServo.setPosition(.47);

@@ -58,8 +58,6 @@ public abstract class Team6475Controls extends LinearOpMode {
     protected DcMotorEx rightMotor;
     protected DcMotorEx leftMotor2;
     protected DcMotorEx rightMotor2;
-    @Deprecated
-    protected DcMotorEx dropMotor;
 
     //Instantiate servos
     protected Servo blueColorServo;
@@ -509,17 +507,7 @@ public abstract class Team6475Controls extends LinearOpMode {
 
     }
 
-    /**
-     * Sets the power of the drop motor to a certain value and stops the autonomous
-     * program until the encoder reaches its target position, the method times out, or
-     * the opmode is no longer active
-     *
-     * @deprecated dropMotor currently does not exist on the robot!
-     * @param newEncoderPosition the new encoder position in encoder ticks
-     * @param power the power of the motor
-     * @param timeout the amount of seconds to wait before giving up
-     */
-    /**
+     /**
      * Grab the glyphs
      */
     protected void grabGlyphs() {
@@ -593,7 +581,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         double rightPower;
 
         pidDrive.setSetpoint(angle);
-        pidDrive.setOutputRange(.1, power);
+        pidDrive.setOutputRange(-power, power);
         pidDrive.setInputRange(-179, 180);
         pidDrive.enable();
 
@@ -608,7 +596,9 @@ public abstract class Team6475Controls extends LinearOpMode {
 
             // Set Target and Turn On RUN_TO_POSITION
             leftMotor.setTargetPosition(newLeftTarget);
+            leftMotor2.setTargetPosition(newLeftTarget);
             rightMotor.setTargetPosition(newRightTarget);
+            rightMotor2.setTargetPosition(newRightTarget);
 
             // Turn On RUN_TO_POSITION
             leftMotor.setMode(DcMotorEx.RunMode.RUN_TO_POSITION);
@@ -629,6 +619,11 @@ public abstract class Team6475Controls extends LinearOpMode {
                 leftPower = power - correction;
                 rightPower = power + correction;
 
+                // set power levels.
+
+                leftDrive(leftPower);
+                rightDrive(rightPower);
+
                 telemetry.addData("1 imu heading", imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES).firstAngle);
                 telemetry.addData("2 global heading", absoluteAngle);
                 telemetry.addData("3 correction", correction);
@@ -639,10 +634,11 @@ public abstract class Team6475Controls extends LinearOpMode {
                 telemetry.update();
                 telemetry.update();
 
-                // set power levels.
 
-                leftDrive(leftPower);
-                rightDrive(rightPower);
+
+                // Stop all motion;
+                leftDrive(0);
+                rightDrive(0);
 
             }
         }
@@ -698,10 +694,6 @@ public abstract class Team6475Controls extends LinearOpMode {
         // gearing configuration, starting power, weight of the robot and the on target tolerance.
         //Ensure the motors are in the right configuration
         //Reset the encoders on the chassis to 0
-        leftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        leftMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         leftMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
