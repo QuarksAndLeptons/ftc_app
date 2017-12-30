@@ -72,25 +72,28 @@ public class ShortRedAuto extends Team6475Controls {
 
         //Is VuMark unknown?
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-//TODO tune new angles and distances for new drop mechanism
             telemetry.addData("VuMark", "not visible");
-            gyroDrive(DRIVE_SPEED, 46, -1, 5);    // Drive forward 46 inches
-            gyroTurn(TURN_SPEED, -60.0, 5);               // Turn left 60 Degrees
-            gyroHold(TURN_SPEED, -60.0, 0.5); // Stop for 1/2 second, holding direction
-            gyroDrive(DRIVE_SPEED, 2, -95, 5);    // Drive forward 2 inches while turning 35 degrees
+            gyroDrive(DRIVE_SPEED, 24, 0, 5);    // Drive forward 24 inches
+            TurnToHeading(-51, .5);                     //Turn right 51 degrees
+            //gyroTurn(TURN_SPEED, -95.0, 5);                // Turn 65 Degrees to the right
+            gyroHold(TURN_SPEED, -51, 0.5); // Hold for a half-second
+            gyroDrive(DRIVE_SPEED, 12, -51, 5);    // Drive forward 12 inches
             sleep(1000);
             releaseGlyphs(); //release initial glyph
             sleep(2000);
-            gyroDrive(DRIVE_SPEED, -6, 90);    // Drive backward six inches
+            gyroDrive(DRIVE_SPEED, -6, 129);    // Drive backward six inches
         }
         else { // This must be a VuMark
             telemetry.addData("VuMark", "%s visible", vuMark);
             switch (vuMark.ordinal()) {
+
+                //TODO tuning is needed
                 case 1: //Left
-                    gyroDrive(DRIVE_SPEED, 30, -1, 5);    // Drive forward 30 inches
-                    gyroTurn(TURN_SPEED, -95.0, 5);                // Turn 65 Degrees to the right
-                    gyroHold(TURN_SPEED, -95.0, 0.5); // Hold for a half-second
-                    gyroDrive(DRIVE_SPEED, 3, -95, 5);    // Drive forward 3 inches
+                    gyroDrive(DRIVE_SPEED, 24, -1, 5);    // Drive forward 24 inches
+                    TurnToHeading(-40, .5);                     //Turn 40 degrees to the right
+                    //gyroTurn(TURN_SPEED, -95.0, 5);                // Turn 65 Degrees to the right
+                    gyroHold(TURN_SPEED, -40.0, 0.5); // Hold for a half-second
+                    gyroDrive(DRIVE_SPEED, 16, -40, 5);    // Drive forward 16 inches
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);
@@ -99,22 +102,24 @@ public class ShortRedAuto extends Team6475Controls {
 
                 case 2://Center
                     telemetry.addData("VuMark", "not visible");
-                    gyroDrive(DRIVE_SPEED, 38, -1);    // Drive forward 38 inches
-                    gyroTurn(TURN_SPEED, -100.0);                // Turn 100 degrees to the left
-                    gyroHold(TURN_SPEED, -100.0, 0.5); // Hold for a half-second
-                    gyroDrive(DRIVE_SPEED, 2, -95);    // Drive forward 2 inches
+                    gyroDrive(DRIVE_SPEED, 24, 0, 5);    // Drive forward 24 inches
+                    TurnToHeading(-51, .5);                     //Turn right 51 degrees
+                    //gyroTurn(TURN_SPEED, -95.0, 5);                // Turn 65 Degrees to the right
+                    gyroHold(TURN_SPEED, -51, 0.5); // Hold for a half-second
+                    gyroDrive(DRIVE_SPEED, 12, -51, 5);    // Drive forward 12 inches
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 90);    // Drive backward six inches
+                    gyroDrive(DRIVE_SPEED, -6, 129);    // Drive backward six inches
                     break;
 
                 case 3://Right
                     telemetry.addData("VuMark", "not visible");
-                    gyroDrive(DRIVE_SPEED, 36, 1, 5);    // Drive forward 36 inches
-                    gyroTurn(TURN_SPEED, -60.0, 5);                // Turn 60 degrees to the left
-                    gyroHold(TURN_SPEED, -60.0, 0.5); // Hold for a half-second
-                    gyroDrive(DRIVE_SPEED, 5, -65, 3);    // Drive forward 5 inches
+                    gyroDrive(DRIVE_SPEED, 44, 0, 5);    // Drive forward 44 inches
+                    TurnToHeading(-135, .5);                    //Turn 135 degrees to the right
+                    //gyroTurn(TURN_SPEED, -95.0, 5);                // Turn 65 Degrees to the right
+                    gyroHold(TURN_SPEED, -135, 0.5); // Hold for a half-second
+                    gyroDrive(DRIVE_SPEED, 16, -135, 5);    // Drive forward 3 inches
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);

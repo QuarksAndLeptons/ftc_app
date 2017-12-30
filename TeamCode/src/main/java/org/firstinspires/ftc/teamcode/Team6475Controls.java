@@ -80,7 +80,7 @@ public abstract class Team6475Controls extends LinearOpMode {
 
     static final double HEADING_THRESHOLD = 2.5;      // As tight as we can make it with an integer gyro
     static final double P_TURN_COEFF = .005;     // .02 Larger is more responsive, but also less stable
-    static final double P_DRIVE_COEFF = .015;     // .05 Larger is more responsive, but also less stable
+    static final double P_DRIVE_COEFF = .010;     // .05 Larger is more responsive, but also less stable
 
 
 

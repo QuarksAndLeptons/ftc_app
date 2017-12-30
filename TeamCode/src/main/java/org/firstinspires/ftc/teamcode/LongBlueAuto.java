@@ -87,7 +87,7 @@ public class LongBlueAuto extends Team6475Controls {
             switch (vuMark.ordinal()) {
                 case 1: //Left
                     grabLowerGlyphs();
-                    TurnToHeading(15,.5);                       // Turn 15 degrees to the right
+                    TurnToHeading(15,.5);                       // Turn 15 degrees to the left
                     gyroHold(TURN_SPEED, 15.0, 0.5);            // Hold for half a second
                     gyroDrive(DRIVE_SPEED, 29, 15, 10);    // Drive forward 29 inches
                     TurnToHeading(-45,.5);                      // Turn to a heading of 45 degrees to the right

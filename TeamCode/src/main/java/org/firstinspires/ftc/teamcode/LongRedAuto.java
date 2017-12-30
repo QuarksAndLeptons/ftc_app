@@ -82,53 +82,62 @@ public class LongRedAuto extends Team6475Controls {
 //TODO tune new angles and distances for new drop mechanism
 
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            telemetry.addData("VuMark", "not visible");
-            gyroTurn(TURN_SPEED, 20.0,3);                // Turn  CCW to -15 Degrees
-            gyroHold(TURN_SPEED, 20.0, 0.5); // Hold -15 Deg heading for a 1/2 second
-            gyroDrive(DRIVE_SPEED, 29, 20, 9);    // Drive FWD 29 inches
-            gyroHold(TURN_SPEED, 20.0, 0.5); // Hold -15 Deg heading for a 1/2 second
+            grabLowerGlyphs();
+            gyroDrive(DRIVE_SPEED, 24, 0, 10);    // Drive forward 24 inches
+            TurnToHeading(50,.4);                      //Turn left 50 degrees
+            gyroHold(TURN_SPEED, 50.0, 0.5);           // Hold for half a second
+            gyroDrive(DRIVE_SPEED, 16, 50, 10);    // Drive forward 16 inches
+            gyroHold(TURN_SPEED, 50.0, 0.5);           // Hold for half a second
             sleep(1000);
             releaseGlyphs(); //release initial glyph
             sleep(2000);
-            gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
+            gyroDrive(DRIVE_SPEED, -6, 130);            // Drive backward 6 inches
 
 
 
         } else {
             telemetry.addData("VuMark", "%s visible", vuMark);
             switch (vuMark.ordinal()) {
-                case 1:
-                    gyroTurn(TURN_SPEED, 2.0, 1);                // Turn  CCW to -25 Degrees
-                    gyroHold(TURN_SPEED, 27.0, 0.5); // Hold -25 Deg heading for a 1/2 second
-                    gyroDrive(DRIVE_SPEED, 32, 28, 9);    // Drive FWD 29 inches
-                    gyroHold(TURN_SPEED, 27.0, 0.5); // Hold -25 Deg heading for a 1/2 second
+                case 1://left
+                    grabLowerGlyphs();
+                    gyroDrive(DRIVE_SPEED, 24, 0, 10);    // Drive forward 24 inches
+                    TurnToHeading(50,.4);                      //Turn left 50 degrees
+                    gyroHold(TURN_SPEED, 50.0, 0.5);           // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 16, 50, 10);    // Drive forward 16 inches
+                    gyroHold(TURN_SPEED, 50.0, 0.5);           // Hold for half a second
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
-
+                    gyroDrive(DRIVE_SPEED, -6, 130);            // Drive backward 6 inches
                     break;
 
                 case 2://Center
-                    gyroTurn(TURN_SPEED, 20.0, 3);                   // Turn 20 degrees to the left
-                    gyroHold(TURN_SPEED, 20.0, 0.5);                // Hold for half a second
-                    gyroDrive(DRIVE_SPEED, 29, 20, 9);        // Drive forward 29 inches
-                    gyroHold(TURN_SPEED, 20.0, 0.5);                 // Hold for half a second
+                    telemetry.addData("VuMark", "not visible");
+                    grabLowerGlyphs();
+                    gyroDrive(DRIVE_SPEED, 24, 0, 10);    // Drive forward 24 inches
+                    TurnToHeading(40,.4);                          //turn left 40 degrees
+                    gyroHold(TURN_SPEED, 40.0, 0.5);           // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 11, 40, 10);    // Drive forward 11 inches
+                    gyroHold(TURN_SPEED, 40.0, 0.5);           // Hold for half a second
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
+                    gyroDrive(DRIVE_SPEED, -6, 180);            // Drive backward 6 inches
                     break;
 
                 case 3://Right
-                    gyroTurn(TURN_SPEED, 10.0, 2);                  // Turn  CCW to -5 Degrees
-                    gyroHold(TURN_SPEED, 10.0, 0.5);                // Hold for half a second
-                    gyroDrive(DRIVE_SPEED, 29, 10.0, 9);    // Drive FWD 30 inches
-                    gyroHold(TURN_SPEED, 10.0, 0.5);                // Hold for half a second
+                    grabLowerGlyphs();
+                    TurnToHeading(-15,.5);                       // Turn 15 degrees to the right
+                    gyroHold(TURN_SPEED, -15.0, 0.5);            // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 29, -15, 10);    // Drive forward 29 inches
+                    TurnToHeading(45,.5);                      // Turn to a heading of 45 degrees to the left
+                    gyroHold(TURN_SPEED, 45, 0.5);             // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 9, 45, 10);    // Drive forward 9 inches
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
+                    gyroDrive(DRIVE_SPEED, -6, 180, 10);    // Drive backward six inches
+                    telemetry.addData("VuMark", "not visible");
                     break;
 
 
