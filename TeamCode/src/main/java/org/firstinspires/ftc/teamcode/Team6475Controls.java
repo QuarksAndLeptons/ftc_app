@@ -131,8 +131,8 @@ public abstract class Team6475Controls extends LinearOpMode {
         glyphGrabber3 = hardwareMap.get(Servo.class, "glyphBottomRight");
 
         //Initialize the servos
-       // blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
-        //jewelRotationServo = hardwareMap.get(Servo.class, "jewelRotationServo");
+       blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
+       jewelRotationServo = hardwareMap.get(Servo.class, "jewelRotationServo");
         //Initialize sensors
         blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
 
@@ -186,6 +186,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         // Set up our telemetry dashboard
         composeTelemetry();
         // Set the g
+
     }
 
     /**
@@ -460,7 +461,7 @@ public abstract class Team6475Controls extends LinearOpMode {
             onTarget = true;
         } else {
             steer = getSteer(error, PCoeff);
-            rightSpeed = Range.clip(speed * steer,.1,1);
+            rightSpeed = Range.clip(speed * steer,-1,1);
             leftSpeed = -rightSpeed;
         }
 
@@ -702,7 +703,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         pidRotate.reset();
         pidRotate.setSetpoint(degrees);
         pidRotate.setInputRange(-179, 180);
-        pidRotate.setOutputRange(.30, power);
+        pidRotate.setOutputRange(.1, power);
         pidRotate.setTolerance(2);
         pidRotate.enable();
 

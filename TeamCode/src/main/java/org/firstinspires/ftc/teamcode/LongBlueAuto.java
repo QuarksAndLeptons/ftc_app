@@ -72,57 +72,57 @@ public class LongBlueAuto extends Team6475Controls {
 
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
             grabLowerGlyphs();
-            gyroDrive(DRIVE_SPEED, 6, 0, 10);    // Drive forward 29 inches
-            gyroTurn(TURN_SPEED, -30.0, 10);                // Turn 15 degrees to the right
-            gyroHold(TURN_SPEED, -30.0, 0.5); // Hold for half a second
-            gyroDrive(DRIVE_SPEED, 6, -30, 10);    // Drive forward 6 inches
-            gyroHold(TURN_SPEED, -30.0, 0.5); // Hold for half a second
+            gyroDrive(DRIVE_SPEED, 24, 0, 10);    // Drive forward 24 inches
+            TurnToHeading(-40,.4);
+            gyroHold(TURN_SPEED, -40.0, 0.5);           // Hold for half a second
+            gyroDrive(DRIVE_SPEED, 11, -40, 10);    // Drive forward 11 inches
+            gyroHold(TURN_SPEED, -40.0, 0.5);           // Hold for half a second
             sleep(1000);
             releaseGlyphs(); //release initial glyph
             sleep(2000);
-            gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward 6 inches
+            gyroDrive(DRIVE_SPEED, -6, 180);            // Drive backward 6 inches
 
         } else {
             telemetry.addData("VuMark", "%s visible", vuMark);
             switch (vuMark.ordinal()) {
                 case 1: //Left
                     grabLowerGlyphs();
-                    gyroTurn(TURN_SPEED, 15.0, 4);                // Turn 15 degrees to teh right
-                    gyroHold(TURN_SPEED, 15.0, 0.5); // Hold for half a second
+                    TurnToHeading(15,.5);                       // Turn 15 degrees to the right
+                    gyroHold(TURN_SPEED, 15.0, 0.5);            // Hold for half a second
                     gyroDrive(DRIVE_SPEED, 29, 15, 10);    // Drive forward 29 inches
-                    gyroTurn(TURN_SPEED, -45.0, 4);                // Turn 15 degrees to teh right
-                    gyroHold(TURN_SPEED, -45, 0.5); // Hold for half a second
-                    gyroDrive(DRIVE_SPEED, 7, -45, 10);    // Drive forward 29 inches
+                    TurnToHeading(-45,.5);                      // Turn to a heading of 45 degrees to the right
+                    gyroHold(TURN_SPEED, -45, 0.5);             // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 9, -45, 10);    // Drive forward 9 inches
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
+                    gyroDrive(DRIVE_SPEED, -6, 180, 10);    // Drive backward six inches
                     break;
 
                 case 2://Center
                     grabLowerGlyphs();
-                    gyroDrive(DRIVE_SPEED, 24, 0, 5);    // Drive forward 29 inches
-                    gyroTurn(TURN_SPEED, -30.0, 4);                // Turn 15 degrees to teh right
-                    gyroHold(TURN_SPEED, -30.0, 0.5); // Hold for half a second
-                    gyroDrive(DRIVE_SPEED, 6, -30, 5);    // Drive forward 29 inches
-                    gyroHold(TURN_SPEED, -30.0, 0.5); // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 24, 0, 10);    // Drive forward 24 inches
+                    TurnToHeading(-40,.4);
+                    gyroHold(TURN_SPEED, -40.0, 0.5);           // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 11, -40, 10);    // Drive forward 11 inches
+                    gyroHold(TURN_SPEED, -40.0, 0.5);           // Hold for half a second
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
+                    gyroDrive(DRIVE_SPEED, -6, 180);            // Drive backward 6 inches
                     break;
 
                 case 3://Right
                     grabLowerGlyphs();
-                    gyroDrive(DRIVE_SPEED, 24, 0, 5);    // Drive forward 29 inches
-                    gyroTurn(TURN_SPEED, -53.0, 4);                // Turn 15 degrees to teh right
-                    gyroHold(TURN_SPEED, -53.0, 0.5); // Hold for half a second
-                    gyroDrive(DRIVE_SPEED, 15, -53, 5);    // Drive forward 29 inches
-                    gyroHold(TURN_SPEED, -53.0, 0.5); // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 24, 0, 10);    // Drive forward 24 inches
+                    TurnToHeading(-50,.4);                      //Turn right 50 degrees
+                    gyroHold(TURN_SPEED, -50.0, 0.5);           // Hold for half a second
+                    gyroDrive(DRIVE_SPEED, 16, -50, 10);    // Drive forward 16 inches
+                    gyroHold(TURN_SPEED, -50.0, 0.5);           // Hold for half a second
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 180);    // Drive backward six inches
+                    gyroDrive(DRIVE_SPEED, -6, 130);            // Drive backward 6 inches
                     break;
 
 
