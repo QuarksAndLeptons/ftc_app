@@ -1,11 +1,12 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 
 @Autonomous(name = "Concept Integrated PID", group = "Linear Opmode")
 // @Team6475Controls(...) is the other common choice
-
+@Disabled
 public class ConceptIntegratedPID extends Team6475Controls {
 
 

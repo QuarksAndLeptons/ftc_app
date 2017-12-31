@@ -72,10 +72,9 @@ public class ShortRedAuto extends Team6475Controls {
 
         //Is VuMark unknown?
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            telemetry.addData("VuMark", "not visible");
+            telemetry.addData("VuMark", "not visible");    //Center
             gyroDrive(DRIVE_SPEED, 24, 0, 5);    // Drive forward 24 inches
             TurnToHeading(-51, .5);                     //Turn right 51 degrees
-            //gyroTurn(TURN_SPEED, -95.0, 5);                // Turn 65 Degrees to the right
             gyroHold(TURN_SPEED, -51, 0.5); // Hold for a half-second
             gyroDrive(DRIVE_SPEED, 12, -51, 5);    // Drive forward 12 inches
             sleep(1000);
@@ -89,9 +88,8 @@ public class ShortRedAuto extends Team6475Controls {
 
                 //TODO tuning is needed
                 case 1: //Left
-                    gyroDrive(DRIVE_SPEED, 24, -1, 5);    // Drive forward 24 inches
+                    gyroDrive(DRIVE_SPEED, 24, 0, 5);    // Drive forward 24 inches
                     TurnToHeading(-40, .5);                     //Turn 40 degrees to the right
-                    //gyroTurn(TURN_SPEED, -95.0, 5);                // Turn 65 Degrees to the right
                     gyroHold(TURN_SPEED, -40.0, 0.5); // Hold for a half-second
                     gyroDrive(DRIVE_SPEED, 16, -40, 5);    // Drive forward 16 inches
                     sleep(1000);
@@ -104,7 +102,6 @@ public class ShortRedAuto extends Team6475Controls {
                     telemetry.addData("VuMark", "not visible");
                     gyroDrive(DRIVE_SPEED, 24, 0, 5);    // Drive forward 24 inches
                     TurnToHeading(-51, .5);                     //Turn right 51 degrees
-                    //gyroTurn(TURN_SPEED, -95.0, 5);                // Turn 65 Degrees to the right
                     gyroHold(TURN_SPEED, -51, 0.5); // Hold for a half-second
                     gyroDrive(DRIVE_SPEED, 12, -51, 5);    // Drive forward 12 inches
                     sleep(1000);
@@ -115,11 +112,10 @@ public class ShortRedAuto extends Team6475Controls {
 
                 case 3://Right
                     telemetry.addData("VuMark", "not visible");
-                    gyroDrive(DRIVE_SPEED, 44, 0, 5);    // Drive forward 44 inches
+                    gyroDrive(DRIVE_SPEED, 44, 0, 10);    // Drive forward 44 inches
                     TurnToHeading(-135, .5);                    //Turn 135 degrees to the right
-                    //gyroTurn(TURN_SPEED, -95.0, 5);                // Turn 65 Degrees to the right
                     gyroHold(TURN_SPEED, -135, 0.5); // Hold for a half-second
-                    gyroDrive(DRIVE_SPEED, 16, -135, 5);    // Drive forward 3 inches
+                    gyroDrive(DRIVE_SPEED, 16, -135, 5);    // Drive forward 16 inches
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);
