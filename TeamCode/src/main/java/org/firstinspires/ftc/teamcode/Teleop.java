@@ -41,53 +41,72 @@ public class Teleop extends Team6475Controls {
             angles   = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
             double angle = AngleUnit.DEGREES.normalize(AngleUnit.DEGREES.fromUnit(angles.angleUnit, angles.firstAngle));
             telemetry.addData("angle", angle);
+
+            blueColorServo.setPosition(.35);
+            jewelRotationServo.setPosition(.47);
+
             if (gamepad1.right_trigger < .5) {
-                leftMotor.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x);
-                leftMotor2.setPower(gamepad1.left_stick_y + gamepad1.right_stick_x);
-                rightMotor2.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x);
-                rightMotor.setPower(gamepad1.left_stick_y - gamepad1.right_stick_x);
+                leftMotor.setPower(-gamepad1.left_stick_y + gamepad1.right_stick_x);
+                leftMotor2.setPower(-gamepad1.left_stick_y + gamepad1.right_stick_x);
+                rightMotor2.setPower(-gamepad1.left_stick_y - gamepad1.right_stick_x);
+                rightMotor.setPower(-gamepad1.left_stick_y - gamepad1.right_stick_x);
             }
             if (gamepad1.right_trigger > .5) {
-                leftMotor.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-                leftMotor2.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-                rightMotor2.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-                rightMotor.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
+                leftMotor.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x)/4);
+                leftMotor2.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x)/4);
+                rightMotor2.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x)/4);
+                rightMotor.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x)/4);
+            }
+
+            if (gamepad1.left_bumper) {
+                leftMotor.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x)/8);
+                leftMotor2.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x)/8);
+                rightMotor2.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x)/8);
+                rightMotor.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x)/8);
             }
             //Add telemetry data
             //    telemetry.addData("Lift motor power", liftMotor.getPower());
             telemetry.addData("Left motor power", leftMotor.getPower());
             telemetry.addData("Right motor power", rightMotor.getPower());
 
-            if(gamepad1.a) {
-                blueColorServo.setPosition(.1);
+            if(gamepad1.b) {
+                blueColorServo.setPosition(.35);
                 jewelRotationServo.setPosition(.47);
 
             }
 
-            //Lifting mechanism
+            //TODO switch the gamepad1 to gamepad 2 for 2 drivers
 
-            liftGlyphs(-gamepad2.left_stick_y);
-            glyphGraber(-gamepad2.right_stick_y);
+            //Lifting mechanism
+            if(gamepad1.y){
+                glyphLifter.setPosition(.8);
+            }
+            if(gamepad1.a) {
+                glyphLifter.setPosition(.2);
+            }
+            if(gamepad1.x) {
+                glyphLifter.setPosition(.5);
+            }
+
 
             //Drop Glyphs
-            if(gamepad2.right_trigger>.5){
+            if(gamepad1.right_trigger>.5){
                 grabLowerGlyphs();
             }
-            if(gamepad2.right_bumper){
+            if(gamepad1.right_bumper){
                 grabUpperGlyphs();
             }
-            if(gamepad2.left_trigger>.5){
-                releaseUpperGlyphs();
-            }
-            if(gamepad2.left_bumper){
+            if(gamepad1.left_trigger>.5){
                 releaseLowerGlyphs();
+            }
+            if(gamepad1.left_bumper){
+                releaseUpperGlyphs();
             }
 
 
             //add some debug data
-            telemetry.addData("Buttons",(gamepad1.a?"A":"-")+(gamepad1.b?"B":"-")+(gamepad1.x?"X":"-")+(gamepad1.y?"Y":"-"));
-            telemetry.addData("Dpad",(gamepad1.dpad_left?"L":"-")+(gamepad1.dpad_right?"R":"-")+(gamepad1.dpad_down?"D":"-")+(gamepad1.dpad_up?"U":"-"));
-            telemetry.addData("Servo Position", jewelRotationServo.getPosition());
+            telemetry.addData("Left Bumper",(gamepad1.left_bumper));
+            telemetry.addData("Right Bumper",(gamepad1.right_bumper));
             //telemetry.addData("Lift Position", liftMotor.getCurrentPosition());
             //telemetry.addData("Lift Target", liftMotor.getTargetPosition());
             //telemetry.addData("Lift status", liftMotor.isBusy()?"I'm busy":"I got free time.");

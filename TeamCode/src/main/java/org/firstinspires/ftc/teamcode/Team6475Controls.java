@@ -562,10 +562,10 @@ public abstract class Team6475Controls extends LinearOpMode {
     }
 //TODO testing needed
     protected void glyphGraber(double speed) {
-        glyphGrabber0.setPosition(Range.clip(speed, 0.15, 0.85) / 2.0 + 0.5); //Upper
-        glyphGrabber1.setPosition(Range.clip(speed, 0.15, 0.85) / 2.0 + 0.5); //Upper
-        glyphGrabber2.setPosition(Range.clip(speed, 0.15, 0.85) / 2.0 + 0.5); //Lower
-        glyphGrabber3.setPosition(Range.clip(speed, 0.15, 0.85) / 2.0 + 0.5); //Lower
+        glyphGrabber0.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Upper
+        glyphGrabber1.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Upper
+        glyphGrabber2.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Lower
+        glyphGrabber3.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Lower
     }
 
     // Set up parameters for driving in a straight line.
