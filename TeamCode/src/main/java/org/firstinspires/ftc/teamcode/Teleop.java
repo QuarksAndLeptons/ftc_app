@@ -58,7 +58,7 @@ public class Teleop extends Team6475Controls {
                 rightMotor.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x)/4);
             }
 
-            if (gamepad1.left_bumper) {
+            if (gamepad1.left_trigger >.5) {
                 leftMotor.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x)/8);
                 leftMotor2.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x)/8);
                 rightMotor2.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x)/8);
