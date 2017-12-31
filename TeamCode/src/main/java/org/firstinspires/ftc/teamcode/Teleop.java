@@ -63,68 +63,27 @@ public class Teleop extends Team6475Controls {
                 jewelRotationServo.setPosition(.47);
 
             }
-            if(gamepad1.x) {
-                blueColorServo.setPosition(.1);
-                jewelRotationServo.setPosition(.47);
-            }
-
 
             //Lifting mechanism
-            //Stop the lifting motor if it isn't busy
-            /*
-            if(!liftMotor.isBusy()) {
-                liftMotor.setPower(0.0);
-            }
-            //Set the target position to base position
-            if(gamepad2.a){
-                liftMotor.setTargetPosition(10);
-                if(liftMotor.isBusy()) liftMotor.setPower(0.5);
-            }
-            //Set the target position to the first block
-            if(gamepad2.b){
-                liftMotor.setTargetPosition(1570);
-                if(liftMotor.isBusy()) liftMotor.setPower(0.5);
-            }
-            //Set the target position to the second (highest) block
-            if(gamepad2.y){
-                liftMotor.setTargetPosition(2390);
-                if(liftMotor.isBusy()) liftMotor.setPower(0.5);
-            }
-            */
 
-            //Glyph dropping mechanism
-            /* if(!dropMotor.isBusy()) dropMotor.setPower(0.0);
-            if(gamepad2.dpad_up) {
+            liftGlyphs(-gamepad2.left_stick_y);
+            glyphGraber(-gamepad2.right_stick_y);
 
+            //Drop Glyphs
+            if(gamepad2.right_trigger>.5){
+                grabLowerGlyphs();
             }
-            if (gamepad2.dpad_down){
-                dropMotor.setTargetPosition(0);
-                dropMotor.setPower(0.25);
+            if(gamepad2.right_bumper){
+                grabUpperGlyphs();
             }
-            if(gamepad2.dpad_right) {
-                int dropPos = dropMotor.getCurrentPosition();
-                dropMotor.setTargetPosition(dropPos + 50);
-                dropMotor.setPower(0.25);
+            if(gamepad2.left_trigger>.5){
+                releaseUpperGlyphs();
             }
-            if (gamepad2.dpad_left){
-                int dropPos = dropMotor.getCurrentPosition();
-                dropMotor.setTargetPosition(dropPos - 50);
-                dropMotor.setPower(0.25);
+            if(gamepad2.left_bumper){
+                releaseLowerGlyphs();
             }
-            */
-//TODO change drop motor to glyphdrop code
-            /*
-            //Drop motor
-            if(gamepad1.x){
-                dropMotor.setTargetPosition(400);
-                if(dropMotor.isBusy()) dropMotor.setPower(0.6);
-            }
-            if(gamepad1.b){
-                dropMotor.setTargetPosition(0);
-                if(dropMotor.isBusy()) dropMotor.setPower(0.6);
-            }
-            if(!dropMotor.isBusy())dropMotor.setPower(0.0);
-*/
+
+
             //add some debug data
             telemetry.addData("Buttons",(gamepad1.a?"A":"-")+(gamepad1.b?"B":"-")+(gamepad1.x?"X":"-")+(gamepad1.y?"Y":"-"));
             telemetry.addData("Dpad",(gamepad1.dpad_left?"L":"-")+(gamepad1.dpad_right?"R":"-")+(gamepad1.dpad_down?"D":"-")+(gamepad1.dpad_up?"U":"-"));

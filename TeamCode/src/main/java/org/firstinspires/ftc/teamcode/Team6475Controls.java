@@ -514,8 +514,8 @@ public abstract class Team6475Controls extends LinearOpMode {
     protected void grabGlyphs() {
         glyphGrabber0.setPosition(0.25);
         glyphGrabber1.setPosition(0.5);
-        glyphGrabber2.setPosition(0.72);
-        glyphGrabber3.setPosition(0.5);
+        glyphGrabber2.setPosition(0.7);
+        glyphGrabber3.setPosition(0.52);
     }
 
     /**
@@ -524,6 +524,16 @@ public abstract class Team6475Controls extends LinearOpMode {
     protected void releaseGlyphs() {
         glyphGrabber0.setPosition(0.05);
         glyphGrabber1.setPosition(.95);
+        glyphGrabber2.setPosition(0.95);
+        glyphGrabber3.setPosition(0.15);
+    }
+
+    protected void releaseUpperGlyphs() {
+        glyphGrabber0.setPosition(0.05);
+        glyphGrabber1.setPosition(.95);
+
+
+    }protected void releaseLowerGlyphs() {
         glyphGrabber2.setPosition(0.95);
         glyphGrabber3.setPosition(0.15);
     }
@@ -549,6 +559,13 @@ public abstract class Team6475Controls extends LinearOpMode {
      **/
     protected void liftGlyphs(double speed) {
         glyphLifter.setPosition(Range.clip(speed, 0.15, 0.85) / 2.0 + 0.5);
+    }
+//TODO testing needed
+    protected void glyphGraber(double speed) {
+        glyphGrabber0.setPosition(Range.clip(speed, 0.15, 0.85) / 2.0 + 0.5); //Upper
+        glyphGrabber1.setPosition(Range.clip(speed, 0.15, 0.85) / 2.0 + 0.5); //Upper
+        glyphGrabber2.setPosition(Range.clip(speed, 0.15, 0.85) / 2.0 + 0.5); //Lower
+        glyphGrabber3.setPosition(Range.clip(speed, 0.15, 0.85) / 2.0 + 0.5); //Lower
     }
 
     // Set up parameters for driving in a straight line.

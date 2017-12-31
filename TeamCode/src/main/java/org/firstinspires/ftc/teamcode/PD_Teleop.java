@@ -1,17 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
 //Import FTC modules
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-        import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-        import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-        import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Position;
-        import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
+import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 
 //Import Gyro
 
@@ -26,20 +24,7 @@ public class PD_Teleop extends Team6475Controls {
     //Declare runtime variable
     private ElapsedTime runtime = new ElapsedTime();
 
-    //Instantiate hardware links
-
-
-
-    public static final double JEWEL_ROTATION_AMOUNT = 0.005;
-
-    //Inilize Encoder
-
-
-    // Gyro
-    //private DcMotor liftMotor;
-
-
-    //Define opmode
+      //Define opmode
     @Override public void runOpMode() {
 
         //This code runs immediately after the "init" button is pressed.
@@ -47,47 +32,7 @@ public class PD_Teleop extends Team6475Controls {
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
-        //Initialize hardware variables by paring them to motors in
-        //"hardwareMap"
-        //Begin with the chassis
 
-
-
-       // liftMotor = hardwareMap.get(DcMotor.class, "liftMotor");
-
-
-        //liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //Initialize servos
-
-        //left_intake = hardwareMap.get(Servo.class, "left_intake");
-        //right_intake = hardwareMap.get(Servo.class, "right_intake");
-        telemetry.addData("Status", "Initializing motors");
-
-        //Gyro
-        BNO055IMU.Parameters parametersG = new BNO055IMU.Parameters();
-        parametersG.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
-        parametersG.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parametersG.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parametersG.loggingEnabled      = true;
-        parametersG.loggingTag          = "IMU";
-        parametersG.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parametersG);
-
-
-        //Reverse the direction of the right motors so the robot drives
-        //forward when all motors are set to 1.0
-        leftMotor.setDirection(DcMotor.Direction.REVERSE);
-        leftMotor2.setDirection(DcMotor.Direction.REVERSE);
-        //Reverse the lifting motor so that it goes up when the power is positive
-       // liftMotor.setDirection(DcMotor.Direction.REVERSE);
-
-        //Inform the user that he needs to press the play button
-        telemetry.addData("Status", "Waiting for play button");
-        telemetry.update();
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -250,49 +195,10 @@ public class PD_Teleop extends Team6475Controls {
         telemetry.update();
 
     }
-    public void encoderDrive(double speed, double leftInches, double rightInches, double timeoutS) {
-        int newTarget;
-        // Ensure that the opmode is still active liftMotor
-        if (opModeIsActive()) {
-/*
-            // Determine new target position, and pass to motor controller
-            newTarget = liftMotor.getCurrentPosition() + (int)(leftInches * COUNTS_PER_INCH);
-            liftMotor.setTargetPosition(newTarget);
 
-            // Turn On RUN_TO_POSITION
-            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+}
 
-            // reset the timeout time and start motion.
-            runtime.reset();
-            liftMotor.setPower(Math.abs(speed));
-*/
-            // keep looping while we are still active, and there is time left, and both motors are running.
-            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
-            // its target position, the motion will stop.  This is "safer" in the event that the robot will
-            // always end the motion as soon as possible.
-            // However, if you require that BOTH motors have finished their moves before the robot continues
-            // onto the next step, use (isBusy() || isBusy()) in the loop test.
-         /*   while (opModeIsActive() && (runtime.seconds() < timeoutS) && (liftMotor.isBusy())) {
-                // Display it for the driver.
-                telemetry.addData("Path1",  "Running to", newTarget);
-                telemetry.addData("Path2",  "Running at", liftMotor.getCurrentPosition());
-                telemetry.update();
-            }
 
-            // Stop all motion;
-            liftMotor.setPower(0);
 
-            // Turn off RUN_TO_POSITION
-            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            sleep(1000);   // optional pause after each move
-
-            telemetry.addData("Done?", "Done" );
-            telemetry.update();
-
-        */
-        }
-        }
-
-    }
 
 
