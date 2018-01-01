@@ -78,6 +78,10 @@ public class Teleop extends Team6475Controls {
             //TODO switch the gamepad1 to gamepad 2 for 2 drivers
 
             //Lifting mechanism
+            liftGlyphs(-gamepad2.right_stick_x);
+
+
+ /*
             if(gamepad1.y){
                 glyphLifter.setPosition(.8);
             }
@@ -88,7 +92,7 @@ public class Teleop extends Team6475Controls {
                 glyphLifter.setPosition(.5);
             }
 
-
+*/
             //Drop Glyphs
             if(gamepad1.right_trigger>.5){
                 grabLowerGlyphs();
