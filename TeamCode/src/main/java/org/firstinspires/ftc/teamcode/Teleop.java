@@ -104,8 +104,9 @@ public class Teleop extends Team6475Controls {
                 releaseLowerGlyphs();
             }
             if(gamepad1.left_bumper){
-                releaseUpperGlyphs();
+                releaseGlyphs();
             }
+
 
 
             //add some debug data

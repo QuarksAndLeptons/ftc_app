@@ -519,13 +519,13 @@ public abstract class Team6475Controls extends LinearOpMode {
     }
 
     /**
-     * Release the glyphs
+     * Release the glyphs CLAWS Straight
      */
     protected void releaseGlyphs() {
-        glyphGrabber0.setPosition(0.05);
-        glyphGrabber1.setPosition(.95);
-        glyphGrabber2.setPosition(0.95);
-        glyphGrabber3.setPosition(0.15);
+        glyphGrabber0.setPosition(0.2);
+        glyphGrabber1.setPosition(.55);
+        glyphGrabber2.setPosition(0.75);
+        glyphGrabber3.setPosition(0.40);
     }
 
     protected void releaseUpperGlyphs() {
