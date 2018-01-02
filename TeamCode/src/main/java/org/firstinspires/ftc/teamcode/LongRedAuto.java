@@ -89,7 +89,7 @@ public class LongRedAuto extends Team6475Controls {
             gyroDrive(DRIVE_SPEED, 16, 50, 10);    // Drive forward 16 inches
             gyroHold(TURN_SPEED, 50.0, 0.5);           // Hold for half a second
             sleep(1000);
-            releaseGlyphs(); //release initial glyph
+            releaseGlyphsAuto(); //release initial glyph
             sleep(2000);
             gyroDrive(DRIVE_SPEED, -6, 130);            // Drive backward 6 inches
 
@@ -106,7 +106,7 @@ public class LongRedAuto extends Team6475Controls {
                     gyroDrive(DRIVE_SPEED, 16, 50, 10);    // Drive forward 16 inches
                     gyroHold(TURN_SPEED, 50.0, 0.5);           // Hold for half a second
                     sleep(1000);
-                    releaseGlyphs(); //release initial glyph
+                    releaseGlyphsAuto(); //release initial glyph
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, 130);            // Drive backward 6 inches
                     break;
@@ -120,7 +120,7 @@ public class LongRedAuto extends Team6475Controls {
                     gyroDrive(DRIVE_SPEED, 11, 40, 10);    // Drive forward 11 inches
                     gyroHold(TURN_SPEED, 40.0, 0.5);           // Hold for half a second
                     sleep(1000);
-                    releaseGlyphs(); //release initial glyph
+                    releaseGlyphsAuto(); //release initial glyph
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, 180);            // Drive backward 6 inches
                     break;
@@ -134,7 +134,7 @@ public class LongRedAuto extends Team6475Controls {
                     gyroHold(TURN_SPEED, 45, 0.5);             // Hold for half a second
                     gyroDrive(DRIVE_SPEED, 9, 45, 10);    // Drive forward 9 inches
                     sleep(1000);
-                    releaseGlyphs(); //release initial glyph
+                    releaseGlyphsAuto(); //release initial glyph
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, 180, 10);    // Drive backward six inches
                     telemetry.addData("VuMark", "not visible");

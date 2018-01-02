@@ -62,7 +62,7 @@ public abstract class Team6475Controls extends LinearOpMode {
     //Instantiate servos
     protected Servo blueColorServo;
     protected Servo jewelRotationServo;
-    protected Servo glyphGrabber0, glyphGrabber1, glyphGrabber2, glyphGrabber3, glyphLifter;
+    protected Servo glyphTopLeft, glyphTopRight, glyphBottomLeft, glyphBottomRight, glyphLifter;
 
     //Instantiate sensors
     ColorSensor blueSensorColor;
@@ -125,10 +125,10 @@ public abstract class Team6475Controls extends LinearOpMode {
 
         //Initialize glyph lifting mechanism
         glyphLifter = hardwareMap.get(Servo.class, "glyphLift");
-        glyphGrabber0 = hardwareMap.get(Servo.class, "glyphTopLeft");
-        glyphGrabber1 = hardwareMap.get(Servo.class, "glyphTopRight");
-        glyphGrabber2 = hardwareMap.get(Servo.class, "glyphBottomLeft");
-        glyphGrabber3 = hardwareMap.get(Servo.class, "glyphBottomRight");
+        glyphTopLeft = hardwareMap.get(Servo.class, "glyphTopLeft");
+        glyphTopRight = hardwareMap.get(Servo.class, "glyphTopRight");
+        glyphBottomLeft = hardwareMap.get(Servo.class, "glyphBottomLeft");
+        glyphBottomRight = hardwareMap.get(Servo.class, "glyphBottomRight");
 
         //Initialize the servos
        blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
@@ -512,41 +512,47 @@ public abstract class Team6475Controls extends LinearOpMode {
      * Grab the glyphs
      */
     protected void grabGlyphs() {
-        glyphGrabber0.setPosition(0.25);
-        glyphGrabber1.setPosition(0.5);
-        glyphGrabber2.setPosition(0.7);
-        glyphGrabber3.setPosition(0.52);
+        glyphTopLeft.setPosition(0.25);
+        glyphTopRight.setPosition(0.5);
+        glyphBottomLeft.setPosition(0.7);
+        glyphBottomRight.setPosition(0.52);
     }
 
     /**
      * Release the glyphs CLAWS Straight
      */
     protected void releaseGlyphs() {
-        glyphGrabber0.setPosition(0.2);
-        glyphGrabber1.setPosition(.55);
-        glyphGrabber2.setPosition(0.75);
-        glyphGrabber3.setPosition(0.40);
+        glyphTopLeft.setPosition(0.00);
+        glyphTopRight.setPosition(.8);
+        glyphBottomLeft.setPosition(0.95);
+        glyphBottomRight.setPosition(0.2);
     }
 
+    protected void releaseGlyphsAuto() {
+        glyphTopLeft.setPosition(0.2);
+        glyphTopRight.setPosition(0.75);
+        glyphBottomLeft.setPosition(0.95);
+        glyphBottomRight.setPosition(0.20);
+    }
     protected void releaseUpperGlyphs() {
-        glyphGrabber0.setPosition(0.05);
-        glyphGrabber1.setPosition(.95);
+        glyphTopLeft.setPosition(0.05);
+        glyphTopRight.setPosition(.95);
 
 
     }protected void releaseLowerGlyphs() {
-        glyphGrabber2.setPosition(0.95);
-        glyphGrabber3.setPosition(0.15);
+        glyphBottomLeft.setPosition(0.95);
+        glyphBottomRight.setPosition(0.15);
     }
 
     protected void grabUpperGlyphs() {
-        glyphGrabber0.setPosition(0.25);
-        glyphGrabber1.setPosition(0.5);
+        glyphTopLeft.setPosition(0.25);
+        glyphTopRight.setPosition(0.5);
 
     }
 
     protected void grabLowerGlyphs() {
-        glyphGrabber2.setPosition(0.70);  //.95 is opn
-        glyphGrabber3.setPosition(0.52); //.15 is open
+        glyphBottomLeft.setPosition(0.70);  //.95 is opn
+        glyphBottomRight.setPosition(0.52); //.15 is open
     }
 
     /**
@@ -562,10 +568,10 @@ public abstract class Team6475Controls extends LinearOpMode {
     }
 //TODO testing needed
     protected void glyphGraber(double speed) {
-        glyphGrabber0.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Upper
-        glyphGrabber1.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Upper
-        glyphGrabber2.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Lower
-        glyphGrabber3.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Lower
+        glyphTopLeft.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Upper
+        glyphTopRight.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Upper
+        glyphBottomLeft.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Lower
+        glyphBottomRight.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Lower
     }
 
     // Set up parameters for driving in a straight line.

@@ -78,7 +78,7 @@ public class ShortRedAuto extends Team6475Controls {
             gyroHold(TURN_SPEED, -51, 0.5); // Hold for a half-second
             gyroDrive(DRIVE_SPEED, 12, -51, 5);    // Drive forward 12 inches
             sleep(1000);
-            releaseGlyphs(); //release initial glyph
+            releaseGlyphsAuto(); //release initial glyph
             sleep(2000);
             gyroDrive(DRIVE_SPEED, -6, 129);    // Drive backward six inches
         }
@@ -93,7 +93,7 @@ public class ShortRedAuto extends Team6475Controls {
                     gyroHold(TURN_SPEED, -40.0, 0.5); // Hold for a half-second
                     gyroDrive(DRIVE_SPEED, 16, -40, 5);    // Drive forward 16 inches
                     sleep(1000);
-                    releaseGlyphs(); //release initial glyph
+                    releaseGlyphsAuto(); //release initial glyph
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, 90);    // Drive backward six inches
                     break;
@@ -105,7 +105,7 @@ public class ShortRedAuto extends Team6475Controls {
                     gyroHold(TURN_SPEED, -51, 0.5); // Hold for a half-second
                     gyroDrive(DRIVE_SPEED, 12, -51, 5);    // Drive forward 12 inches
                     sleep(1000);
-                    releaseGlyphs(); //release initial glyph
+                    releaseGlyphsAuto(); //release initial glyph
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, 129);    // Drive backward six inches
                     break;
@@ -117,7 +117,7 @@ public class ShortRedAuto extends Team6475Controls {
                     gyroHold(TURN_SPEED, -135, 0.5); // Hold for a half-second
                     gyroDrive(DRIVE_SPEED, 16, -135, 5);    // Drive forward 16 inches
                     sleep(1000);
-                    releaseGlyphs(); //release initial glyph
+                    releaseGlyphsAuto(); //release initial glyph
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, 90);    // Drive backward six inches
                     break;
