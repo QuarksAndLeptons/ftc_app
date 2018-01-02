@@ -20,5 +20,6 @@ android {
     }
 }
 dependencies {
-compile project(path: ':DogeCV')
+    implementation project(':DogeCV')
+    implementation project(':openCVLibrary320')
 }
