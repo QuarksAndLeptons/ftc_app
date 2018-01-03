@@ -41,7 +41,7 @@ public class LongBlueAuto extends Team6475Controls {
 //Grab initial glyph
         jewelRotationServo.setPosition(.5);
         blueColorServo.setPosition(.91);
-        grabLowerGlyphs();
+        grabGlyphs();
         liftGlyphs(.8);
         sleep(2000);
         glyphLifter.setPosition(.5);
@@ -71,14 +71,14 @@ public class LongBlueAuto extends Team6475Controls {
         telemetry.addData("Identified Vumark", vuMark.name());
 
         if (vuMark == RelicRecoveryVuMark.UNKNOWN) {
-            grabLowerGlyphs();
+            grabGlyphs();
             gyroDrive(DRIVE_SPEED, 24, 0, 10);    // Drive forward 24 inches
             TurnToHeading(-40,.4);
             gyroHold(TURN_SPEED, -40.0, 0.5);           // Hold for half a second
             gyroDrive(DRIVE_SPEED, 11, -40, 10);    // Drive forward 11 inches
             gyroHold(TURN_SPEED, -40.0, 0.5);           // Hold for half a second
             sleep(1000);
-            releaseGlyphsAuto(); //release initial glyph
+            releaseGlyphs(); //release initial glyph
             sleep(2000);
             gyroDrive(DRIVE_SPEED, -6, 180);            // Drive backward 6 inches
 
@@ -86,7 +86,7 @@ public class LongBlueAuto extends Team6475Controls {
             telemetry.addData("VuMark", "%s visible", vuMark);
             switch (vuMark.ordinal()) {
                 case 1: //Left
-                    grabLowerGlyphs();
+                    grabGlyphs();
                     TurnToHeading(15,.5);                       // Turn 15 degrees to the left
                     gyroHold(TURN_SPEED, 15.0, 0.5);            // Hold for half a second
                     gyroDrive(DRIVE_SPEED, 29, 15, 10);    // Drive forward 29 inches
@@ -94,33 +94,33 @@ public class LongBlueAuto extends Team6475Controls {
                     gyroHold(TURN_SPEED, -45, 0.5);             // Hold for half a second
                     gyroDrive(DRIVE_SPEED, 9, -45, 10);    // Drive forward 9 inches
                     sleep(1000);
-                    releaseGlyphsAuto(); //release initial glyph
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, 180, 10);    // Drive backward six inches
                     break;
 
                 case 2://Center
-                    grabLowerGlyphs();
+                    grabGlyphs();
                     gyroDrive(DRIVE_SPEED, 24, 0, 10);    // Drive forward 24 inches
                     TurnToHeading(-40,.4);
                     gyroHold(TURN_SPEED, -40.0, 0.5);           // Hold for half a second
                     gyroDrive(DRIVE_SPEED, 11, -40, 10);    // Drive forward 11 inches
                     gyroHold(TURN_SPEED, -40.0, 0.5);           // Hold for half a second
                     sleep(1000);
-                    releaseGlyphsAuto(); //release initial glyph
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, 180);            // Drive backward 6 inches
                     break;
 
                 case 3://Right
-                    grabLowerGlyphs();
+                    grabGlyphs();
                     gyroDrive(DRIVE_SPEED, 24, 0, 10);    // Drive forward 24 inches
                     TurnToHeading(-50,.4);                      //Turn right 50 degrees
                     gyroHold(TURN_SPEED, -50.0, 0.5);           // Hold for half a second
                     gyroDrive(DRIVE_SPEED, 16, -50, 10);    // Drive forward 16 inches
                     gyroHold(TURN_SPEED, -50.0, 0.5);           // Hold for half a second
                     sleep(1000);
-                    releaseGlyphsAuto(); //release initial glyph
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, 130);            // Drive backward 6 inches
                     break;

@@ -514,8 +514,8 @@ public abstract class Team6475Controls extends LinearOpMode {
     protected void grabGlyphs() {
         glyphTopLeft.setPosition(0.25);
         glyphTopRight.setPosition(0.5);
-        glyphBottomLeft.setPosition(0.7);
-        glyphBottomRight.setPosition(0.52);
+        glyphBottomLeft.setPosition(0.70);  //.95 is opn
+        glyphBottomRight.setPosition(0.52); //.15 is open
     }
 
     /**
@@ -528,32 +528,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         glyphBottomRight.setPosition(0.2);
     }
 
-    protected void releaseGlyphsAuto() {
-        glyphTopLeft.setPosition(0.2);
-        glyphTopRight.setPosition(0.75);
-        glyphBottomLeft.setPosition(0.95);
-        glyphBottomRight.setPosition(0.20);
-    }
-    protected void releaseUpperGlyphs() {
-        glyphTopLeft.setPosition(0.05);
-        glyphTopRight.setPosition(.95);
 
-
-    }protected void releaseLowerGlyphs() {
-        glyphBottomLeft.setPosition(0.95);
-        glyphBottomRight.setPosition(0.15);
-    }
-
-    protected void grabUpperGlyphs() {
-        glyphTopLeft.setPosition(0.25);
-        glyphTopRight.setPosition(0.5);
-
-    }
-
-    protected void grabLowerGlyphs() {
-        glyphBottomLeft.setPosition(0.70);  //.95 is opn
-        glyphBottomRight.setPosition(0.52); //.15 is open
-    }
 
     /**
      * Sets the speed of the lifting mechanism.

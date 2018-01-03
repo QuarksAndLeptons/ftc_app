@@ -41,7 +41,7 @@ public class ShortBlueAuto extends Team6475Controls {
 //Grab initial glyph
         jewelRotationServo.setPosition(.5);
         blueColorServo.setPosition(.91);
-        grabLowerGlyphs();
+        grabGlyphs();
         liftGlyphs(.8);
         sleep(2000);
         glyphLifter.setPosition(.5);
@@ -82,7 +82,7 @@ public class ShortBlueAuto extends Team6475Controls {
             gyroHold(TURN_SPEED, 51, 0.5); // Hold for a half-second
             gyroDrive(DRIVE_SPEED, 12, 51, 5);    // Drive forward 12 inches
             sleep(1000);
-            releaseGlyphsAuto(); //release initial glyph
+            releaseGlyphs(); //release initial glyph
             sleep(2000);
             gyroDrive(DRIVE_SPEED, -6, -129);    // Drive backward six inches
         }
@@ -95,7 +95,7 @@ public class ShortBlueAuto extends Team6475Controls {
                     gyroHold(TURN_SPEED, 135, 0.5); // Hold for a half-second
                     gyroDrive(DRIVE_SPEED, 16, 135, 5);    // Drive forward 16 inches
                     sleep(1000);
-                    releaseGlyphsAuto(); //release initial glyph
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, -45);    // Drive backward six inches
                     break;
@@ -107,7 +107,7 @@ public class ShortBlueAuto extends Team6475Controls {
                     gyroHold(TURN_SPEED, 51, 0.5); // Hold for a half-second
                     gyroDrive(DRIVE_SPEED, 12, 51, 5);    // Drive forward 12 inches
                     sleep(1000);
-                    releaseGlyphsAuto(); //release initial glyph
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, -129);    // Drive backward six inches
                     break;
@@ -120,7 +120,7 @@ public class ShortBlueAuto extends Team6475Controls {
                     gyroHold(TURN_SPEED, 40.0, 0.5); // Hold for a half-second
                     gyroDrive(DRIVE_SPEED, 16, 40, 5);    // Drive forward 16 inches
                     sleep(1000);
-                    releaseGlyphsAuto(); //release initial glyph
+                    releaseGlyphs(); //release initial glyph
                     sleep(2000);
                     gyroDrive(DRIVE_SPEED, -6, -90);    // Drive backward six inches
                     break;
