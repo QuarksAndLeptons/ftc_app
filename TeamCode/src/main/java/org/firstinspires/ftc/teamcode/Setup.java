@@ -160,7 +160,7 @@ public class Setup extends LinearOpMode {
                     double tX = trans.get(0);
                     double tY = trans.get(1);
                     double tZ = trans.get(2);
-                    telemetry.addLine("Distance from wall must be 420-450mm");
+                    telemetry.addLine("Distance from wall must be ~465mm");
                     telemetry.addData("Distance from Wall", tZ);
                     telemetry.update();
 

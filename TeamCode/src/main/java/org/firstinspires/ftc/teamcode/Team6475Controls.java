@@ -512,10 +512,10 @@ public abstract class Team6475Controls extends LinearOpMode {
      * Grab the glyphs
      */
     protected void grabGlyphs() {
-        glyphTopLeft.setPosition(0.25);
-        glyphTopRight.setPosition(0.5);
+        glyphTopLeft.setPosition(0.20);
+        glyphTopRight.setPosition(0.65);
         glyphBottomLeft.setPosition(0.70);  //.95 is opn
-        glyphBottomRight.setPosition(0.52); //.15 is open
+        glyphBottomRight.setPosition(0.25); //.15 is open
     }
 
     /**
@@ -523,9 +523,9 @@ public abstract class Team6475Controls extends LinearOpMode {
      */
     protected void releaseGlyphs() {
         glyphTopLeft.setPosition(0.00);
-        glyphTopRight.setPosition(.8);
+        glyphTopRight.setPosition(.95);
         glyphBottomLeft.setPosition(0.95);
-        glyphBottomRight.setPosition(0.2);
+        glyphBottomRight.setPosition(00);
     }
 
 
@@ -539,7 +539,7 @@ public abstract class Team6475Controls extends LinearOpMode {
      *              downward speed, and +1.0 is the maximum upward speed.
      **/
     protected void liftGlyphs(double speed) {
-        glyphLifter.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5);
+        glyphLifter.setPosition(Range.clip(speed, -.95, .95) / 2.0 + 0.5);
     }
 //TODO testing needed
     protected void glyphGraber(double speed) {
