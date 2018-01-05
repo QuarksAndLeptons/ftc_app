@@ -10,14 +10,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 
 //Define as teleop
-@TeleOp(name = "Competition Teleoperation", group = "Linear Opmode")
+@TeleOp(name = "Competition Teleop", group = "Linear Opmode")
 
 public class Teleop extends Team6475Controls {
 
     //Define opmode
-    @Override public void runOpMode() {
+    @Override
+    public void runOpMode() {
         //This code runs immediately after the "init" button is pressed.
-
+        //PD waz here
         //Initialize the hardware
         initializeHardware();
 
@@ -26,6 +27,7 @@ public class Teleop extends Team6475Controls {
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        relicMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)\
         telemetry.addData("Status", "Waiting for play button");
@@ -45,57 +47,6 @@ public class Teleop extends Team6475Controls {
             blueColorServo.setPosition(.1);
             jewelRotationServo.setPosition(.47);
 
-            /*
-            //This is the code from PD to allow for driving based on drivers orientation versus robot orientation
-
-                if (gamepad1.left_trigger < .5 && gamepad1.right_trigger < .5) {
-                if ( 0 <= angle && angle <= 180) {
-
-                    leftMotor.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x));
-                    leftMotor2.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x));
-                    rightMotor2.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x));
-                    rightMotor.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x));
-
-                }
-                if ( 0 > angle && angle > -180) {
-
-                    leftMotor.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x));
-                    leftMotor2.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x));
-                    rightMotor2.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x));
-                    rightMotor.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x));
-
-                }
-            }
-            if (gamepad1.left_trigger > .5 && gamepad1.right_trigger < .5) {
-
-                leftMotor.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x));
-                leftMotor2.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x));
-                rightMotor2.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x));
-                rightMotor.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x));
-
-            }
-
-
-
-            if (gamepad1.left_trigger < .5 && gamepad1.right_trigger > .5 ) {
-                if ( 0 <= angle && angle <= 180) {
-
-                    leftMotor.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-                    leftMotor2.setPower((gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-                    rightMotor2.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-                    rightMotor.setPower((gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-
-                }
-                if ( 0 > angle && angle > -180) {
-
-                    leftMotor.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-                    leftMotor2.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x)/2);
-                    rightMotor2.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-                    rightMotor.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x)/2);
-
-                }
-            }
-            */
 
             //Default drive speed is quarter power
             if (gamepad1.right_trigger < .5) {
@@ -123,6 +74,7 @@ public class Teleop extends Team6475Controls {
             //    telemetry.addData("Lift motor power", liftMotor.getPower());
             telemetry.addData("Left motor power", leftMotor.getPower());
             telemetry.addData("Right motor power", rightMotor.getPower());
+            telemetry.addData("Relic motor power", relicMotor.getPower());
 
             if (gamepad1.b) {
                 blueColorServo.setPosition(.1);
@@ -130,36 +82,81 @@ public class Teleop extends Team6475Controls {
             }
 
             //Lifting mechanism
-            liftGlyphs(-gamepad2.right_stick_y);
+            glyphLifter.setPosition(.5);
 
-
-            if (gamepad2.y) {
+            if (gamepad2.dpad_up) {
                 glyphLifter.setPosition(.9);
             }
-            if (gamepad2.a) {
+
+            if (gamepad2.dpad_down) {
                 glyphLifter.setPosition(.1);
             }
-            if (gamepad2.x) {
-                glyphLifter.setPosition(.5);
-            }
+
 
             //Drop Glyphs
             if (gamepad2.right_trigger > .5) {
                 grabGlyphs();
             }
+
             if (gamepad2.left_trigger > .5) {
                 releaseGlyphs();
-
-
-                //add some debug data
-
-                //Update the telemetry
-                telemetry.update();
             }
 
-            telemetry.addData("Status", "Done");
+            //END GAME CONTROLS
+            relicMotor.setPower(-gamepad2.right_stick_y);
+
+            if (gamepad2.x) {
+                grabRelic();
+            }
+
+            if (gamepad2.b) {
+                releaseRelic();
+            }
+
+            if (gamepad2.y) {
+                liftRelic();
+            }
+
+            if (gamepad2.a) {
+                dropRelic();
+            }
+
+            //add some debug data
+
+            //Update the telemetry
+            telemetry.update();
+        }
+
+        //SINGLE DRIVER CONTROLS
+
+        // So you can drive with only one controller(press both back buttons)
+        if (gamepad1.left_trigger > .2) {
+            glyphLifter.setPosition(.5);
+
+            if (gamepad1.y) {
+                glyphLifter.setPosition(.9);
+            }
+            if (gamepad1.a) {
+                glyphLifter.setPosition(.1);
+            }
+            if (gamepad1.x) {
+                glyphLifter.setPosition(.5);
+            }
+
+            //Drop Glyphs
+            if (gamepad1.right_bumper) {
+                grabGlyphs();
+            }
+            if (gamepad1.left_bumper) {
+                releaseGlyphs();
+            }
+
+            //Update the telemetry
             telemetry.update();
 
-
         }
-    }}
+
+        telemetry.addData("Status", "Done");
+        telemetry.update();
+    }
+}

@@ -58,11 +58,14 @@ public abstract class Team6475Controls extends LinearOpMode {
     protected DcMotorEx rightMotor;
     protected DcMotorEx leftMotor2;
     protected DcMotorEx rightMotor2;
+    protected DcMotorEx relicMotor;
 
     //Instantiate servos
     protected Servo blueColorServo;
     protected Servo jewelRotationServo;
     protected Servo glyphTopLeft, glyphTopRight, glyphBottomLeft, glyphBottomRight, glyphLifter;
+    protected Servo relicClaw;
+    protected Servo relicLift;
 
     //Instantiate sensors
     ColorSensor blueSensorColor;
@@ -104,6 +107,8 @@ public abstract class Team6475Controls extends LinearOpMode {
         rightMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightFront");
         leftMotor2 = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftRear");
         rightMotor2 = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightRear");
+        relicMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "relicMotor");
+
         //Reset the encoders on the chassis to 0
         leftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
         leftMotor2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -133,6 +138,10 @@ public abstract class Team6475Controls extends LinearOpMode {
         //Initialize the servos
        blueColorServo = hardwareMap.get(Servo.class, "jewelServo");
        jewelRotationServo = hardwareMap.get(Servo.class, "jewelRotationServo");
+        relicClaw = hardwareMap.get(Servo.class, "relicClaw");
+        relicLift = hardwareMap.get(Servo.class, "relicLift");
+
+
         //Initialize sensors
         blueSensorColor = hardwareMap.get(ColorSensor.class, "BlueColorSensor");
 
@@ -541,13 +550,54 @@ public abstract class Team6475Controls extends LinearOpMode {
     protected void liftGlyphs(double speed) {
         glyphLifter.setPosition(Range.clip(speed, -.95, .95) / 2.0 + 0.5);
     }
-//TODO testing needed
-    protected void glyphGraber(double speed) {
-        glyphTopLeft.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Upper
-        glyphTopRight.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Upper
-        glyphBottomLeft.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Lower
-        glyphBottomRight.setPosition(Range.clip(speed, -1, 1) / 2.0 + 0.5); //Lower
+
+
+    //END GAME CONTROLS
+    /**
+     * Grabs the relic
+     *
+     **/
+    protected void grabRelic(){
+        relicClaw.setPosition(0);
+
     }
+
+    /**
+     * Releases the relic
+     */
+    protected void releaseRelic(){
+        relicClaw.setPosition(.9);
+
+
+    }
+
+    /**
+     * Sets the power of the relic motor to extend the "relic arm"
+     * @param power the power of the relic motor
+     */
+    protected void deployRelic(double power){
+        relicMotor.setPower(power);
+
+    }
+
+    /**
+     * Lifts the relic.  Ideal for endgame where the relic must
+     * go over the field wall and throwing the relic, if necessary
+     */
+    protected void liftRelic(){
+        relicLift.setPosition(1);
+
+    }
+
+    /**
+     * Drops the relic.  Ideal for initializing servo motors and
+     * lowering the glyph after carrying it over the field wall
+     */
+    protected void dropRelic(){
+        relicLift.setPosition(.1);
+
+    }
+
 
     // Set up parameters for driving in a straight line.
 
@@ -566,7 +616,7 @@ public abstract class Team6475Controls extends LinearOpMode {
      *                 before giving up
      */
 
-    protected void Drive(double power, double distance, double angle, double timeout) {
+    protected void drive(double power, double distance, double angle, double timeout) {
         //Ensure the motors are in the right configuration
         leftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -678,7 +728,7 @@ public abstract class Team6475Controls extends LinearOpMode {
      *
      * @param degrees Degrees to turn, + is left - is right
      */
-    protected void TurnToHeading(int degrees, double power) {
+    protected void turnToHeading(int degrees, double power) {
         // restart imu angle tracking.
         //resetAngle();
 
@@ -747,8 +797,6 @@ public abstract class Team6475Controls extends LinearOpMode {
 
 
 
-
-    //TODO class or method?
     public class PIDController {
         private double m_P;                                 // factor for "proportional" control
         private double m_I;                                 // factor for "integral" control
@@ -1053,8 +1101,8 @@ public abstract class Team6475Controls extends LinearOpMode {
         DcMotorControllerEx rmotorControllerEx = (DcMotorControllerEx) rightMotor.getController();
 
         // get the port number of our configured motor.
-        int lmotorIndex = ((DcMotorEx) leftMotor).getPortNumber();
-        int rmotorIndex = ((DcMotorEx) rightMotor).getPortNumber();
+        int lmotorIndex = leftMotor.getPortNumber();
+        int rmotorIndex = rightMotor.getPortNumber();
 
         // get the PID coefficients for the RUN_USING_ENCODER  modes.
         PIDCoefficients lpidOrig = lmotorControllerEx.getPIDCoefficients(lmotorIndex, DcMotor.RunMode.RUN_USING_ENCODER);

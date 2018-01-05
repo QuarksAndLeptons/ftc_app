@@ -30,13 +30,13 @@ public class ConceptPIDController extends Team6475Controls {
 
         runtime.reset();
 
-        Drive(.5,24,0,10);
+        drive(.5,24,0,10);
         gyroHold(.2,0,.5);
 
-        TurnToHeading(-90,.5);
+        turnToHeading(-90,.5);
         gyroHold(.2,-90,.5);
 
-        Drive(.5,24,-90,10);
+        drive(.5,24,-90,10);
         gyroHold(.2,-90,.5);
 
 

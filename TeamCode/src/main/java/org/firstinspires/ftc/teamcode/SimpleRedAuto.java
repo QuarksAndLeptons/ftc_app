@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * of the FTC Driver Station. When an selection is made from the menu, the corresponding OpMode
  * class is instantiated on the Robot Controller and executed.
  * <p>
- * This particular OpMode just executes a basic Tank Drive Teleop for a PushBot
+ * This particular OpMode just executes a basic Tank drive Teleop for a PushBot
  * It includes all the skeletal structure that all linear OpModes contain.
  * <p>
  * Use Android Studios to Copy this Class, and Paste it into your team's code folder with a new name.
