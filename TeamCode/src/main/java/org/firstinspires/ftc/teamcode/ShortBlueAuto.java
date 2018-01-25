@@ -43,7 +43,8 @@ public class ShortBlueAuto extends Team6475Controls {
         blueColorServo.setPosition(.95);
         grabGlyphs();
         liftGlyphs(.8);
-        sleep(2000);
+        sleep(1000);
+        liftGlyphs(0.0);
 
         blueColorServo.setPosition(.93);
         jewelRotationServo.setPosition(.5);
@@ -85,8 +86,7 @@ public class ShortBlueAuto extends Team6475Controls {
             releaseGlyphs(); //release initial glyph
             sleep(2000);
             gyroDrive(DRIVE_SPEED, -6, -129);    // drive backward six inches
-        }
-        else { // This must be a VuMark
+        } else { // This must be a VuMark
             telemetry.addData("VuMark", "%s visible", vuMark);
             switch (vuMark.ordinal()) {
                 case 1: //Left
