@@ -65,7 +65,7 @@ public abstract class Team6475Controls extends LinearOpMode {
     //Instantiate servos
     protected Servo blueColorServo;
     protected Servo jewelRotationServo;
-    @Deprecated protected Servo glyphTopLeft, glyphTopRight, glyphBottomLeft, glyphBottomRight;
+    protected Servo glyphTopLeft, glyphTopRight, glyphBottomLeft, glyphBottomRight;
     protected Servo relicClaw;
     protected Servo relicLift;
 
@@ -524,8 +524,9 @@ public abstract class Team6475Controls extends LinearOpMode {
      * Grab the glyphs
      */
     protected void grabGlyphs() {
-        glyphTopLeft.setPosition(0.20);
-        glyphTopRight.setPosition(0.65);
+        //FIXME Values are wrong.
+        glyphTopLeft.setPosition(.5);
+        glyphTopRight.setPosition(.5);
         glyphBottomLeft.setPosition(0.70);  //.95 is opn
         glyphBottomRight.setPosition(0.25); //.15 is open
     }
@@ -534,10 +535,11 @@ public abstract class Team6475Controls extends LinearOpMode {
      * Release the glyphs CLAWS Straight
      */
     protected void releaseGlyphs() {
+        //These values have been caliberated, unlike the ones in "grabGlyphs()"
         glyphTopLeft.setPosition(0.00);
-        glyphTopRight.setPosition(.95);
-        glyphBottomLeft.setPosition(0.95);
-        glyphBottomRight.setPosition(00);
+        glyphTopRight.setPosition(0.92);
+        glyphBottomLeft.setPosition(0.49);
+        glyphBottomRight.setPosition(0.89);
     }
 
 
