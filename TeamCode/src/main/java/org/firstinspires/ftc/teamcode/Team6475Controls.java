@@ -58,12 +58,14 @@ public abstract class Team6475Controls extends LinearOpMode {
     protected DcMotorEx rightMotor;
     protected DcMotorEx leftMotor2;
     protected DcMotorEx rightMotor2;
-    protected DcMotorEx relicMotor;
+    protected DcMotorEx relicExtendMotor;
+    protected DcMotorEx relicRetractMotor;
+    protected DcMotor glyphLiftMotor;
 
     //Instantiate servos
     protected Servo blueColorServo;
     protected Servo jewelRotationServo;
-    protected Servo glyphTopLeft, glyphTopRight, glyphBottomLeft, glyphBottomRight, glyphLifter;
+    @Deprecated protected Servo glyphTopLeft, glyphTopRight, glyphBottomLeft, glyphBottomRight;
     protected Servo relicClaw;
     protected Servo relicLift;
 
@@ -107,7 +109,9 @@ public abstract class Team6475Controls extends LinearOpMode {
         rightMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightFront");
         leftMotor2 = (DcMotorEx) hardwareMap.get(DcMotor.class, "leftRear");
         rightMotor2 = (DcMotorEx) hardwareMap.get(DcMotor.class, "rightRear");
-        relicMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "relicMotor");
+        relicExtendMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "relicExtendMotor");
+        relicRetractMotor = (DcMotorEx) hardwareMap.get(DcMotor.class, "relicRetractMotor");
+        glyphLiftMotor = hardwareMap.get(DcMotor.class, "glyphlift");
 
         //Reset the encoders on the chassis to 0
         leftMotor.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
@@ -128,8 +132,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         leftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         leftMotor2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
 
-        //Initialize glyph lifting mechanism
-        glyphLifter = hardwareMap.get(Servo.class, "glyphLift");
+        //Initialize glyph lifting servos
         glyphTopLeft = hardwareMap.get(Servo.class, "glyphTopLeft");
         glyphTopRight = hardwareMap.get(Servo.class, "glyphTopRight");
         glyphBottomLeft = hardwareMap.get(Servo.class, "glyphBottomLeft");
@@ -548,7 +551,7 @@ public abstract class Team6475Controls extends LinearOpMode {
      *              downward speed, and +1.0 is the maximum upward speed.
      **/
     protected void liftGlyphs(double speed) {
-        glyphLifter.setPosition(Range.clip(speed, -.95, .95) / 2.0 + 0.5);
+        glyphLiftMotor.setPower(speed);
     }
 
 
@@ -576,7 +579,14 @@ public abstract class Team6475Controls extends LinearOpMode {
      * @param power the power of the relic motor
      */
     protected void deployRelic(double power){
-        relicMotor.setPower(power);
+        if(power>0.0){
+            relicExtendMotor.setPower(power);
+            relicRetractMotor.setPower(-0.1);
+        }
+        else{
+            relicExtendMotor.setPower(-0.4);
+            relicRetractMotor.setPower(power);
+        }
 
     }
 
@@ -585,7 +595,7 @@ public abstract class Team6475Controls extends LinearOpMode {
      * go over the field wall and throwing the relic, if necessary
      */
     protected void liftRelic(){
-        relicLift.setPosition(1);
+        relicLift.setPosition(.9);
 
     }
 

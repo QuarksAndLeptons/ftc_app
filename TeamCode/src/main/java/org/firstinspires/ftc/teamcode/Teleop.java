@@ -18,7 +18,6 @@ public class Teleop extends Team6475Controls {
     @Override
     public void runOpMode() {
         //This code runs immediately after the "init" button is pressed.
-        //PD waz here
         //Initialize the hardware
         initializeHardware();
 
@@ -27,7 +26,7 @@ public class Teleop extends Team6475Controls {
         rightMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         leftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        relicMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        relicExtendMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Wait for the game to start (driver presses PLAY)\
         telemetry.addData("Status", "Waiting for play button");
@@ -74,7 +73,7 @@ public class Teleop extends Team6475Controls {
             //    telemetry.addData("Lift motor power", liftMotor.getPower());
             telemetry.addData("Left motor power", leftMotor.getPower());
             telemetry.addData("Right motor power", rightMotor.getPower());
-            telemetry.addData("Relic motor power", relicMotor.getPower());
+            telemetry.addData("Relic motor power", relicExtendMotor.getPower());
 
             if (gamepad1.b) {
                 blueColorServo.setPosition(.1);
@@ -82,14 +81,14 @@ public class Teleop extends Team6475Controls {
             }
 
             //Lifting mechanism
-            glyphLifter.setPosition(.5);
+            liftGlyphs(0);
 
             if (gamepad2.dpad_up) {
-                glyphLifter.setPosition(.9);
+                liftGlyphs(1);
             }
 
             if (gamepad2.dpad_down) {
-                glyphLifter.setPosition(.1);
+                liftGlyphs(-1);
             }
 
 
@@ -103,8 +102,19 @@ public class Teleop extends Team6475Controls {
             }
 
             //END GAME CONTROLS
-            relicMotor.setPower(-gamepad2.right_stick_y);
 
+            if(-gamepad2.right_stick_y > 0) {
+                relicExtendMotor.setPower(gamepad2.right_stick_y);
+                relicRetractMotor.setPower(-.1);
+            }
+            if(-gamepad2.right_stick_y < 0) {
+                relicExtendMotor.setPower(.1);
+                relicRetractMotor.setPower(gamepad2.right_stick_y);
+            }
+            if(-gamepad2.right_stick_y == 0) {
+                relicExtendMotor.setPower(0);
+                relicRetractMotor.setPower(0);
+            }
             if (gamepad2.x) {
                 grabRelic();
             }
@@ -128,19 +138,16 @@ public class Teleop extends Team6475Controls {
         }
 
         //SINGLE DRIVER CONTROLS
-
         // So you can drive with only one controller(press both back buttons)
         if (gamepad1.left_trigger > .2) {
-            glyphLifter.setPosition(.5);
+            liftGlyphs(0);
 
-            if (gamepad1.y) {
-                glyphLifter.setPosition(.9);
+            if (gamepad2.dpad_up) {
+                liftGlyphs(1);
             }
-            if (gamepad1.a) {
-                glyphLifter.setPosition(.1);
-            }
-            if (gamepad1.x) {
-                glyphLifter.setPosition(.5);
+
+            if (gamepad2.dpad_down) {
+                liftGlyphs(-1);
             }
 
             //Drop Glyphs

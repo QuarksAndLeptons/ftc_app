@@ -40,11 +40,10 @@ public class ShortRedAuto extends Team6475Controls {
 
         //Grab initial glyph
         jewelRotationServo.setPosition(.5);
-        blueColorServo.setPosition(.91);
+        blueColorServo.setPosition(.95);
         grabGlyphs();
         liftGlyphs(.8);
         sleep(2000);
-        glyphLifter.setPosition(.5);
 
 
         debugColorSensor(blueSensorColor);
@@ -61,7 +60,7 @@ public class ShortRedAuto extends Team6475Controls {
         telemetry.update();
 
         sleep(1000);
-        blueColorServo.setPosition(.35);
+        blueColorServo.setPosition(.33);
         jewelRotationServo.setPosition(.47);
         sleep(1500);
 
@@ -80,7 +79,7 @@ public class ShortRedAuto extends Team6475Controls {
             sleep(1000);
             releaseGlyphs(); //release initial glyph
             sleep(2000);
-            gyroDrive(DRIVE_SPEED, -6, 129);    // drive backward six inches
+            gyroDrive(DRIVE_SPEED, -10, 129);    // drive backward six inches
         }
         else { // This must be a VuMark
             telemetry.addData("VuMark", "%s visible", vuMark);
@@ -95,7 +94,7 @@ public class ShortRedAuto extends Team6475Controls {
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 90);    // drive backward six inches
+                    gyroDrive(DRIVE_SPEED, -10, 90);    // drive backward six inches
                     break;
 
                 case 2://Center
@@ -107,7 +106,7 @@ public class ShortRedAuto extends Team6475Controls {
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 129);    // drive backward six inches
+                    gyroDrive(DRIVE_SPEED, -10, 129);    // drive backward six inches
                     break;
 
                 case 3://Right
@@ -119,7 +118,7 @@ public class ShortRedAuto extends Team6475Controls {
                     sleep(1000);
                     releaseGlyphs(); //release initial glyph
                     sleep(2000);
-                    gyroDrive(DRIVE_SPEED, -6, 90);    // drive backward six inches
+                    gyroDrive(DRIVE_SPEED, -10, 90);    // drive backward six inches
                     break;
 
             }

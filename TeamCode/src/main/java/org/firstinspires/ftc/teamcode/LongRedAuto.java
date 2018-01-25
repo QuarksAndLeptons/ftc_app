@@ -49,11 +49,11 @@ public class LongRedAuto extends Team6475Controls {
 
         //Grab initial glyph
         jewelRotationServo.setPosition(.5);
-        blueColorServo.setPosition(.91);
+        blueColorServo.setPosition(.95);
         grabGlyphs();
         liftGlyphs(.8);
         sleep(2000);
-        glyphLifter.setPosition(.5);
+
 
 
         debugColorSensor(blueSensorColor);
@@ -70,7 +70,7 @@ public class LongRedAuto extends Team6475Controls {
         telemetry.update();
 
         sleep(1000);
-        blueColorServo.setPosition(.35);
+        blueColorServo.setPosition(.33);
         jewelRotationServo.setPosition(.47);
         sleep(1000);
 

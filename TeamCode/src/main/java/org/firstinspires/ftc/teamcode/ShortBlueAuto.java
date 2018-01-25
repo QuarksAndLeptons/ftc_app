@@ -40,11 +40,11 @@ public class ShortBlueAuto extends Team6475Controls {
 
 //Grab initial glyph
         jewelRotationServo.setPosition(.5);
-        blueColorServo.setPosition(.91);
+        blueColorServo.setPosition(.95);
         grabGlyphs();
         liftGlyphs(.8);
         sleep(2000);
-        glyphLifter.setPosition(.5);
+
         blueColorServo.setPosition(.93);
         jewelRotationServo.setPosition(.5);
         sleep(1500);
@@ -64,7 +64,7 @@ public class ShortBlueAuto extends Team6475Controls {
         telemetry.update();
 
         sleep(1000);
-        blueColorServo.setPosition(.35);
+        blueColorServo.setPosition(.36);
         jewelRotationServo.setPosition(.47);
         sleep(1000);
 
