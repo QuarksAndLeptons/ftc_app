@@ -528,7 +528,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         glyphTopLeft.setPosition(.24);
         glyphTopRight.setPosition(.68);
         glyphBottomLeft.setPosition(0.68);
-        glyphBottomRight.setPosition(0.27);
+        glyphBottomRight.setPosition(0.44);
     }
 
     /**
@@ -539,7 +539,7 @@ public abstract class Team6475Controls extends LinearOpMode {
         glyphTopLeft.setPosition(0.0);
         glyphTopRight.setPosition(1.0);
         glyphBottomLeft.setPosition(0.92);
-        glyphBottomRight.setPosition(0.00);
+        glyphBottomRight.setPosition(.18);
     }
 
 
