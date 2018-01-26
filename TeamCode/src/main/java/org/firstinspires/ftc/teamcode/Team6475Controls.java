@@ -524,22 +524,22 @@ public abstract class Team6475Controls extends LinearOpMode {
      * Grab the glyphs
      */
     protected void grabGlyphs() {
-        //FIXME Values are wrong.
-        glyphTopLeft.setPosition(.5);
-        glyphTopRight.setPosition(.5);
-        glyphBottomLeft.setPosition(0.70);  //.95 is opn
-        glyphBottomRight.setPosition(0.25); //.15 is open
+        //FIXED
+        glyphTopLeft.setPosition(.24);
+        glyphTopRight.setPosition(.68);
+        glyphBottomLeft.setPosition(0.68);
+        glyphBottomRight.setPosition(0.27);
     }
 
     /**
      * Release the glyphs CLAWS Straight
      */
     protected void releaseGlyphs() {
-        //These values have been caliberated, unlike the ones in "grabGlyphs()"
-        glyphTopLeft.setPosition(0.00);
-        glyphTopRight.setPosition(0.92);
-        glyphBottomLeft.setPosition(0.49);
-        glyphBottomRight.setPosition(0.89);
+        //FIXED
+        glyphTopLeft.setPosition(0.0);
+        glyphTopRight.setPosition(1.0);
+        glyphBottomLeft.setPosition(0.92);
+        glyphBottomRight.setPosition(0.00);
     }
 
 
