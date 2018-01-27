@@ -42,8 +42,9 @@ public class LongBlueAuto extends Team6475Controls {
         jewelRotationServo.setPosition(.5);
         blueColorServo.setPosition(.95);
         grabGlyphs();
-        liftGlyphs(.8);
-        sleep(2000);
+        liftGlyphs(.3);
+        sleep(1500);
+        liftGlyphs(0);
 
 
         debugColorSensor(blueSensorColor);
