@@ -47,12 +47,12 @@ public class Teleop extends Team6475Controls {
             jewelRotationServo.setPosition(.47);
 
 
-            //Default drive speed is quarter power
+            //Default drive speed is half power
             if (gamepad1.right_trigger < .5) {
-                leftMotor.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x) / 4);
-                leftMotor2.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x) / 4);
-                rightMotor2.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x) / 4);
-                rightMotor.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x) / 4);
+                leftMotor.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x) / 2.0);
+                leftMotor2.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x) / 2.0);
+                rightMotor2.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x) / 2.0);
+                rightMotor.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x) / 2.0);
             }
             //By holding down the right trigger we can give a boost to full power
             if (gamepad1.right_trigger > .5) {
@@ -64,10 +64,10 @@ public class Teleop extends Team6475Controls {
 
             //By holding down the left trigger we can give a boost to half power
             if (gamepad1.left_trigger > .5) {
-                leftMotor.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x) / 2);
-                leftMotor2.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x) / 2);
-                rightMotor2.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x) / 2);
-                rightMotor.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x) / 2);
+                leftMotor.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x) / 4.0);
+                leftMotor2.setPower((-gamepad1.left_stick_y + gamepad1.right_stick_x) / 4.0);
+                rightMotor2.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x) / 4.0);
+                rightMotor.setPower((-gamepad1.left_stick_y - gamepad1.right_stick_x) / 4.0);
             }
             //Add telemetry data
             //    telemetry.addData("Lift motor power", liftMotor.getPower());
