@@ -79,90 +79,132 @@ public class Teleop extends Team6475Controls {
                 blueColorServo.setPosition(.1);
                 jewelRotationServo.setPosition(.47);
             }
+            boolean easter = false;
+            if(easter && gamepad1.left_stick_button) {easter = true;};
+            if(!easter && gamepad1.left_stick_button) {easter = false;};
+            if (!easter) {
+                //Lifting mechanism
+                liftGlyphs(0);
 
-            //Lifting mechanism
-            liftGlyphs(0);
+                if (gamepad2.dpad_up) {
+                    liftGlyphs(1);
+                }
 
-            if (gamepad2.dpad_up) {
-                liftGlyphs(1);
+                if (gamepad2.dpad_down) {
+                    liftGlyphs(-1);
+                }
+
+
+                //Drop Glyphs
+                if (gamepad2.right_trigger > .5) {
+                    grabGlyphs();
+                }
+
+                if (gamepad2.left_trigger > .5) {
+                    releaseGlyphs();
+                }
+
+                //END GAME CONTROLS
+
+                if (-gamepad2.right_stick_y > 0) {
+                    relicExtendMotor.setPower(gamepad2.right_stick_y);
+                    relicRetractMotor.setPower(-.1);
+                }
+                if (-gamepad2.right_stick_y < 0) {
+                    relicExtendMotor.setPower(.1);
+                    relicRetractMotor.setPower(gamepad2.right_stick_y);
+                }
+                if (-gamepad2.right_stick_y == 0) {
+                    relicExtendMotor.setPower(0);
+                    relicRetractMotor.setPower(0);
+                }
+                if (gamepad2.x) {
+                    grabRelic();
+                }
+
+                if (gamepad2.b) {
+                    releaseRelic();
+                }
+
+                if (gamepad2.y) {
+                    liftRelic();
+                }
+
+                if (gamepad2.a) {
+                    dropRelic();
+                }
+
+                //add some debug data
+
+                //Update the telemetry
+                telemetry.update();
+
+
+                //SINGLE DRIVER CONTROLS
+                // So you can drive with only one controller(press both back buttons)
+
             }
+            //Easter ----------------------------------------------------------------------------------
+            if (easter) {
 
-            if (gamepad2.dpad_down) {
-                liftGlyphs(-1);
+                if (gamepad1.dpad_up) {
+                    liftGlyphs(1);
+                }
+
+                if (gamepad1.dpad_down) {
+                    liftGlyphs(-1);
+                }
+
+
+                //Drop Glyphs
+                if (gamepad1.right_trigger > .5) {
+                    grabGlyphs();
+                }
+
+                if (gamepad1.left_trigger > .5) {
+                    releaseGlyphs();
+                }
+
+                //END GAME CONTROLS
+
+                if (-gamepad1.right_stick_y > 0) {
+                    relicExtendMotor.setPower(gamepad1.right_stick_y);
+                    relicRetractMotor.setPower(-.1);
+                }
+                if (-gamepad1.right_stick_y < 0) {
+                    relicExtendMotor.setPower(.1);
+                    relicRetractMotor.setPower(gamepad1.right_stick_y);
+                }
+                if (-gamepad1.right_stick_y == 0) {
+                    relicExtendMotor.setPower(0);
+                    relicRetractMotor.setPower(0);
+                }
+                if (gamepad1.a) {
+                    grabRelic();
+                }
+
+                if (gamepad1.x) {
+                    releaseRelic();
+                }
+
+                if (gamepad1.y) {
+                    liftRelic();
+                }
+
+                if (gamepad1.b) {
+                    dropRelic();
+                }
+
+                //add some debug data
+
+                //Update the telemetry
+                telemetry.update();
+
+
+                //SINGLE DRIVER CONTROLS
+                // So you can drive with only one controller(press both back buttons)
             }
-
-
-            //Drop Glyphs
-            if (gamepad2.right_trigger > .5) {
-                grabGlyphs();
-            }
-
-            if (gamepad2.left_trigger > .5) {
-                releaseGlyphs();
-            }
-
-            //END GAME CONTROLS
-
-            if(-gamepad2.right_stick_y > 0) {
-                relicExtendMotor.setPower(gamepad2.right_stick_y);
-                relicRetractMotor.setPower(-.1);
-            }
-            if(-gamepad2.right_stick_y < 0) {
-                relicExtendMotor.setPower(.1);
-                relicRetractMotor.setPower(gamepad2.right_stick_y);
-            }
-            if(-gamepad2.right_stick_y == 0) {
-                relicExtendMotor.setPower(0);
-                relicRetractMotor.setPower(0);
-            }
-            if (gamepad2.x) {
-                grabRelic();
-            }
-
-            if (gamepad2.b) {
-                releaseRelic();
-            }
-
-            if (gamepad2.y) {
-                liftRelic();
-            }
-
-            if (gamepad2.a) {
-                dropRelic();
-            }
-
-            //add some debug data
-
-            //Update the telemetry
-            telemetry.update();
         }
-
-        //SINGLE DRIVER CONTROLS
-        // So you can drive with only one controller(press both back buttons)
-        if (gamepad1.left_trigger > .2) {
-            liftGlyphs(0);
-
-            if (gamepad2.dpad_up) {
-                liftGlyphs(1);
-            }
-
-            if (gamepad2.dpad_down) {
-                liftGlyphs(-1);
-            }
-
-            //Drop Glyphs
-            if (gamepad1.right_bumper) {
-                grabGlyphs();
-            }
-            if (gamepad1.left_bumper) {
-                releaseGlyphs();
-            }
-
-            //Update the telemetry
-            telemetry.update();
-
-        }
-
         telemetry.addData("Status", "Done");
         telemetry.update();
     }
