@@ -28,10 +28,6 @@ public class Teleop extends Team6475Controls {
         rightMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         relicExtendMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // Initialize and retract servos
-        blueColorServo.setPosition(.1);
-        jewelRotationServo.setPosition(.47);
-
         // Wait for the game to start (driver presses PLAY)
         telemetry.addData("Status", "Waiting for start boi.");
         telemetry.update();
