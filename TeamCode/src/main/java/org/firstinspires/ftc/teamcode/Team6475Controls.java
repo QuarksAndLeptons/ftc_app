@@ -30,7 +30,7 @@ import java.util.Locale;
 import static java.lang.Math.abs;
 
 /**
- * Created by Micah on 12/5/17.
+ * Created by Micah Mundy on 12/5/17.
  */
 
 public abstract class Team6475Controls extends LinearOpMode {
